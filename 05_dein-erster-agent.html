@@ -190,9 +190,52 @@ section:not(.parchment) .pull .text{color:var(--gray-200)}
 .pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
 @media(max-width:880px){.pull{grid-template-columns:1fr}}
 
-/* Footer */
-footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
-footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+/* ---- Nav (Codex) ---- */
+nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* ---- Language Toggle ---- */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:#8A8F99;font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:#8A8F99;padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+
+/* ---- Footer (Codex) ---- */
+.footer-codex{background:var(--ink-black);border-top:1px solid var(--border-on-ink);padding:64px 0 40px}
+.footer-grid-c{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:48px}
+.footer-brand-c{font-family:'Source Serif 4',serif;font-size:26px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1;margin-bottom:4px}
+.footer-brand-sub-c{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:20px}
+.footer-desc-c{font-family:'Lora',serif;font-size:14px;line-height:1.65;color:var(--gray-400)}
+.footer-col-head-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray-400);margin-bottom:20px}
+.footer-links-c{display:flex;flex-direction:column;gap:12px}
+.footer-link-c{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:var(--gray-400);transition:color .15s}
+.footer-link-c:hover{color:var(--copper)}
+.footer-link-c.dim{opacity:.5;pointer-events:none}
+.footer-bottom-c{border-top:1px solid var(--border-on-ink);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-meta-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-400)}
+.footer-meta-c .cu{color:var(--copper)}
+.motion-btn-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:6px 14px;cursor:pointer;transition:border-color .15s,color .15s}
+.motion-btn-c:hover{border-color:var(--copper);color:var(--copper)}
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{transition:none!important;animation:none!important}
+@media(max-width:900px){.footer-grid-c{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.footer-grid-c{grid-template-columns:1fr}}
 
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;animation:none !important}
@@ -201,37 +244,71 @@ footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mo
 </head>
 <body>
 
+<!-- ===== NAV ===== -->
+<nav aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back"><span data-de>&#x2190; Alle Tafeln</span><span data-en>&#x2190; All Articles</span></a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link"><span data-de>01 &#x2192; Was ist AI?</span><span data-en>01 &#x2192; What is AI?</span></a>
+      <a href="./02_wie-ein-agent-denkt.html"        class="nav-link"><span data-de>02 &#x2192; Wie ein Agent denkt</span><span data-en>02 &#x2192; How an Agent Thinks</span></a>
+      <a href="./03_tools-mcps-plugins.html"         class="nav-link"><span data-de>03 &#x2192; Tools &amp; MCPs</span><span data-en>03 &#x2192; Tools &amp; MCPs</span></a>
+      <a href="./04_risiko-und-trust.html"           class="nav-link"><span data-de>04 &#x2192; Risiko &amp; Trust</span><span data-en>04 &#x2192; Risk &amp; Trust</span></a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache w&#xE4;hlen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="true">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <!-- =========================== HERO =========================== -->
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 05</span><span>· LEHRTAFEL · DEIN ERSTER AGENT</span></div>
-    <h1 class="serif">Dein erster Agent<br/><em>in 60 Minuten</em>.</h1>
-    <p class="kicker">Vom Use-Case bis zum lauffähigen Prototyp. Kein Framework-Marathon, keine Cloud-Migration. Eine klare Reihenfolge: Ziel, Bestandteile, sechs Schritte, ein Test-Run, ein Echo. Diese Tafel ist die Anleitung, die du brauchst, wenn du das erste Mal selbst einen Agent zusammensteckst.</p>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 05</span><span data-de>&#xB7; LEHRTAFEL &#xB7; DEIN ERSTER AGENT</span><span data-en>&#xB7; ARTICLE &#xB7; YOUR FIRST AGENT</span></div>
+    <h1 class="serif" data-de>Dein erster Agent<br/><em>in 60 Minuten</em>.</h1>
+    <h1 class="serif" data-en>Your first agent<br/><em>in 60 minutes</em>.</h1>
+    <p class="kicker" data-de>Vom Use-Case bis zum lauff&auml;higen Prototyp. Kein Framework-Marathon, keine Cloud-Migration. Eine klare Reihenfolge: Ziel, Bestandteile, sechs Schritte, ein Test-Run, ein Echo. Diese Tafel ist die Anleitung, die du brauchst, wenn du das erste Mal selbst einen Agent zusammensteckst.</p>
+    <p class="kicker" data-en>From use-case to working prototype. No framework marathon, no cloud migration. One clear sequence: goal, components, six steps, a test run, an echo. This article is the guide you need when you're assembling your first agent from scratch.</p>
 
     <div class="hero-stats">
       <div class="stat">
         <div class="num">60</div>
-        <div class="label">Minuten bis zum Prototyp</div>
+        <div class="label" data-de>Minuten bis zum Prototyp</div>
+        <div class="label" data-en>Minutes to prototype</div>
       </div>
       <div class="stat">
         <div class="num">6</div>
-        <div class="label">Schritte vom Ziel zum Run</div>
+        <div class="label" data-de>Schritte vom Ziel zum Run</div>
+        <div class="label" data-en>Steps from goal to run</div>
       </div>
       <div class="stat">
         <div class="num">5</div>
-        <div class="label">Anti-Patterns, die du meidest</div>
+        <div class="label" data-de>Anti-Patterns, die du meidest</div>
+        <div class="label" data-en>Anti-patterns to avoid</div>
       </div>
     </div>
 
     <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
-      <a class="cta" href="#kapitel-1">METHODE LESEN <span class="arrow">┌──→</span></a>
-      <a class="cta" href="#kapitel-3" style="border-color:var(--gray-600);color:var(--gray-400)">DIREKT ZUM BUILD <span class="arrow">┌──→</span></a>
+      <a class="cta" href="#kapitel-1"><span data-de>METHODE LESEN</span><span data-en>READ THE METHOD</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+      <a class="cta" href="#kapitel-3" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-de>DIREKT ZUM BUILD</span><span data-en>JUMP TO THE BUILD</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
     </div>
 
     <div class="meta">
-      <span>FILE · 05 / SERIE AI &amp; AGENTIC EXPLAINED</span>
-      <span>LESEZEIT · 14 MINUTEN</span>
-      <span>VERSION · v.2026.05</span>
+      <span>FILE &#xB7; 05 / SERIE AI &amp; AGENTIC EXPLAINED</span>
+      <span data-de>LESEZEIT &#xB7; 14 MINUTEN</span><span data-en>READ TIME &#xB7; 14 MINUTES</span>
+      <span>VERSION &#xB7; v.2026.05</span>
     </div>
   </div>
 </section>
@@ -239,33 +316,57 @@ footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mo
 <!-- =========================== KAPITEL 1: USE-CASE WAEHLEN =========================== -->
 <section id="kapitel-1" class="parchment">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 06</span><span>· DIE WAHL</span></div>
-    <h2 class="serif">Welcher Use-Case <em>zuerst</em>?</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 06</span><span data-de>&#xB7; DIE WAHL</span><span data-en>&#xB7; THE CHOICE</span></div>
+    <h2 class="serif" data-de>Welcher Use-Case <em>zuerst</em>?</h2>
+    <h2 class="serif" data-en>Which use-case <em>first</em>?</h2>
     <div class="rule-copper"></div>
-    <p class="kicker lora">Der erste Agent scheitert oder gelingt schon vor dem Bauen. An der Wahl des Use-Cases. Ein guter erster Use-Case ist klein genug, dass du ihn fertig bekommst, und groß genug, dass das Ergebnis spürbar Zeit spart. Drei Fragen helfen, ihn zu finden.</p>
+    <p class="kicker lora" data-de>Der erste Agent scheitert oder gelingt schon vor dem Bauen. An der Wahl des Use-Cases. Ein guter erster Use-Case ist klein genug, dass du ihn fertig bekommst, und gro&szlig; genug, dass das Ergebnis sp&uuml;rbar Zeit spart. Drei Fragen helfen, ihn zu finden.</p>
+    <p class="kicker lora" data-en>The first agent succeeds or fails before you even start building. At the choice of use-case. A good first use-case is small enough to finish, and large enough that the result saves noticeable time. Three questions help you find it.</p>
 
     <table class="compare" style="margin-top:48px">
       <thead>
         <tr>
-          <th>FRAGE</th>
-          <th style="color:var(--success)">GUT GEEIGNET</th>
-          <th style="color:var(--rust)">EHER NICHT</th>
+          <th data-de>FRAGE</th><th data-en>QUESTION</th>
+          <th style="color:var(--success)" data-de>GUT GEEIGNET</th><th style="color:var(--success)" data-en>GOOD FIT</th>
+          <th style="color:var(--rust)" data-de>EHER NICHT</th><th style="color:var(--rust)" data-en>NOT IDEAL</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td class="col-label">Wie oft kommt es vor?</td><td>Mehrmals pro Woche</td><td>Einmal im Quartal</td></tr>
-        <tr><td class="col-label">Wie klar ist das Ziel?</td><td>In einem Satz erklärbar</td><td>Hängt vom Bauchgefühl ab</td></tr>
-        <tr><td class="col-label">Wie viele Quellen?</td><td>Zwei bis fünf, klar abgegrenzt</td><td>Offenes Internet, beliebige Domänen</td></tr>
-        <tr><td class="col-label">Was kostet ein Fehler?</td><td>Reversibel, intern</td><td>Externe Wirkung, irreversibel</td></tr>
-        <tr><td class="col-label">Wer prüft das Ergebnis?</td><td>Du, in unter einer Minute</td><td>Niemand, oder zu spät</td></tr>
+        <tr>
+          <td class="col-label"><span data-de>Wie oft kommt es vor?</span><span data-en>How often does it occur?</span></td>
+          <td><span data-de>Mehrmals pro Woche</span><span data-en>Several times a week</span></td>
+          <td><span data-de>Einmal im Quartal</span><span data-en>Once a quarter</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Wie klar ist das Ziel?</span><span data-en>How clear is the goal?</span></td>
+          <td><span data-de>In einem Satz erkl&auml;rbar</span><span data-en>Explainable in one sentence</span></td>
+          <td><span data-de>H&auml;ngt vom Bauchgef&uuml;hl ab</span><span data-en>Depends on gut feeling</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Wie viele Quellen?</span><span data-en>How many sources?</span></td>
+          <td><span data-de>Zwei bis f&uuml;nf, klar abgegrenzt</span><span data-en>Two to five, clearly scoped</span></td>
+          <td><span data-de>Offenes Internet, beliebige Dom&auml;nen</span><span data-en>Open internet, any domain</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Was kostet ein Fehler?</span><span data-en>What does an error cost?</span></td>
+          <td><span data-de>Reversibel, intern</span><span data-en>Reversible, internal</span></td>
+          <td><span data-de>Externe Wirkung, irreversibel</span><span data-en>External impact, irreversible</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Wer pr&uuml;ft das Ergebnis?</span><span data-en>Who reviews the result?</span></td>
+          <td><span data-de>Du, in unter einer Minute</span><span data-en>You, in under a minute</span></td>
+          <td><span data-de>Niemand, oder zu sp&auml;t</span><span data-en>Nobody, or too late</span></td>
+        </tr>
       </tbody>
     </table>
 
     <div class="pull" style="margin-top:64px">
-      <div class="num">×3</div>
+      <div class="num">&#xD7;3</div>
       <div>
-        <p class="label">FAUSTREGEL · USE-CASE</p>
-        <p class="text">Wenn du eine Aufgabe in dieser Woche dreimal selbst gemacht hast, ist sie ein guter Kandidat. Einmaliges baut man nicht als Agent. Repeatables verdienen einen.</p>
+        <p class="label" data-de>FAUSTREGEL &#xB7; USE-CASE</p>
+        <p class="label" data-en>RULE OF THUMB &#xB7; USE-CASE</p>
+        <p class="text" data-de>Wenn du eine Aufgabe in dieser Woche dreimal selbst gemacht hast, ist sie ein guter Kandidat. Einmaliges baut man nicht als Agent. Repeatables verdienen einen.</p>
+        <p class="text" data-en>If you have done a task three times yourself this week, it's a good candidate. One-offs don't become agents. Repeatables deserve one.</p>
       </div>
     </div>
   </div>
@@ -274,41 +375,55 @@ footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mo
 <!-- =========================== KAPITEL 2: ANATOMIE =========================== -->
 <section id="kapitel-2">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 07</span><span>· ANATOMIE</span></div>
-    <h2 class="serif">Fünf Bestandteile,<br/>eine <em>Architektur</em>.</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 07</span><span data-de>&#xB7; ANATOMIE</span><span data-en>&#xB7; ANATOMY</span></div>
+    <h2 class="serif" data-de>F&uuml;nf Bestandteile,<br/>eine <em>Architektur</em>.</h2>
+    <h2 class="serif" data-en>Five components,<br/>one <em>architecture</em>.</h2>
     <div class="rule-copper"></div>
-    <p class="kicker">Egal ob du in Claude, OpenAI, einem Plugin-System oder selbst gebauter Pipeline arbeitest, jeder funktionierende Agent besteht aus fünf Teilen. Wer einen weglässt, baut keinen Agent, sondern einen netten Chatbot.</p>
+    <p class="kicker" data-de>Egal ob du in Claude, OpenAI, einem Plugin-System oder selbst gebauter Pipeline arbeitest, jeder funktionierende Agent besteht aus f&uuml;nf Teilen. Wer einen wegl&auml;sst, baut keinen Agent, sondern einen netten Chatbot.</p>
+    <p class="kicker" data-en>Whether you work in Claude, OpenAI, a plugin system, or a self-built pipeline, every working agent consists of five parts. Leave one out and you haven't built an agent -- just a nice chatbot.</p>
 
     <div class="process cols-2" style="margin-top:48px">
       <div class="step">
-        <span class="num">01 · ZIEL</span>
-        <h4 class="serif">Die Zielbeschreibung.</h4>
-        <p>Ein Satz, der das Ergebnis konkret beschreibt. Nicht das Verfahren. Beispiel: "Liste der fünf interessantesten Wettbewerber-News der letzten 7 Tage, mit Quellen."</p>
+        <span class="num">01 &#xB7; <span data-de>ZIEL</span><span data-en>GOAL</span></span>
+        <h4 class="serif" data-de>Die Zielbeschreibung.</h4>
+        <h4 class="serif" data-en>The goal statement.</h4>
+        <p data-de>Ein Satz, der das Ergebnis konkret beschreibt. Nicht das Verfahren. Beispiel: "Liste der f&uuml;nf interessantesten Wettbewerber-News der letzten 7 Tage, mit Quellen."</p>
+        <p data-en>One sentence that concretely describes the result. Not the procedure. Example: "List of the five most interesting competitor news items of the last 7 days, with sources."</p>
       </div>
       <div class="step">
-        <span class="num">02 · TOOLS</span>
-        <h4 class="serif">Der Werkzeuggürtel.</h4>
-        <p>Drei bis sieben Tools. Mehr verwirrt das Modell. Jedes Tool mit klarer Beschreibung und engem Scope. Lieber eines weglassen als zu viele zulassen.</p>
+        <span class="num">02 &#xB7; TOOLS</span>
+        <h4 class="serif" data-de>Der Werkzeugg&uuml;rtel.</h4>
+        <h4 class="serif" data-en>The tool belt.</h4>
+        <p data-de>Drei bis sieben Tools. Mehr verwirrt das Modell. Jedes Tool mit klarer Beschreibung und engem Scope. Lieber eines weglassen als zu viele zulassen.</p>
+        <p data-en>Three to seven tools. More confuses the model. Each tool with a clear description and narrow scope. Better to leave one out than allow too many.</p>
       </div>
       <div class="step">
-        <span class="num">03 · MEMORY</span>
-        <h4 class="serif">Das Gedächtnis.</h4>
-        <p>Mindestens Kurzzeit für den laufenden Run. Falls du dem Agent Vorlieben mitgibst, auch Langzeit. Ohne Memory kein lernender Agent.</p>
+        <span class="num">03 &#xB7; MEMORY</span>
+        <h4 class="serif" data-de>Das Ged&auml;chtnis.</h4>
+        <h4 class="serif" data-en>The memory.</h4>
+        <p data-de>Mindestens Kurzzeit f&uuml;r den laufenden Run. Falls du dem Agent Vorlieben mitgibst, auch Langzeit. Ohne Memory kein lernender Agent.</p>
+        <p data-en>At minimum short-term for the running session. If you give the agent preferences, long-term too. No memory means no learning agent.</p>
       </div>
       <div class="step">
-        <span class="num">04 · GUARDRAILS</span>
-        <h4 class="serif">Die Schutzschicht.</h4>
-        <p>Step-Limit, Token-Budget, Approval-Gates an heiklen Stellen. Aus Tafel 04 übernehmen, je nach Risiko der Aktionen.</p>
+        <span class="num">04 &#xB7; GUARDRAILS</span>
+        <h4 class="serif" data-de>Die Schutzschicht.</h4>
+        <h4 class="serif" data-en>The protection layer.</h4>
+        <p data-de>Step-Limit, Token-Budget, Approval-Gates an heiklen Stellen. Aus Tafel 04 &uuml;bernehmen, je nach Risiko der Aktionen.</p>
+        <p data-en>Step limit, token budget, approval gates at sensitive points. Carry over from Article 04, depending on the risk of the actions.</p>
       </div>
       <div class="step">
-        <span class="num">05 · ERFOLGSMASS</span>
-        <h4 class="serif">Die Messlatte.</h4>
-        <p>Ein Kriterium, an dem du erkennst, ob der Run gut war. Beispiel: "Mindestens 3 verifizierte Quellen pro Wettbewerber, Tonalität neutral." Ohne Maß keine Verbesserung.</p>
+        <span class="num">05 &#xB7; <span data-de>ERFOLGSMASS</span><span data-en>SUCCESS METRIC</span></span>
+        <h4 class="serif" data-de>Die Messlatte.</h4>
+        <h4 class="serif" data-en>The measuring stick.</h4>
+        <p data-de>Ein Kriterium, an dem du erkennst, ob der Run gut war. Beispiel: "Mindestens 3 verifizierte Quellen pro Wettbewerber, Tonalit&auml;t neutral." Ohne Ma&szlig; keine Verbesserung.</p>
+        <p data-en>One criterion by which you can tell whether a run was good. Example: "At least 3 verified sources per competitor, tone neutral." No metric means no improvement.</p>
       </div>
       <div class="step" style="background:rgba(217,119,87,.04)">
         <span class="num" style="color:var(--copper-deep)">+ ITERATION</span>
-        <h4 class="serif">Der sechste, unsichtbare Teil.</h4>
-        <p>Kein einziger Agent läuft im ersten Wurf. Drei bis fünf Iterationen sind Standard, bevor er das tut, was du dir vorgestellt hast. Plane sie ein.</p>
+        <h4 class="serif" data-de>Der sechste, unsichtbare Teil.</h4>
+        <h4 class="serif" data-en>The sixth, invisible part.</h4>
+        <p data-de>Kein einziger Agent l&auml;uft im ersten Wurf. Drei bis f&uuml;nf Iterationen sind Standard, bevor er das tut, was du dir vorgestellt hast. Plane sie ein.</p>
+        <p data-en>Not a single agent works on the first try. Three to five iterations are standard before it does what you imagined. Plan for them.</p>
       </div>
     </div>
   </div>
@@ -317,115 +432,152 @@ footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mo
 <!-- =========================== KAPITEL 3: SECHS SCHRITTE =========================== -->
 <section id="kapitel-3" class="parchment">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 08</span><span>· DER BUILD</span></div>
-    <h2 class="serif">Sechs Schritte zum<br/>ersten <em>Run</em>.</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 08</span><span data-de>&#xB7; DER BUILD</span><span data-en>&#xB7; THE BUILD</span></div>
+    <h2 class="serif" data-de>Sechs Schritte zum<br/>ersten <em>Run</em>.</h2>
+    <h2 class="serif" data-en>Six steps to the<br/>first <em>run</em>.</h2>
     <div class="rule-copper"></div>
-    <p class="kicker lora">Reihenfolge zählt. Wer mit Tools anfängt, baut sich in eine Sackgasse. Wer mit dem Erfolgsmaß anfängt, kommt schneller ans Ziel als gedacht. Die folgenden sechs Schritte sind die kürzeste Strecke, die in der Praxis funktioniert.</p>
+    <p class="kicker lora" data-de>Reihenfolge z&auml;hlt. Wer mit Tools anf&auml;ngt, baut sich in eine Sackgasse. Wer mit dem Erfolgsma&szlig; anf&auml;ngt, kommt schneller ans Ziel als gedacht. Die folgenden sechs Schritte sind die k&uuml;rzeste Strecke, die in der Praxis funktioniert.</p>
+    <p class="kicker lora" data-en>Order matters. Starting with tools leads into a dead end. Starting with the success metric gets you to the goal faster than you'd expect. The following six steps are the shortest path that works in practice.</p>
 
     <div class="process cols-6" style="margin-top:48px">
       <div class="step">
         <span class="num">1.0</span>
-        <h4 class="serif" style="font-size:18px">Ziel.</h4>
-        <p>Ein Satz. Konkret. Kein Verfahren, nur Ergebnis.</p>
+        <h4 class="serif" style="font-size:18px" data-de>Ziel.</h4>
+        <h4 class="serif" style="font-size:18px" data-en>Goal.</h4>
+        <p data-de>Ein Satz. Konkret. Kein Verfahren, nur Ergebnis.</p>
+        <p data-en>One sentence. Concrete. No procedure, only result.</p>
       </div>
       <div class="step">
         <span class="num">2.0</span>
-        <h4 class="serif" style="font-size:18px">Erfolg.</h4>
-        <p>Wie messbar gut sieht der Run aus?</p>
+        <h4 class="serif" style="font-size:18px" data-de>Erfolg.</h4>
+        <h4 class="serif" style="font-size:18px" data-en>Success.</h4>
+        <p data-de>Wie messbar gut sieht der Run aus?</p>
+        <p data-en>What does a measurably good run look like?</p>
       </div>
       <div class="step">
         <span class="num">3.0</span>
         <h4 class="serif" style="font-size:18px">Tools.</h4>
-        <p>3 bis 7. Mit Scope, mit Beschreibung.</p>
+        <p data-de>3 bis 7. Mit Scope, mit Beschreibung.</p>
+        <p data-en>3 to 7. With scope, with description.</p>
       </div>
       <div class="step">
         <span class="num">4.0</span>
-        <h4 class="serif" style="font-size:18px">Schutz.</h4>
-        <p>Limits, Approval-Gates, Kill-Switch.</p>
+        <h4 class="serif" style="font-size:18px" data-de>Schutz.</h4>
+        <h4 class="serif" style="font-size:18px" data-en>Protection.</h4>
+        <p data-de>Limits, Approval-Gates, Kill-Switch.</p>
+        <p data-en>Limits, approval gates, kill switch.</p>
       </div>
       <div class="step">
         <span class="num">5.0</span>
         <h4 class="serif" style="font-size:18px">Test.</h4>
-        <p>Drei Beispielfälle. Manuell prüfen.</p>
+        <p data-de>Drei Beispiel&shy;f&auml;lle. Manuell pr&uuml;fen.</p>
+        <p data-en>Three example cases. Review manually.</p>
       </div>
       <div class="step">
         <span class="num">6.0</span>
         <h4 class="serif" style="font-size:18px">Run.</h4>
-        <p>Live mit Audit. Erste Stichproben.</p>
+        <p data-de>Live mit Audit. Erste Stichproben.</p>
+        <p data-en>Live with audit. First spot checks.</p>
       </div>
     </div>
 
-    <p class="prose" style="margin-top:48px">In dieser Reihenfolge fällt jeder Schritt leicht, weil der vorherige geklärt ist. Wer Test überspringt, zahlt es im Run. Wer Erfolg überspringt, weiß nie, ob es funktioniert hat. Wer Schutz überspringt, lernt seine Lektion einmalig und teuer.</p>
+    <p class="prose" style="margin-top:48px" data-de>In dieser Reihenfolge f&auml;llt jeder Schritt leicht, weil der vorherige gekl&auml;rt ist. Wer Test &uuml;berspringt, zahlt es im Run. Wer Erfolg &uuml;berspringt, wei&szlig; nie, ob es funktioniert hat. Wer Schutz &uuml;berspringt, lernt seine Lektion einmalig und teuer.</p>
+    <p class="prose" style="margin-top:48px" data-en>In this order, each step is easy because the previous one is resolved. Skip Test and you pay for it in the run. Skip Success and you never know if it worked. Skip Protection and you learn that lesson once, expensively.</p>
   </div>
 </section>
 
 <!-- =========================== KAPITEL 4: LIVE-BUILDER =========================== -->
 <section id="kapitel-4">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 09</span><span>· LIVE-BUILDER</span></div>
-    <h2 class="serif">Ein echter Setup<br/>im <em>Aufbau</em>.</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 09</span><span data-de>&#xB7; LIVE-BUILDER</span><span data-en>&#xB7; LIVE BUILDER</span></div>
+    <h2 class="serif" data-de>Ein echter Setup<br/>im <em>Aufbau</em>.</h2>
+    <h2 class="serif" data-en>A real setup<br/>in <em>construction</em>.</h2>
     <div class="rule-copper"></div>
-    <p class="kicker">Beispiel: ein Agent, der jeden Montag fünf Wettbewerber-News zusammenstellt. Klick durch die fünf Phasen und sieh, wie aus einem Satz eine lauffähige Konfiguration wird. Die JSON-Schnipsel sind echte Agent-Konfigurationen, gekürzt zur Lesbarkeit.</p>
+    <p class="kicker" data-de>Beispiel: ein Agent, der jeden Montag f&uuml;nf Wettbewerber-News zusammenstellt. Klick durch die f&uuml;nf Phasen und sieh, wie aus einem Satz eine lauff&auml;hige Konfiguration wird. Die JSON-Schnipsel sind echte Agent-Konfigurationen, gek&uuml;rzt zur Lesbarkeit.</p>
+    <p class="kicker" data-en>Example: an agent that compiles five competitor news items every Monday. Click through the five phases and see how a single sentence becomes a runnable configuration. The JSON snippets are real agent configurations, trimmed for readability.</p>
 
     <div class="demo" style="margin-top:48px">
       <div class="demo-head">
-        <div class="title">Use-Case: "Wöchentliche Wettbewerbs-News, jeden Montag früh."</div>
-        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em">BUILDER · v.2026.05</div>
+        <div class="title">
+          <span data-de>Use-Case: "W&ouml;chentliche Wettbewerbs-News, jeden Montag fr&uuml;h."</span>
+          <span data-en>Use-Case: "Weekly competitor news, every Monday morning."</span>
+        </div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em">BUILDER &#xB7; v.2026.05</div>
       </div>
       <div class="demo-tabs" id="demo-tabs">
-        <button class="demo-tab active" data-step="0"><span class="step-num">01</span>ZIEL</button>
-        <button class="demo-tab" data-step="1"><span class="step-num">02</span>ERFOLG</button>
+        <button class="demo-tab active" data-step="0"><span class="step-num">01</span><span data-de>ZIEL</span><span data-en>GOAL</span></button>
+        <button class="demo-tab" data-step="1"><span class="step-num">02</span><span data-de>ERFOLG</span><span data-en>SUCCESS</span></button>
         <button class="demo-tab" data-step="2"><span class="step-num">03</span>TOOLS</button>
-        <button class="demo-tab" data-step="3"><span class="step-num">04</span>SCHUTZ</button>
+        <button class="demo-tab" data-step="3"><span class="step-num">04</span><span data-de>SCHUTZ</span><span data-en>PROTECTION</span></button>
         <button class="demo-tab" data-step="4"><span class="step-num">05</span>RUN</button>
       </div>
       <div class="demo-body" id="demo-body"></div>
     </div>
-    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px">SIMULATION · BUILDER-OBERFLÄCHEN UNTERSCHEIDEN SICH JE PLATTFORM, DAS PRINZIP IST IDENTISCH.</p>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px" data-de>SIMULATION &#xB7; BUILDER-OBERFL&Auml;CHEN UNTERSCHEIDEN SICH JE PLATTFORM, DAS PRINZIP IST IDENTISCH.</p>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px" data-en>SIMULATION &#xB7; BUILDER INTERFACES DIFFER BY PLATFORM, THE PRINCIPLE IS IDENTICAL.</p>
   </div>
 </section>
 
 <!-- =========================== KAPITEL 5: STOLPERFALLEN =========================== -->
 <section id="kapitel-5" class="parchment">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 10</span><span>· FALLEN</span></div>
-    <h2 class="serif">Fünf Anti-Patterns,<br/>die <em>teuer werden</em>.</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 10</span><span data-de>&#xB7; FALLEN</span><span data-en>&#xB7; PITFALLS</span></div>
+    <h2 class="serif" data-de>F&uuml;nf Anti-Patterns,<br/>die <em>teuer werden</em>.</h2>
+    <h2 class="serif" data-en>Five anti-patterns<br/>that <em>get expensive</em>.</h2>
     <div class="rule-copper"></div>
-    <p class="kicker lora">Die folgenden fünf Fehler tauchen in fast jedem ersten Setup auf. Wer sie kennt, vermeidet sie. Wer sie ignoriert, lernt sie über Schmerz. Beides funktioniert, das eine ist günstiger.</p>
+    <p class="kicker lora" data-de>Die folgenden f&uuml;nf Fehler tauchen in fast jedem ersten Setup auf. Wer sie kennt, vermeidet sie. Wer sie ignoriert, lernt sie &uuml;ber Schmerz. Beides funktioniert, das eine ist g&uuml;nstiger.</p>
+    <p class="kicker lora" data-en>The following five mistakes appear in almost every first setup. Those who know them avoid them. Those who ignore them learn through pain. Both work, one is cheaper.</p>
 
     <div class="grid-5">
       <div>
-        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">A · ZU VIELE TOOLS</p>
-        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">15 statt 5</h4>
-        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Der Agent verzettelt sich, wählt das falsche Werkzeug, dreht im Kreis. Cut on six.</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-de>A &#xB7; ZU VIELE TOOLS</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-en>A &#xB7; TOO MANY TOOLS</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-de>15 statt 5</h4>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-en>15 instead of 5</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-de>Der Agent verzettelt sich, w&auml;hlt das falsche Werkzeug, dreht im Kreis. Cut on six.</p>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-en>The agent gets confused, picks the wrong tool, goes in circles. Cut at six.</p>
       </div>
       <div>
-        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">B · KEIN ZIELSATZ</p>
-        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Vage Beschreibung</h4>
-        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">"Hilf mir mit Wettbewerbern" ist kein Ziel. Ohne klaren Satz kein klarer Output.</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-de>B &#xB7; KEIN ZIELSATZ</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-en>B &#xB7; NO GOAL STATEMENT</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-de>Vage Beschreibung</h4>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-en>Vague description</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-de>"Hilf mir mit Wettbewerbern" ist kein Ziel. Ohne klaren Satz kein klarer Output.</p>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-en>"Help me with competitors" is not a goal. Without a clear sentence, no clear output.</p>
       </div>
       <div>
-        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">C · KEIN MASS</p>
-        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Erfolg unklar</h4>
-        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Ohne Erfolgsmaß weißt du nicht, wann du fertig bist. Iteration ohne Maß ist Bastelei.</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-de>C &#xB7; KEIN MASS</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-en>C &#xB7; NO METRIC</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-de>Erfolg unklar</h4>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-en>Success unclear</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-de>Ohne Erfolgsma&szlig; wei&szlig;t du nicht, wann du fertig bist. Iteration ohne Ma&szlig; ist Bastelei.</p>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-en>Without a success metric you don't know when you're done. Iteration without a metric is tinkering.</p>
       </div>
       <div>
-        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">D · KEIN BUDGET</p>
-        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Token frei laufen lassen</h4>
-        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Ein vergessener Loop verbrennt in zehn Minuten dein Monatsbudget. Limits sind Pflicht.</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-de>D &#xB7; KEIN BUDGET</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-en>D &#xB7; NO BUDGET</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-de>Token frei laufen lassen</h4>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-en>Tokens running free</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-de>Ein vergessener Loop verbrennt in zehn Minuten dein Monatsbudget. Limits sind Pflicht.</p>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-en>A forgotten loop burns your monthly budget in ten minutes. Limits are mandatory.</p>
       </div>
       <div>
-        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">E · PRODUCTION ZUERST</p>
-        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Test ausgelassen</h4>
-        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Wer ohne drei Test-Runs live geht, lernt seine Failure-Modi vor Publikum kennen.</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-de>E &#xB7; PRODUCTION ZUERST</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px" data-en>E &#xB7; PRODUCTION FIRST</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-de>Test ausgelassen</h4>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25" data-en>Test skipped</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-de>Wer ohne drei Test-Runs live geht, lernt seine Failure-Modi vor Publikum kennen.</p>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)" data-en>Anyone who goes live without three test runs meets their failure modes in front of an audience.</p>
       </div>
     </div>
 
     <div class="pull" style="margin-top:64px">
       <div class="num">3</div>
       <div>
-        <p class="label">FAUSTREGEL · TEST-RUNS</p>
-        <p class="text">Drei Test-Runs vor dem ersten produktiven sind das Minimum. Idealerweise mit drei verschiedenen Eingabe-Typen, damit der Agent in der Bandbreite getestet ist und nicht nur im Idealfall glänzt.</p>
+        <p class="label" data-de>FAUSTREGEL &#xB7; TEST-RUNS</p>
+        <p class="label" data-en>RULE OF THUMB &#xB7; TEST RUNS</p>
+        <p class="text" data-de>Drei Test-Runs vor dem ersten produktiven sind das Minimum. Idealerweise mit drei verschiedenen Eingabe-Typen, damit der Agent in der Bandbreite getestet ist und nicht nur im Idealfall gl&auml;nzt.</p>
+        <p class="text" data-en>Three test runs before the first production run are the minimum. Ideally with three different input types, so the agent is tested across its full range and not only shines in the ideal case.</p>
       </div>
     </div>
   </div>
@@ -434,34 +586,53 @@ footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mo
 <!-- =========================== KAPITEL 6: GLOSSAR =========================== -->
 <section id="kapitel-6">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 11</span><span>· GLOSSAR</span></div>
-    <h2 class="serif">Sechs Begriffe<br/>aus dem Werkraum.</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 11</span><span data-de>&#xB7; GLOSSAR</span><span data-en>&#xB7; GLOSSARY</span></div>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>aus dem Werkraum.</h2>
+    <h2 class="serif" data-en>Six terms<br/>from the workshop.</h2>
     <div class="rule-copper"></div>
 
     <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
       <div class="gloss">
         <span class="term">USE-CASE</span>
-        <span class="def">Die konkrete Aufgabe, die der Agent erledigen soll. Klein genug zum Fertigwerden, groß genug zum Spürbar-Zeit-Sparen. Jeder Agent beginnt hier.</span>
+        <span>
+          <span class="def" data-de>Die konkrete Aufgabe, die der Agent erledigen soll. Klein genug zum Fertigwerden, gro&szlig; genug zum Sp&uuml;rbar-Zeit-Sparen. Jeder Agent beginnt hier.</span>
+          <span class="def" data-en>The specific task the agent should complete. Small enough to finish, large enough to save noticeable time. Every agent starts here.</span>
+        </span>
       </div>
       <div class="gloss">
         <span class="term">PROTOTYP</span>
-        <span class="def">Die erste lauffähige Version. Funktioniert für den Hauptfall, ist noch nicht produktionsreif. Wird durch Iteration zum echten Werkzeug.</span>
+        <span>
+          <span class="def" data-de>Die erste lauff&auml;hige Version. Funktioniert f&uuml;r den Hauptfall, ist noch nicht produktionsreif. Wird durch Iteration zum echten Werkzeug.</span>
+          <span class="def" data-en>The first working version. Works for the main case, not yet production-ready. Becomes a real tool through iteration.</span>
+        </span>
       </div>
       <div class="gloss">
         <span class="term">EVAL</span>
-        <span class="def">Ein wiederholbarer Test gegen das Erfolgsmaß. Drei bis fünf typische Eingaben, dieselben Erwartungen. Bleibt während der Iteration erhalten.</span>
+        <span>
+          <span class="def" data-de>Ein wiederholbarer Test gegen das Erfolgsma&szlig;. Drei bis f&uuml;nf typische Eingaben, dieselben Erwartungen. Bleibt w&auml;hrend der Iteration erhalten.</span>
+          <span class="def" data-en>A repeatable test against the success metric. Three to five typical inputs, the same expectations. Stays intact throughout iteration.</span>
+        </span>
       </div>
       <div class="gloss">
         <span class="term">ITERATION</span>
-        <span class="def">Eine Runde aus Test, Diagnose, Anpassung, neuer Test. Drei bis fünf Iterationen sind Standard, bevor ein erster Agent das tut, was er soll.</span>
+        <span>
+          <span class="def" data-de>Eine Runde aus Test, Diagnose, Anpassung, neuer Test. Drei bis f&uuml;nf Iterationen sind Standard, bevor ein erster Agent das tut, was er soll.</span>
+          <span class="def" data-en>One round of test, diagnosis, adjustment, new test. Three to five iterations are standard before a first agent does what it should.</span>
+        </span>
       </div>
       <div class="gloss">
-        <span class="term">ERFOLGSMASS</span>
-        <span class="def">Ein klar formuliertes Kriterium, an dem du erkennst, ob ein Run gut war. Ohne Maß keine Verbesserung, ohne Verbesserung kein guter Agent.</span>
+        <span class="term" data-de>ERFOLGSMASS</span><span class="term" data-en>SUCCESS METRIC</span>
+        <span>
+          <span class="def" data-de>Ein klar formuliertes Kriterium, an dem du erkennst, ob ein Run gut war. Ohne Ma&szlig; keine Verbesserung, ohne Verbesserung kein guter Agent.</span>
+          <span class="def" data-en>A clearly formulated criterion by which you can tell whether a run was good. No metric means no improvement, no improvement means no good agent.</span>
+        </span>
       </div>
       <div class="gloss" style="border-bottom:none">
         <span class="term">PRODUCTION</span>
-        <span class="def">Der Agent läuft echt, mit echten Daten, an echten Tagen. Davor stehen mindestens drei saubere Test-Runs und ein Audit-Trail. Keine Abkürzung.</span>
+        <span>
+          <span class="def" data-de>Der Agent l&auml;uft echt, mit echten Daten, an echten Tagen. Davor stehen mindestens drei saubere Test-Runs und ein Audit-Trail. Keine Abk&uuml;rzung.</span>
+          <span class="def" data-en>The agent runs for real, with real data, on real days. Before that: at least three clean test runs and an audit trail. No shortcuts.</span>
+        </span>
       </div>
     </div>
   </div>
@@ -470,69 +641,151 @@ footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mo
 <!-- =========================== AUSBLICK =========================== -->
 <section id="ausblick" class="parchment">
   <div class="wrap">
-    <div class="eyebrow"><span class="dot"></span><span class="num">● 12</span><span>· N&Auml;CHSTE LEHRTAFEL</span></div>
-    <h2 class="serif">Du hast deinen ersten Agent.<br/>Was kommt als Nächstes?</h2>
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 12</span><span data-de>&#xB7; N&Auml;CHSTE LEHRTAFEL</span><span data-en>&#xB7; NEXT ARTICLE</span></div>
+    <h2 class="serif" data-de>Du hast deinen ersten Agent.<br/>Was kommt als N&auml;chstes?</h2>
+    <h2 class="serif" data-en>You have your first agent.<br/>What comes next?</h2>
     <div class="rule-copper"></div>
 
     <div class="grid-3" style="margin-top:48px">
       <div class="card">
         <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">06</p>
-        <h3 class="serif" style="margin-top:8px">Agent-Teams</h3>
-        <p>Mehrere Agents, die zusammen arbeiten. Rollen, Übergaben, Orchestrierung. Wann das funktioniert und wann nicht.</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Agent-Teams</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Agent Teams</h3>
+        <p data-de>Mehrere Agents, die zusammen arbeiten. Rollen, &Uuml;bergaben, Orchestrierung. Wann das funktioniert und wann nicht.</p>
+        <p data-en>Multiple agents working together. Roles, handoffs, orchestration. When this works and when it doesn't.</p>
       </div>
       <div class="card">
         <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">07</p>
-        <h3 class="serif" style="margin-top:8px">Was kommt danach?</h3>
-        <p>Wohin sich Agentic AI bewegt. Welche Trends bleiben, welche verschwinden, was du jetzt schon einüben solltest.</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Was kommt danach?</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>What comes next?</h3>
+        <p data-de>Wohin sich Agentic AI bewegt. Welche Trends bleiben, welche verschwinden, was du jetzt schon ein&uuml;ben solltest.</p>
+        <p data-en>Where Agentic AI is heading. Which trends stay, which disappear, what you should practice right now.</p>
       </div>
       <div class="card">
-        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">∞</p>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">&#x221E;</p>
         <h3 class="serif" style="margin-top:8px">Iteration</h3>
-        <p>Dein erster Agent ist nie fertig. Wie du ihn pflegst, nachschärfst und Schritt für Schritt zu einem ernsthaften Werkzeug machst.</p>
+        <p data-de>Dein erster Agent ist nie fertig. Wie du ihn pflegst, nachsch&auml;rfst und Schritt f&uuml;r Schritt zu einem ernsthaften Werkzeug machst.</p>
+        <p data-en>Your first agent is never done. How to maintain it, sharpen it, and step by step make it a serious tool.</p>
       </div>
     </div>
 
     <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
-      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> ZURÜCK ZU 01</a>
-      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> ZURÜCK ZU 02</a>
-      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> ZURÜCK ZU 03</a>
-      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> ZURÜCK ZU 04</a>
-      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)">LEHRTAFEL 06 ANFORDERN <span class="arrow">┌──→</span></a>
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&Uuml;CK ZU 01</span><span data-en>BACK TO 01</span></a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&Uuml;CK ZU 02</span><span data-en>BACK TO 02</span></a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&Uuml;CK ZU 03</span><span data-en>BACK TO 03</span></a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&Uuml;CK ZU 04</span><span data-en>BACK TO 04</span></a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-de>LEHRTAFEL 06 ANFORDERN</span><span data-en>REQUEST ARTICLE 06</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
     </div>
   </div>
 </section>
 
-<!-- =========================== FOOTER =========================== -->
-<footer>
+<!-- ===== FOOTER ===== -->
+<footer class="footer-codex">
   <div class="wrap">
-    <div class="row">
-      <span>● CODEX LEHRTAFEL · 05</span>
-      <span>STAND · 2026-05</span>
-      <span>VERSION · v.2026.05 · DRAFT</span>
+    <div class="footer-grid-c">
+      <div>
+        <div class="footer-brand-c">Readix<span style="color:var(--copper)">.</span></div>
+        <div class="footer-brand-sub-c">Learn &middot; learn.readix.net</div>
+        <p class="footer-desc-c" data-de>Illustrierte Erkl&auml;rungen zu KI, Agenten und den Technologien, die unsere Arbeit neu definieren. Kein Hype. Keine Vereinfachung.</p>
+        <p class="footer-desc-c" data-en>Illustrated explanations of AI, agents, and the technologies redefining how we work. No hype. No oversimplification.</p>
+      </div>
+      <div>
+        <div class="footer-col-head-c" data-de>Alle Lehrtafeln</div>
+        <div class="footer-col-head-c" data-en>All Articles</div>
+        <div class="footer-links-c">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="footer-link-c">01 &middot; <span data-de>Was ist AI?</span><span data-en>What is AI?</span></a>
+          <a href="./02_wie-ein-agent-denkt.html"        class="footer-link-c">02 &middot; <span data-de>Wie ein Agent denkt</span><span data-en>How an Agent Thinks</span></a>
+          <a href="./03_tools-mcps-plugins.html"         class="footer-link-c">03 &middot; <span data-de>Tools, MCPs &amp; Plugins</span><span data-en>Tools, MCPs &amp; Plugins</span></a>
+          <a href="./04_risiko-und-trust.html"           class="footer-link-c">04 &middot; <span data-de>Risiko und Trust</span><span data-en>Risk and Trust</span></a>
+          <a href="./05_dein-erster-agent.html"          class="footer-link-c" style="color:var(--copper)">05 &middot; <span data-de>Erster Agent</span><span data-en>First Agent</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c" data-de>Bald verf&uuml;gbar</div>
+        <div class="footer-col-head-c" data-en>Coming soon</div>
+        <div class="footer-links-c">
+          <span class="footer-link-c dim">06 &middot; <span data-de>Agent-Teams</span><span data-en>Agent Teams</span></span>
+          <span class="footer-link-c dim">07 &middot; <span data-de>KI in der Praxis</span><span data-en>AI in Practice</span></span>
+          <span class="footer-link-c dim">08 &middot; <span data-de>Was kommt danach?</span><span data-en>What comes next?</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c">Readix</div>
+        <div class="footer-links-c">
+          <a href="https://readix.net"          class="footer-link-c">readix.net</a>
+          <a href="https://readix.net/platform" class="footer-link-c"><span data-de>Die Plattform</span><span data-en>The Platform</span></a>
+          <a href="./index.html"                class="footer-link-c">&#x2190; <span data-de>Alle Tafeln</span><span data-en>All Articles</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-c">
+      <div class="footer-meta-c"><span class="cu">Readix</span> &middot; <span data-de>Lehrtafel</span><span data-en>Article</span> 05 &middot; v.2026.05 &middot; learn.readix.net</div>
+      <button class="motion-btn-c" id="motion-btn" onclick="toggleMotion()">Motion: <span id="motion-state">On</span></button>
     </div>
   </div>
 </footer>
 
 <script>
+// ========== Language Toggle ==========
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'Your first agent · Codex Article 05'
+    : 'Dein erster Agent · Codex Lehrtafel 05';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  // re-render the active demo stage so its data-de/data-en responds to the new class
+  var activeTab = document.querySelector('#demo-tabs .demo-tab.active');
+  if (activeTab) renderStage(parseInt(activeTab.dataset.step, 10));
+}
+
+// ========== Motion Toggle ==========
+function toggleMotion() {
+  var body = document.body;
+  var state = document.getElementById('motion-state');
+  var on = !body.classList.contains('no-motion');
+  body.classList.toggle('no-motion', on);
+  if (state) state.textContent = on ? 'Off' : 'On';
+  try { localStorage.setItem('rl-motion', on ? 'off' : 'on'); } catch(e) {}
+}
+
+// ========== Init prefs ==========
+(function initPrefs() {
+  try {
+    if (localStorage.getItem('rl-motion') === 'off') {
+      document.body.classList.add('no-motion');
+      var el = document.getElementById('motion-state');
+      if (el) el.textContent = 'Off';
+    }
+    var savedLang = localStorage.getItem('rl-lang');
+    if (savedLang === 'en') setLang('en');
+  } catch(e) {}
+})();
+
 // ============== Live-Builder Demo ==============
 const stages = [
   {
-    label: 'PHASE 01 · ZIEL',
-    title: 'Ein Satz, der das Ergebnis beschreibt.',
-    text: 'Wir formulieren das Ziel so, dass es nicht das Verfahren beschreibt, sondern das gewünschte Ergebnis. Konkret, prüfbar, in einem Satz. Der Agent leitet daraus seinen Plan ab.',
+    label: '<span data-de>PHASE 01 &middot; ZIEL</span><span data-en>PHASE 01 &middot; GOAL</span>',
+    title: '<span data-de>Ein Satz, der das Ergebnis beschreibt.</span><span data-en>One sentence that describes the result.</span>',
+    text:  '<span data-de>Wir formulieren das Ziel so, dass es nicht das Verfahren beschreibt, sondern das gew&uuml;nschte Ergebnis. Konkret, pr&uuml;fbar, in einem Satz. Der Agent leitet daraus seinen Plan ab.</span><span data-en>We write the goal so it describes the desired result, not the procedure. Concrete, verifiable, in one sentence. The agent derives its plan from this.</span>',
     code: `// agent.config.json
 {
-  "goal": "Liste der 5 wichtigsten Wettbewerber-News der letzten 7 Tage,
-           mit Quelle, Kurzfassung und Relevanz-Score 1-5.",
+  "goal": "List of the 5 most important competitor news items
+           of the last 7 days, with source, summary and
+           relevance score 1-5.",
   "frequency": "weekly · Monday 08:00 Europe/Berlin",
   "delivery": "Slack-Channel #competitive-intel"
 }`,
-    meta: ['ZIELLÄNGE · 1 SATZ','PRÜFBAR · JA']
+    meta: ['<span data-de>ZIELL&Auml;NGE &middot; 1 SATZ</span><span data-en>GOAL LENGTH &middot; 1 SENTENCE</span>','<span data-de>PR&Uuml;FBAR &middot; JA</span><span data-en>VERIFIABLE &middot; YES</span>']
   },
   {
-    label: 'PHASE 02 · ERFOLG',
-    title: 'Wie sieht ein guter Run aus?',
-    text: 'Vor dem ersten Tool-Call muss klar sein, woran wir Erfolg erkennen. Mindestens 5 Treffer, jeder mit Quelle, Tonalität neutral, Lieferung pünktlich. Was nicht messbar ist, wird nicht besser.',
+    label: '<span data-de>PHASE 02 &middot; ERFOLG</span><span data-en>PHASE 02 &middot; SUCCESS</span>',
+    title: '<span data-de>Wie sieht ein guter Run aus?</span><span data-en>What does a good run look like?</span>',
+    text:  '<span data-de>Vor dem ersten Tool-Call muss klar sein, woran wir Erfolg erkennen. Mindestens 5 Treffer, jeder mit Quelle, Tonalit&auml;t neutral, Lieferung p&uuml;nktlich. Was nicht messbar ist, wird nicht besser.</span><span data-en>Before the first tool call it must be clear how we recognize success. At least 5 results, each with source, tone neutral, delivery on time. What cannot be measured cannot be improved.</span>',
     code: `// success_criteria.json
 {
   "min_results": 5,
@@ -542,12 +795,12 @@ const stages = [
   "delivery_window": "Mo 08:00 ± 30min",
   "human_review_within": "30min"
 }`,
-    meta: ['KRITERIEN · 6','MESSBAR · ALLE']
+    meta: ['<span data-de>KRITERIEN &middot; 6</span><span data-en>CRITERIA &middot; 6</span>','<span data-de>MESSBAR &middot; ALLE</span><span data-en>MEASURABLE &middot; ALL</span>']
   },
   {
-    label: 'PHASE 03 · TOOLS',
-    title: 'Drei bis sieben, jedes mit engem Scope.',
-    text: 'Wir wählen die kleinste sinnvolle Tool-Liste. Jedes mit klarer Beschreibung, jedem die minimal nötige Berechtigung. Mehr Tools heißt nicht besserer Agent, sondern verwirrteres Modell.',
+    label: '<span data-de>PHASE 03 &middot; TOOLS</span><span data-en>PHASE 03 &middot; TOOLS</span>',
+    title: '<span data-de>Drei bis sieben, jedes mit engem Scope.</span><span data-en>Three to seven, each with a narrow scope.</span>',
+    text:  '<span data-de>Wir w&auml;hlen die kleinste sinnvolle Tool-Liste. Jedes mit klarer Beschreibung, jedem die minimal n&ouml;tige Berechtigung. Mehr Tools hei&szlig;t nicht besserer Agent, sondern verwirrteres Modell.</span><span data-en>We choose the smallest sensible tool list. Each with a clear description, each with the minimum required permissions. More tools does not mean a better agent -- it means a more confused model.</span>',
     code: `// tools.json
 [
   { "name": "news_search",     "scope": "read",  "rate": "60/min" },
@@ -556,12 +809,12 @@ const stages = [
   { "name": "llm_summarize",   "scope": "model", "tone": "neutral" },
   { "name": "slack_post",      "scope": "write", "channel": "competitive-intel" }
 ]`,
-    meta: ['TOOLS · 5','SCOPES · 4 READ, 1 WRITE']
+    meta: ['TOOLS &middot; 5','<span data-de>SCOPES &middot; 4 READ, 1 WRITE</span><span data-en>SCOPES &middot; 4 READ, 1 WRITE</span>']
   },
   {
-    label: 'PHASE 04 · SCHUTZ',
-    title: 'Limits, Gates, Notbremse.',
-    text: 'Aus Tafel 04 übernommen: Step-Limit, Token-Budget, Approval vor jedem Slack-Post, Audit-Log für jede Entscheidung. Eskalation an dich, wenn Anomalien auftreten.',
+    label: '<span data-de>PHASE 04 &middot; SCHUTZ</span><span data-en>PHASE 04 &middot; PROTECTION</span>',
+    title: '<span data-de>Limits, Gates, Notbremse.</span><span data-en>Limits, gates, emergency stop.</span>',
+    text:  '<span data-de>Aus Tafel 04 &uuml;bernommen: Step-Limit, Token-Budget, Approval vor jedem Slack-Post, Audit-Log f&uuml;r jede Entscheidung. Eskalation an dich, wenn Anomalien auftreten.</span><span data-en>Carried over from Article 04: step limit, token budget, approval before every Slack post, audit log for every decision. Escalation to you when anomalies occur.</span>',
     code: `// guardrails.json
 {
   "max_steps": 25,
@@ -572,42 +825,45 @@ const stages = [
   "audit_log": "drive://logs/competitive-intel/",
   "escalate_on": ["timeout", "tool_error_rate>20%"]
 }`,
-    meta: ['LIMITS · 3','GATES · 1','LOG · AKTIV']
+    meta: ['<span data-de>LIMITS &middot; 3</span><span data-en>LIMITS &middot; 3</span>','GATES &middot; 1','LOG &middot; <span data-de>AKTIV</span><span data-en>ACTIVE</span>']
   },
   {
-    label: 'PHASE 05 · RUN',
-    title: 'Drei Tests, dann live.',
-    text: 'Wir starten mit drei Test-Runs an drei verschiedenen Wochen aus dem Archiv. Erst wenn alle drei das Erfolgsmaß treffen, läuft er produktiv. Erste produktive Wochen mit Stichproben, dann auf Auto.',
-    code: `// run.log (Auszug)
+    label: '<span data-de>PHASE 05 &middot; RUN</span><span data-en>PHASE 05 &middot; RUN</span>',
+    title: '<span data-de>Drei Tests, dann live.</span><span data-en>Three tests, then live.</span>',
+    text:  '<span data-de>Wir starten mit drei Test-Runs an drei verschiedenen Wochen aus dem Archiv. Erst wenn alle drei das Erfolgsma&szlig; treffen, l&auml;uft er produktiv. Erste produktive Wochen mit Stichproben, dann auf Auto.</span><span data-en>We start with three test runs on three different archived weeks. Only when all three meet the success metric does it run in production. First production weeks with spot checks, then on auto.</span>',
+    code: `// run.log (excerpt)
 [2026-05-04 09:14] TEST RUN 1/3
-  → 6 News, 6 Quellen, 0 Halluzinationen
+  → 6 news, 6 sources, 0 hallucinations
   → Score: 5/5  ✓
 [2026-05-04 09:21] TEST RUN 2/3
-  → 5 News, 5 Quellen, 1 Doppel-Treffer (dedup ergänzt)
+  → 5 news, 5 sources, 1 duplicate (dedup added)
   → Score: 4/5  → fix → re-test
 [2026-05-04 09:28] TEST RUN 3/3
-  → 5 News, 5 Quellen, 0 Halluzinationen
+  → 5 news, 5 sources, 0 hallucinations
   → Score: 5/5  ✓
 [2026-05-11 08:02] PRODUCTION RUN 1
-  → ok · gepostet · 4 min Laufzeit · 0.42 EUR`,
-    meta: ['TESTS · 3/3','LIVE · WOCHE 1']
+  → ok · posted · 4 min runtime · 0.42 EUR`,
+    meta: ['TESTS &middot; 3/3','LIVE &middot; <span data-de>WOCHE 1</span><span data-en>WEEK 1</span>']
   }
 ];
 
 const tabs = document.querySelectorAll('#demo-tabs .demo-tab');
 const body = document.getElementById('demo-body');
-function renderStage(idx){
-  tabs.forEach((t,i)=>t.classList.toggle('active', i===idx));
+
+function renderStage(idx) {
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
   const s = stages[idx];
-  body.innerHTML = `
-    <div class="demo-label">${s.label}</div>
-    <div class="demo-title">${s.title}</div>
-    <div class="demo-text">${s.text}</div>
-    <pre class="demo-code">${s.code}</pre>
-    <div class="demo-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
-  `;
+  body.innerHTML =
+    '<div class="demo-label">' + s.label + '</div>' +
+    '<div class="demo-title">' + s.title + '</div>' +
+    '<div class="demo-text">'  + s.text  + '</div>' +
+    '<pre class="demo-code">'  + s.code  + '</pre>' +
+    '<div class="demo-meta">'  + s.meta.map(function(m){ return '<span>' + m + '</span>'; }).join('') + '</div>';
 }
-tabs.forEach((t,i)=>t.addEventListener('click', ()=>renderStage(i)));
+
+tabs.forEach(function(t, i) {
+  t.addEventListener('click', function() { renderStage(i); });
+});
 renderStage(0);
 </script>
 
