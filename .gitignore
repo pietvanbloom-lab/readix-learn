@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Working copies / drafts
+Copies/
+
+# Design system source (lives in readix-research-analytics)
+Engineering Codex Design System/
+
+# Editors
+.vscode/
+*.swp
+*~
