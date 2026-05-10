@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 24px; background: var(--ink-black); }
+  .card { background: var(--paper-warm); border: 1px solid var(--border-on-paper); padding: 28px; box-shadow: 0 18px 36px -12px rgba(60,40,20,0.18); position: relative; }
+  .card::after { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.08'/></svg>"); pointer-events:none; mix-blend-mode: multiply; }
+  .eb { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--copper-deep); }
+  .h { font-family: var(--font-display); font-size: 28px; letter-spacing: -0.01em; color: var(--fg-on-paper); margin-top: 8px; }
+  .it { font-family: var(--font-display); font-style: italic; font-size: 16px; color: var(--fg-on-paper-mute); margin-top: 4px; }
+  .fig { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; color: var(--fg-on-paper-mute); margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eb">● TIER 01</div>
+  <div class="h">The Brief</div>
+  <div class="it">the rapid response</div>
+  <div class="fig">FIG 0.1 · 8-page PDF, 5–10 sources, 48h turnaround</div>
+</div>
+</body>
+</html>

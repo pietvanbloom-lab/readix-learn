@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wie ein Agent denkt · Codex Lehrtafel 02</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#0E1116;
+  --canvas-2:#161B22;
+  --parchment:#F2EBDB;
+  --parchment-2:#E8DFC9;
+  --ink:#0B0E13;
+  --ink-soft:#2A2F38;
+  --paper-text:#1A1D23;
+  --copper:#B87333;
+  --copper-bright:#D08A45;
+  --rule:#3A3F47;
+  --rule-light:#C9C0A8;
+  --plan:#5B7FAA;
+  --act:#B87333;
+  --observe:#5BAA6F;
+  --blood:#8B3A3A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--canvas);color:#E8E6DF;font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+.lora{font-family:'Lora',serif}
+
+/* Layout */
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--rule)}
+section.parchment{background:var(--parchment);color:var(--paper-text);border-top:1px solid var(--rule-light)}
+section.parchment .eyebrow{color:var(--copper)}
+section.parchment .rule{background:var(--copper)}
+section.parchment .num{color:var(--copper)}
+
+/* Eyebrow */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--copper);display:inline-block}
+.eyebrow .num{font-weight:600}
+
+/* Headlines */
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(48px,7vw,96px);line-height:1.02;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:#CFCDC4}
+section.parchment .kicker{color:#3A3D44}
+
+/* Rule */
+.rule{height:1px;background:var(--rule);margin:24px 0}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+/* Hero */
+.hero{padding:120px 0 80px}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:64px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9C9A92;letter-spacing:.06em;text-transform:uppercase}
+.hero .meta span{display:block}
+
+/* CTA */
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s}
+.cta:hover{background:var(--copper);color:var(--canvas)}
+.cta .arrow{font-family:'JetBrains Mono',monospace}
+
+/* Two-col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+/* Card */
+.card{border:1px solid var(--rule);padding:32px;background:var(--canvas-2)}
+section.parchment .card{border:1px solid var(--rule-light);background:var(--parchment-2)}
+.card h3{margin-bottom:16px}
+.card p{font-size:15px;color:#C7C5BD}
+section.parchment .card p{color:#3A3D44}
+
+/* Comparison Table */
+.compare{width:100%;border-collapse:collapse;font-size:14px;font-family:'Inter',sans-serif}
+.compare th,.compare td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--rule-light);vertical-align:top}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#7C7468;width:160px;font-weight:500}
+.compare tr:hover td{background:rgba(184,115,51,.06)}
+
+/* Diagramm Layout */
+.diagram-wrap{padding:40px;border:1px solid var(--rule);background:var(--canvas-2);position:relative}
+section.parchment .diagram-wrap{border:1px solid var(--rule-light);background:var(--parchment-2)}
+
+/* Loop interaktiv */
+.loop-stage{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);margin-top:24px}
+section.parchment .loop-stage{border-color:var(--rule-light);background:var(--parchment-2)}
+.loop-cell{padding:32px;border-right:1px solid var(--rule);transition:all .35s;cursor:pointer}
+section.parchment .loop-cell{border-right-color:var(--rule-light)}
+.loop-cell:last-child{border-right:none}
+.loop-cell.active{background:rgba(184,115,51,.1)}
+.loop-cell .step-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px;color:#9C9A92}
+section.parchment .loop-cell .step-label{color:#7C7468}
+.loop-cell.active .step-label{color:var(--copper)}
+.loop-cell .step-title{font-family:'Source Serif 4',serif;font-size:24px;color:#E8E6DF;margin-bottom:12px;line-height:1.2}
+section.parchment .loop-cell .step-title{color:#1A1D23}
+.loop-cell .step-desc{font-size:14px;line-height:1.55;color:#C7C5BD}
+section.parchment .loop-cell .step-desc{color:#3A3D44}
+
+/* Trace Live-Demo */
+.trace{border:1px solid var(--rule);background:var(--canvas-2);overflow:hidden;margin-top:24px}
+.trace-header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--rule);background:var(--canvas);gap:24px;flex-wrap:wrap}
+.trace-controls{display:flex;gap:12px;align-items:center}
+.trace-btn{padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);background:transparent;cursor:pointer}
+.trace-btn:hover{background:var(--copper);color:var(--canvas)}
+.trace-btn.primary{background:var(--copper);color:var(--canvas)}
+.trace-progress{flex:1;height:2px;background:var(--rule);position:relative;margin:0 16px;min-width:200px}
+.trace-progress .bar{height:2px;background:var(--copper);width:0;transition:width .4s ease}
+.trace-body{display:grid;grid-template-columns:280px 1fr;min-height:480px}
+@media(max-width:880px){.trace-body{grid-template-columns:1fr}}
+.trace-timeline{border-right:1px solid var(--rule);padding:14px 0;overflow-y:auto;max-height:480px}
+.trace-step{padding:12px 24px;border-left:3px solid transparent;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:#7C7468;transition:all .15s}
+.trace-step:hover{background:rgba(184,115,51,.06);color:#C7C5BD}
+.trace-step.done{color:#9C9A92}
+.trace-step.active{border-left-color:var(--copper);background:rgba(184,115,51,.08);color:var(--copper)}
+.trace-step .num{display:inline-block;width:24px;color:#5C5851}
+.trace-step.active .num{color:var(--copper)}
+.trace-step .tag{display:inline-block;padding:2px 6px;margin-left:8px;font-size:9px;letter-spacing:.1em}
+.tag-plan{color:var(--plan);border:1px solid var(--plan)}
+.tag-act{color:var(--act);border:1px solid var(--act)}
+.tag-observe{color:var(--observe);border:1px solid var(--observe)}
+.trace-detail{padding:32px}
+.trace-detail .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+.trace-detail .head{font-family:'Source Serif 4',serif;font-size:24px;color:#E8E6DF;margin-bottom:14px;line-height:1.25}
+.trace-detail .body{font-size:15px;line-height:1.65;color:#C7C5BD;margin-bottom:18px}
+.trace-detail .quote{border-left:2px solid var(--copper);padding:12px 18px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#D8D4C7;background:var(--canvas);margin-bottom:18px;white-space:pre-wrap;line-height:1.7}
+.trace-detail .meta{display:flex;gap:20px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#7C7468;text-transform:uppercase;letter-spacing:.12em;margin-top:20px;padding-top:14px;border-top:1px solid var(--rule);flex-wrap:wrap}
+
+/* Use cases grid */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:880px){.grid-3{grid-template-columns:1fr}}
+
+/* Fail boxen */
+.fail-box{padding:22px;border:1px solid var(--blood);background:rgba(139,58,58,.08)}
+.fail-box.ok{border-color:var(--copper);background:rgba(184,115,51,.06)}
+.fail-box .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#D08A8A;margin-bottom:10px}
+.fail-box.ok .label{color:var(--copper)}
+.fail-box .msg{font-family:'JetBrains Mono',monospace;font-size:13px;color:#1A1D23;line-height:1.7}
+
+/* Glossar */
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:20px 0;border-bottom:1px solid var(--rule)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:16px;line-height:1.55;color:#C7C5BD}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+/* Footer */
+footer{padding:64px 0;border-top:1px solid var(--rule);background:var(--canvas)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7C7468;text-transform:uppercase;letter-spacing:.12em}
+
+/* Animationen */
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+.spin-slow{animation:spin 14s linear infinite;transform-origin:240px 180px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Big number */
+.bignum{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+
+/* ─── Nav (Codex) ─── */
+nav{position:sticky;top:0;z-index:200;height:56px;background:var(--canvas);border-bottom:1px solid #2E3440;display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:#E8E6DF;line-height:1}
+.wm-rule-v{width:1px;height:18px;background:#2E3440;flex-shrink:0}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8A8F99;transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#E8E6DF;border:1px solid #2E3440;padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* ─── Parchment grain ─── */
+section.parchment{position:relative;overflow:hidden}
+section.parchment::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+section.parchment>.wrap{position:relative;z-index:1}
+
+
+/* ─── Footer (Codex) ─── */
+.footer-codex{background:var(--canvas);border-top:1px solid #2E3440;padding:64px 0 40px}
+.footer-grid-c{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:48px}
+.footer-brand-c{font-family:'Source Serif 4',serif;font-size:26px;font-weight:600;letter-spacing:-.025em;color:#E8E6DF;line-height:1;margin-bottom:4px}
+.footer-brand-sub-c{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:20px}
+.footer-desc-c{font-family:'Lora',serif;font-size:14px;line-height:1.65;color:#8A8F99}
+.footer-col-head-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8A8F99;margin-bottom:20px}
+.footer-links-c{display:flex;flex-direction:column;gap:12px}
+.footer-link-c{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:#8A8F99;transition:color .15s}
+.footer-link-c:hover{color:var(--copper)}
+.footer-link-c.dim{opacity:.5;pointer-events:none}
+.footer-bottom-c{border-top:1px solid #2E3440;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-meta-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8A8F99}
+.footer-meta-c .cu{color:var(--copper)}
+.motion-btn-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid #2E3440;color:#8A8F99;padding:6px 14px;cursor:pointer;transition:border-color .15s,color .15s}
+.motion-btn-c:hover{border-color:var(--copper);color:var(--copper)}
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{transition:none!important;animation:none!important}
+
+/* ─── Language Toggle ─── */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:#8A8F99;font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--rule);color:#8A8F99;padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+</style>
+</head>
+<body>
+
+<nav aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back"><span data-de>&#x2190; Alle Tafeln</span><span data-en>&#x2190; All Articles</span></a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link"><span data-de>01 &#x2192; Was ist AI?</span><span data-en>01 &#x2192; What is AI?</span></a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link"><span data-de>03 &#x2192; Tools &amp; MCPs</span><span data-en>03 &#x2192; Tools &amp; MCPs</span></a>
+      <a href="./04_risiko-und-trust.html" class="nav-link"><span data-de>04 &#x2192; Risiko &amp; Trust</span><span data-en>04 &#x2192; Risk &amp; Trust</span></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-lang">
+        <button class="lang-btn" id="btn-de" aria-pressed="true" onclick="setLang('de')">DE</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" id="btn-en" aria-pressed="false" onclick="setLang('en')">EN</button>
+      </div>
+      <a href="https://readix.net" class="nav-cta-a" style="margin-left:12px">Readix Platform &#x250C;&#x2500;&#x2500;&#x2192;</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 02</span><span data-de>&#xB7; LEHRTAFEL &#xB7; DAS DENKEN</span><span data-en>&#xB7; ARTICLE &#xB7; THINKING</span></div>
+    <h1 class="serif">
+      <span data-de>Wie ein Agent<br/><em style="font-style:italic;color:var(--copper-bright)">denkt</em>.</span>
+      <span data-en>How an Agent<br/><em style="font-style:italic;color:var(--copper-bright)">thinks</em>.</span>
+    </h1>
+    <p class="kicker" data-de>Du gibst ein Ziel und wartest. Zw&#246;lf Sekunden sp&#228;ter steht ein Ergebnis. Was passiert dazwischen? Diese Lehrtafel &#246;ffnet die Black Box, Schritt f&#252;r Schritt: der Loop, die innere Stimme, das Ged&#228;chtnis und der Live-Trace eines echten Agent-Runs.</p>
+    <p class="kicker" data-en>You give a goal and wait. Twelve seconds later, a result appears. What happens in between? This article opens the black box, step by step: the loop, the inner voice, memory, and a live trace of a real agent run.</p>
+    <div style="margin-top:48px">
+      <a class="cta" href="#kapitel-1"><span data-de>START LESEN</span><span data-en>START READING</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+    </div>
+    <div class="meta">
+      <span><span data-de>FILE &#xB7; 02 / SERIE AI &amp; AGENTIC EXPLAINED</span><span data-en>FILE &#xB7; 02 / SERIES AI &amp; AGENTIC EXPLAINED</span></span>
+      <span><span data-de>LESEZEIT &#xB7; 10 MINUTEN</span><span data-en>READING TIME &#xB7; 10 MINUTES</span></span>
+      <span>VERSION &#xB7; v0.1</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 1: DER LOOP =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 03</span><span data-de>&#xB7; DAS HERZST&#xDC;CK</span><span data-en>&#xB7; THE CORE</span></div>
+    <h2 class="serif" data-de>Drei Schritte.<br/>Eine Schleife.</h2>
+    <h2 class="serif" data-en>Three Steps.<br/>One Loop.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Was wir Denken nennen, ist beim Agent kein Mysterium. Es ist ein Mechanismus aus drei Bewegungen, die sich wiederholen, bis ein Ziel erreicht ist. In der Forschung hei&#223;t er <em>Plan, Act, Observe</em>. Auf Deutsch: Planen, Handeln, Beobachten.</p>
+    <p class="kicker lora" data-en>What we call thinking is no mystery for an agent. It&#x2019;s a mechanism of three movements that repeat until a goal is reached. In research it&#x2019;s called <em>Plan, Act, Observe</em>.</p>
+
+    <div class="two" style="margin-top:64px">
+      <div>
+        <h3 class="serif" data-de>Was im Loop passiert</h3>
+        <h3 class="serif" data-en>What happens in the loop</h3>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6;color:#3A3D44" data-de>Der Agent zerlegt dein Ziel in Schritte. Er f&#252;hrt einen aus. Er pr&#252;ft das Ergebnis. Wenn es passt, geht es weiter. Wenn nicht, plant er um. Dieser Drei-Takt ist die Grundeinheit jeder Agent-Architektur. Manchmal gen&#252;gen drei Schleifen. Manchmal braucht es vierzig.</p>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6;color:#3A3D44" data-en>The agent breaks down your goal into steps. It executes one. It checks the result. If it fits, it continues. If not, it replans. This three-beat is the basic unit of every agent architecture. Sometimes three loops suffice. Sometimes it takes forty.</p>
+        <div class="rule" style="background:var(--rule-light)"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);text-transform:uppercase;letter-spacing:.14em">FORMEL</p>
+        <p class="mono" style="font-size:14px;color:#3A3D44;margin-top:8px">PLAN &nbsp;&#x250C;&#x2500;&#x2500;&#x2192;&nbsp; ACT &nbsp;&#x250C;&#x2500;&#x2500;&#x2192;&nbsp; OBSERVE &nbsp;&#x21BA;</p>
+      </div>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 480 360" style="width:100%">
+          <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L8,5 L0,10 z" fill="#B87333"/>
+            </marker>
+          </defs>
+
+          <text x="240" y="36" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#B87333" letter-spacing="2">PLAN · ACT · OBSERVE · LOOP</text>
+          <line x1="80" y1="50" x2="400" y2="50" stroke="#B87333" stroke-width="1"/>
+
+          <g class="spin-slow">
+            <circle cx="240" cy="180" r="120" fill="none" stroke="#B87333" stroke-width="1" stroke-dasharray="3 4"/>
+          </g>
+
+          <rect x="180" y="80" width="120" height="50" fill="#F2EBDB" stroke="#B87333" stroke-width="2"/>
+          <text x="240" y="103" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#1A1D23">PLAN</text>
+          <text x="240" y="119" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7C7468">ZERLEGEN</text>
+
+          <rect x="320" y="200" width="120" height="50" fill="#F2EBDB" stroke="#B87333" stroke-width="2"/>
+          <text x="380" y="223" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#1A1D23">ACT</text>
+          <text x="380" y="239" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7C7468">HANDELN</text>
+
+          <rect x="40" y="200" width="120" height="50" fill="#F2EBDB" stroke="#B87333" stroke-width="2"/>
+          <text x="100" y="223" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#1A1D23">OBSERVE</text>
+          <text x="100" y="239" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7C7468">PR&#220;FEN</text>
+
+          <path d="M 300 110 Q 380 140 380 198" fill="none" stroke="#B87333" stroke-width="1.5" marker-end="url(#arr1)" class="flow"/>
+          <path d="M 320 240 Q 240 300 160 240" fill="none" stroke="#B87333" stroke-width="1.5" marker-end="url(#arr1)" class="flow"/>
+          <path d="M 100 198 Q 100 140 180 110" fill="none" stroke="#B87333" stroke-width="1.5" marker-end="url(#arr1)" class="flow"/>
+
+          <circle cx="240" cy="180" r="4" fill="#B87333" class="pulse"/>
+
+          <text x="240" y="340" text-anchor="middle" font-family="Lora" font-style="italic" font-size="13" fill="#3A3D44" id="svg-caption">Drei Schritte. Beliebig viele Runden.</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="loop-stage" id="loop-stage">
+      <div class="loop-cell active" data-step="plan">
+        <div class="step-label"><span data-de>01 &#xB7; PLAN</span><span data-en>01 &#xB7; PLAN</span></div>
+        <div class="step-title"><span data-de>Er denkt laut.</span><span data-en>It thinks out loud.</span></div>
+        <div class="step-desc"><span data-de>Der Agent zerlegt dein Ziel. Welche Schritte braucht es? Welcher zuerst? Was h&#228;ngt wovon ab? Hier entstehen Hypothesen, bevor irgendetwas Echtes geschieht.</span><span data-en>The agent breaks down your goal. What steps does it need? Which first? What depends on what? Hypotheses are formed here before anything real happens.</span></div>
+      </div>
+      <div class="loop-cell" data-step="act">
+        <div class="step-label"><span data-de>02 &#xB7; ACT</span><span data-en>02 &#xB7; ACT</span></div>
+        <div class="step-title"><span data-de>Er greift zum Werkzeug.</span><span data-en>It reaches for the tool.</span></div>
+        <div class="step-desc"><span data-de>Aus Plan wird Tat. Der Agent ruft ein Tool auf. Sucht im Web. Schreibt eine Email. Liest aus der Datenbank. F&#252;hrt Code aus. Ber&#252;hrt die Realit&#228;t.</span><span data-en>Plan becomes action. The agent calls a tool. Searches the web. Writes an email. Reads from the database. Executes code. Touches reality.</span></div>
+      </div>
+      <div class="loop-cell" data-step="observe">
+        <div class="step-label"><span data-de>03 &#xB7; OBSERVE</span><span data-en>03 &#xB7; OBSERVE</span></div>
+        <div class="step-title"><span data-de>Er pr&#252;ft das Ergebnis.</span><span data-en>It checks the result.</span></div>
+        <div class="step-desc"><span data-de>Hat es geklappt? Steht da, was gehofft war? Oder kam M&#252;ll zur&#252;ck? Hier entscheidet sich, ob der n&#228;chste Plan reicht oder alles neu gedacht werden muss.</span><span data-en>Did it work? Is what was hoped for there? Or did garbage come back? Here it decides whether the next plan suffices or everything must be rethought.</span></div>
+      </div>
+    </div>
+    <p class="mono" style="margin-top:18px;font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-de>&#x250C;&#x2500;&#x2500;&#x2192; KLICKEN ZUM HALTEN. AUTO-WECHSEL ALLE 3 SEKUNDEN.</span><span data-en>&#x250C;&#x2500;&#x2500;&#x2192; CLICK TO PAUSE. AUTO-SWITCH EVERY 3 SECONDS.</span></p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 2: CHAIN OF THOUGHT =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 04</span><span data-de>&#xB7; DAS LAUTE DENKEN</span><span data-en>&#xB7; THINKING OUT LOUD</span></div>
+    <h2 class="serif" data-de>Bevor er handelt,<br/>redet er <em style="color:var(--copper-bright);font-style:italic">mit sich</em>.</h2>
+    <h2 class="serif" data-en>Before it acts,<br/>it talks <em style="color:var(--copper-bright);font-style:italic">to itself</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker" data-de>Im Plan-Schritt f&#252;hrt der Agent einen inneren Monolog. Er notiert Schritte, verwirft sie, ordnet sie neu. In der Fachwelt hei&#223;t das Chain of Thought, eine Kette aus Gedanken. Je l&#228;nger sie wird, desto kl&#252;ger die Schlussfolgerung am Ende.</p>
+    <p class="kicker" data-en>In the Plan step, the agent runs an inner monologue. It notes steps, discards them, reorders them. In the field this is called Chain of Thought, a chain of thoughts. The longer it gets, the smarter the conclusion at the end.</p>
+
+    <div class="two" style="margin-top:64px">
+      <div class="diagram-wrap">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em;margin-bottom:18px"><span data-de>CHAIN OF THOUGHT &#xB7; ROHFASSUNG</span><span data-en>CHAIN OF THOUGHT &#xB7; DRAFT</span></p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.85;color:#C7C5BD;background:var(--canvas);padding:22px;border:1px solid var(--rule)">
+          <div data-de>
+            <div><span style="color:var(--copper)">&gt;</span> Ziel: 5 Leads finden, anschreiben.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Schritt 1: ICP kl&#228;ren.</div>
+            <div style="color:#7C7468">  &#x21B3; Branche? Gr&#246;&#223;e? Region?</div>
+            <div><span style="color:var(--copper)">&gt;</span> Schritt 2: Quellen.</div>
+            <div style="color:#7C7468">  &#x21B3; CRM zuerst, dann LinkedIn-Signale.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Halt. CRM hat keine Trigger.</div>
+            <div style="color:#7C7468">  &#x21B3; Plan revidieren: erst LinkedIn.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Schritt 3: Top 5 scoren.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Schritt 4: Personalisieren.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Schritt 5: Approval-Gate.</div>
+            <div style="margin-top:14px;color:#5BAA6F">&#x25A3; PLAN BEREIT.</div>
+          </div>
+          <div data-en>
+            <div><span style="color:var(--copper)">&gt;</span> Goal: find 5 leads, reach out.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Step 1: clarify ICP.</div>
+            <div style="color:#7C7468">  &#x21B3; Industry? Size? Region?</div>
+            <div><span style="color:var(--copper)">&gt;</span> Step 2: sources.</div>
+            <div style="color:#7C7468">  &#x21B3; CRM first, then LinkedIn signals.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Hold. CRM has no triggers.</div>
+            <div style="color:#7C7468">  &#x21B3; Revise plan: LinkedIn first.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Step 3: score top 5.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Step 4: personalize.</div>
+            <div><span style="color:var(--copper)">&gt;</span> Step 5: approval gate.</div>
+            <div style="margin-top:14px;color:#5BAA6F">&#x25A3; PLAN READY.</div>
+          </div>
+        </div>
+        <p class="mono" style="margin-top:14px;font-size:10px;color:#7C7468;letter-spacing:.1em"><span data-de>Auszug &#xB7; Real ist die Kette l&#228;nger.</span><span data-en>Excerpt &#xB7; Real chain is longer.</span></p>
+      </div>
+
+      <div>
+        <h3 class="serif" data-de>Zwei Spielarten</h3>
+        <h3 class="serif" data-en>Two Variants</h3>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em">01 &#xB7; CHAIN OF THOUGHT</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-de>Eine gerade Linie aus Gedanken. Schritt f&#252;r Schritt. Glied f&#252;r Glied. Funktioniert f&#252;r die meisten Aufgaben und ist die Standard-Form jedes modernen Agents.</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-en>A straight line of thoughts. Step by step. Link by link. Works for most tasks and is the standard form of every modern agent.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em">02 &#xB7; TREE OF THOUGHT</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-de>Bei schweren Problemen verzweigt sich die Kette zu einem Baum. Der Agent denkt mehrere Wege parallel, vergleicht sie, schneidet schwache ab und folgt dem besten.</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-en>For hard problems, the chain branches into a tree. The agent thinks multiple paths in parallel, compares them, prunes weak ones, and follows the best.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em"><span data-de>03 &#xB7; WARUM DAS WICHTIG IST</span><span data-en>03 &#xB7; WHY THIS MATTERS</span></p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-de>Ein Modell, das laut denken darf, ist messbar zuverl&#228;ssiger als eines, das direkt antwortet. Wer Agents baut, schaltet diese Schicht nie ab.</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-en>A model allowed to think out loud is measurably more reliable than one that answers directly. Anyone building agents never turns this layer off.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 3: MEMORY VERGLEICHSTABELLE =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 05</span><span data-de>&#xB7; DAS GED&#xC4;CHTNIS</span><span data-en>&#xB7; MEMORY</span></div>
+    <h2 class="serif" data-de>Drei Ged&#228;chtnisse.<br/>Verschiedene Aufgaben.</h2>
+    <h2 class="serif" data-en>Three Memories.<br/>Different Jobs.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Ein Agent ohne Memory ist ein Werkzeug. Ein Agent mit Memory wird zum Mitarbeiter. Der Unterschied liegt nicht in einem Speicher, sondern in drei verschiedenen, die parallel arbeiten und je eine eigene Aufgabe haben.</p>
+    <p class="kicker lora" data-en>An agent without memory is a tool. An agent with memory becomes a colleague. The difference isn&#x2019;t in one store, but in three different ones that work in parallel, each with its own job.</p>
+
+    <div style="margin-top:48px;display:flex;gap:8px;flex-wrap:wrap" id="mem-toggle">
+      <button class="cta" data-view="all" style="padding:10px 16px;font-size:11px"><span data-de>ALLE</span><span data-en>ALL</span></button>
+      <button class="cta" data-view="prop" style="padding:10px 16px;font-size:11px;border-color:#7C7468;color:#7C7468"><span data-de>EIGENSCHAFTEN</span><span data-en>PROPERTIES</span></button>
+      <button class="cta" data-view="usage" style="padding:10px 16px;font-size:11px;border-color:#7C7468;color:#7C7468"><span data-de>VERWENDUNG</span><span data-en>USAGE</span></button>
+    </div>
+
+    <table class="compare" style="margin-top:32px">
+      <thead>
+        <tr>
+          <th><span data-de>DIMENSION</span><span data-en>DIMENSION</span></th>
+          <th style="color:#5B7FAA"><span data-de>KURZZEIT &#xB7; SCRATCHPAD</span><span data-en>SHORT-TERM &#xB7; SCRATCHPAD</span></th>
+          <th style="color:#B87333"><span data-de>SESSION &#xB7; EPISODISCH</span><span data-en>SESSION &#xB7; EPISODIC</span></th>
+          <th style="color:#5BAA6F"><span data-de>LANGZEIT &#xB7; SEMANTISCH</span><span data-en>LONG-TERM &#xB7; SEMANTIC</span></th>
+        </tr>
+      </thead>
+      <tbody id="mem-body">
+        <tr data-cat="prop">
+          <td class="col-label"><span data-de>Lebensdauer</span><span data-en>Lifespan</span></td>
+          <td><span data-de>Eine Aufgabe</span><span data-en>One task</span></td>
+          <td><span data-de>Eine Session</span><span data-en>One session</span></td>
+          <td><span data-de>Permanent</span><span data-en>Permanent</span></td>
+        </tr>
+        <tr data-cat="prop">
+          <td class="col-label"><span data-de>Speicherort</span><span data-en>Location</span></td>
+          <td><span data-de>Im Modell-Kontext</span><span data-en>In model context</span></td>
+          <td><span data-de>Session-State</span><span data-en>Session state</span></td>
+          <td><span data-de>Vektor-DB / Dateien</span><span data-en>Vector DB / Files</span></td>
+        </tr>
+        <tr data-cat="prop">
+          <td class="col-label"><span data-de>Gr&#246;&#223;e</span><span data-en>Size</span></td>
+          <td><span data-de>Wenige tausend Tokens</span><span data-en>A few thousand tokens</span></td>
+          <td><span data-de>Bis zu hunderttausend</span><span data-en>Up to a hundred thousand</span></td>
+          <td><span data-de>Unbegrenzt, indexiert</span><span data-en>Unlimited, indexed</span></td>
+        </tr>
+        <tr data-cat="usage">
+          <td class="col-label"><span data-de>Speichert</span><span data-en>Stores</span></td>
+          <td><span data-de>Aktueller Plan, letzte Tool-Antwort</span><span data-en>Current plan, last tool response</span></td>
+          <td><span data-de>Bisherige Schritte, gegebene Approvals</span><span data-en>Previous steps, given approvals</span></td>
+          <td><span data-de>Vorlieben, Tools, Tonalit&#228;t, Schwellen</span><span data-en>Preferences, tools, tone, thresholds</span></td>
+        </tr>
+        <tr data-cat="usage">
+          <td class="col-label"><span data-de>Gefahr ohne</span><span data-en>Risk without</span></td>
+          <td><span data-de>Faden verlieren mitten im Loop</span><span data-en>Losing the thread mid-loop</span></td>
+          <td><span data-de>Du musst zweimal antworten</span><span data-en>You have to answer twice</span></td>
+          <td><span data-de>Agent bleibt ein Fremder</span><span data-en>Agent stays a stranger</span></td>
+        </tr>
+        <tr data-cat="usage">
+          <td class="col-label"><span data-de>Beispiel</span><span data-en>Example</span></td>
+          <td><span data-de>&#x201E;Welche 12 Wettbewerber waren das gerade?&#x201C;</span><span data-en>&#x201C;Which 12 competitors were those?&#x201D;</span></td>
+          <td><span data-de>&#x201E;Du hattest vorhin Budget X freigegeben.&#x201C;</span><span data-en>&#x201C;You had approved budget X earlier.&#x201D;</span></td>
+          <td><span data-de>&#x201E;Du schreibst n&#252;chtern, ohne Adjektive.&#x201C;</span><span data-en>&#x201C;You write soberly, without adjectives.&#x201D;</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="mono" style="font-size:11px;color:#7C7468;margin-top:24px;letter-spacing:.12em"><span data-de>&#x250C;&#x2500;&#x2500;&#x2192; DREI EBENEN, JE EIGENE ROLLE. WER EINE WEGL&#xC4;SST, BAUT EINEN HALBEN AGENT.</span><span data-en>&#x250C;&#x2500;&#x2500;&#x2192; THREE LAYERS, EACH WITH ITS OWN ROLE. SKIP ONE AND YOU BUILD HALF AN AGENT.</span></p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 4: LIVE TRACE =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 06</span><span>&#xB7; LIVE-TRACE</span></div>
+    <h2 class="serif" data-de>Schritt f&#252;r Schritt.<br/>Was wirklich passiert.</h2>
+    <h2 class="serif" data-en>Step by step.<br/>What really happens.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker" data-de>Eine echte Aufgabe, zw&#246;lf Schritte, ein Loop in Aktion. Dr&#252;ck Play und sieh dem Agent zu, wie er aus drei S&#228;tzen einen erledigten Auftrag macht. Pausiere jederzeit oder klick auf einen Schritt, um in seinen Kopf zu schauen.</p>
+    <p class="kicker" data-en>A real task, twelve steps, a loop in action. Press Play and watch the agent turn three sentences into a completed assignment. Pause at any time or click a step to look inside its head.</p>
+
+    <div class="trace">
+      <div class="trace-header">
+        <div style="display:flex;flex-direction:column">
+          <span class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-de>AUFTRAG</span><span data-en>ASSIGNMENT</span></span>
+          <span class="serif" style="font-size:18px;color:#E8E6DF;margin-top:4px" data-de>&#x201E;Schick einen Wettbewerber-Report &#xFC;ber letzte Woche an das Leadership-Team.&#x201C;</span>
+          <span class="serif" style="font-size:18px;color:#E8E6DF;margin-top:4px" data-en>&#x201C;Send a competitor report about last week to the leadership team.&#x201D;</span>
+        </div>
+        <div class="trace-controls">
+          <button class="trace-btn primary" id="play-btn">&#x25B6; PLAY</button>
+          <button class="trace-btn" id="reset-btn">&#x27F2; RESET</button>
+        </div>
+      </div>
+      <div style="padding:0 24px;background:var(--canvas)">
+        <div class="trace-progress"><div class="bar" id="progress-bar"></div></div>
+      </div>
+      <div class="trace-body">
+        <div class="trace-timeline" id="trace-timeline"></div>
+        <div class="trace-detail" id="trace-detail"></div>
+      </div>
+    </div>
+    <p class="mono" style="font-size:11px;color:#7C7468;letter-spacing:.12em;margin-top:14px"><span data-de>SIMULATION &#xB7; VEREINFACHTER ECHTER AGENT-RUN. ZAHLEN GESCH&#xC4;TZT.</span><span data-en>SIMULATION &#xB7; SIMPLIFIED REAL AGENT RUN. NUMBERS ESTIMATED.</span></p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 5: SELF-CORRECTION & GRENZEN =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 07</span><span data-de>&#xB7; WENN ETWAS BRICHT</span><span data-en>&#xB7; WHEN SOMETHING BREAKS</span></div>
+    <h2 class="serif" data-de>Der Moment,<br/>der den Unterschied macht.</h2>
+    <h2 class="serif" data-en>The moment<br/>that makes the difference.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>In jedem zweiten Run schl&#228;gt irgendwo etwas fehl. Eine Datenbank antwortet nicht. Eine Suche bringt Schrott. Ein Tool gibt einen Timeout zur&#252;ck. Hier zeigt sich, ob ein Agent wirklich denkt oder nur tut.</p>
+    <p class="kicker lora" data-en>In every second run, something fails somewhere. A database doesn&#x2019;t respond. A search returns garbage. A tool returns a timeout. This is where it shows whether an agent actually thinks or just does.</p>
+
+    <div class="two" style="margin-top:64px">
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em;margin-bottom:14px"><span data-de>OHNE SELF-CORRECTION</span><span data-en>WITHOUT SELF-CORRECTION</span></p>
+        <div class="fail-box">
+          <div class="label"><span data-de>FEHLER</span><span data-en>ERROR</span></div>
+          <div class="msg">db_query() &nbsp;&#x2192;&nbsp; TimeoutError</div>
+          <div class="msg" style="margin-top:14px;color:#D08A8A"><span data-de>&#x2298; ABORT. Auftrag gescheitert.</span><span data-en>&#x2298; ABORT. Task failed.</span></div>
+        </div>
+        <p style="font-family:'Lora',serif;font-size:15px;line-height:1.6;margin-top:18px;color:#3A3D44" data-de>Ein primitiver Agent gibt auf, sobald irgendetwas hakt. Kein Plan B. Kein Ausweg. Du bekommst einen Fehler statt einer L&#246;sung.</p>
+        <p style="font-family:'Lora',serif;font-size:15px;line-height:1.6;margin-top:18px;color:#3A3D44" data-en>A primitive agent gives up as soon as anything snags. No plan B. No way out. You get an error instead of a solution.</p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em;margin-bottom:14px"><span data-de>MIT SELF-CORRECTION</span><span data-en>WITH SELF-CORRECTION</span></p>
+        <div class="fail-box ok">
+          <div class="label"><span data-de>FEHLER ERKANNT</span><span data-en>ERROR DETECTED</span></div>
+          <div class="msg">db_query() &nbsp;&#x2192;&nbsp; TimeoutError</div>
+          <div class="msg" style="margin-top:10px"><span data-de>&#x21BB; Retry mit k&#252;rzerem Range.</span><span data-en>&#x21BB; Retry with shorter range.</span></div>
+          <div class="msg" style="margin-top:10px"><span data-de>&#x21BB; Falls erneut: alternative Quelle.</span><span data-en>&#x21BB; If again: alternative source.</span></div>
+          <div class="msg" style="margin-top:10px;color:#5BAA6F"><span data-de>&#x25A3; Erfolg im 2. Versuch.</span><span data-en>&#x25A3; Success on 2nd attempt.</span></div>
+        </div>
+        <p style="font-family:'Lora',serif;font-size:15px;line-height:1.6;margin-top:18px;color:#3A3D44" data-de>Ein guter Agent liest jede Fehlermeldung wie ein Detektiv. Was war das? Was lerne ich daraus? Was probiere ich als N&#228;chstes? Genau dieser Reflex unterscheidet ein robustes System von einem Spielzeug.</p>
+        <p style="font-family:'Lora',serif;font-size:15px;line-height:1.6;margin-top:18px;color:#3A3D44" data-en>A good agent reads every error message like a detective. What was that? What can I learn from it? What do I try next? Exactly this reflex distinguishes a robust system from a toy.</p>
+      </div>
+    </div>
+
+    <h3 class="mono" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-top:80px;margin-bottom:24px"><span data-de>&#x268A; DREI TYPISCHE GRENZEN</span><span data-en>&#x268A; THREE TYPICAL LIMITS</span></h3>
+    <div class="grid-3">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">A &#xB7; HALLUZINATION</p>
+        <h3 class="serif" style="margin-top:8px"><span data-de>Selbstbewusste Fiktion</span><span data-en>Confident Fiction</span></h3>
+        <p data-de>Der Agent erfindet Quellen, Zitate, Zahlen. Klingt richtig. Ist es nicht. L&#246;sung: Tools statt Fantasie, also Fakten holen statt raten.</p>
+        <p data-en>The agent invents sources, quotes, numbers. Sounds right. Isn&#x2019;t. Solution: tools instead of fantasy, i.e. fetch facts instead of guessing.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em"><span data-de>B &#xB7; LOOP-FALLE</span><span data-en>B &#xB7; LOOP TRAP</span></p>
+        <h3 class="serif" style="margin-top:8px"><span data-de>Endlose Schleife</span><span data-en>Endless Loop</span></h3>
+        <p data-de>Der Agent dreht sich im Kreis, korrigiert die Korrektur. L&#246;sung: harte Limits auf Schritte, Zeit und Budget pro Run.</p>
+        <p data-en>The agent goes in circles, corrects the correction. Solution: hard limits on steps, time and budget per run.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em"><span data-de>C &#xB7; &#xDC;BER-AUTOMATION</span><span data-en>C &#xB7; OVER-AUTOMATION</span></p>
+        <h3 class="serif" style="margin-top:8px"><span data-de>Zu viel Vertrauen</span><span data-en>Too much trust</span></h3>
+        <p data-de>Wer den Agent ohne R&#252;ckfrage senden l&#228;sst, riskiert peinliche oder teure Aktionen. L&#246;sung: Approval-Gates an heiklen Stellen.</p>
+        <p data-en>Letting the agent send without asking risks embarrassing or costly actions. Solution: approval gates at critical points.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:56px;padding:32px;border:1px solid var(--copper);background:var(--parchment-2);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center">
+      <div class="bignum">2 / 3</div>
+      <div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em"><span data-de>FAUSTREGEL</span><span data-en>RULE OF THUMB</span></p>
+        <p class="lora" style="font-size:18px;line-height:1.55;color:#3A3D44;margin-top:8px" data-de>In zwei von drei Runs muss der Agent mindestens einmal selbst korrigieren. Ein Run ohne Selbstkorrektur ist eher die Ausnahme als die Regel. Wer das versteht, baut Guardrails ein, statt auf reibungslose Magie zu hoffen.</p>
+        <p class="lora" style="font-size:18px;line-height:1.55;color:#3A3D44;margin-top:8px" data-en>In two out of three runs, the agent must self-correct at least once. A run without self-correction is the exception rather than the rule. Those who understand this build guardrails instead of hoping for frictionless magic.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 6: GLOSSAR =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 08</span><span data-de>&#xB7; GLOSSAR</span><span data-en>&#xB7; GLOSSARY</span></div>
+    <h2 class="serif" data-de>F&#252;nf Begriffe,<br/>die jetzt fallen.</h2>
+    <h2 class="serif" data-en>Five terms<br/>that come up now.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--canvas-2);padding:48px;border:1px solid var(--rule)">
+      <div class="gloss">
+        <span class="term">PLAN-ACT-OBSERVE</span>
+        <span class="def" data-de>Der Drei-Takt-Loop, in dem ein Agent arbeitet. Plan: zerlegen. Act: handeln. Observe: pr&#252;fen. Wiederholen, bis das Ziel steht. In manchen Frameworks hei&#223;t das auch ReAct.</span>
+        <span class="def" data-en>The three-beat loop in which an agent works. Plan: decompose. Act: act. Observe: check. Repeat until goal is achieved. In some frameworks this is also called ReAct.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">CHAIN OF THOUGHT</span>
+        <span class="def" data-de>Der innere Monolog, in dem das Modell Schritt f&#252;r Schritt mit sich selbst spricht, bevor es handelt. Macht Antworten messbar zuverl&#228;ssiger.</span>
+        <span class="def" data-en>The inner monologue in which the model talks to itself step by step before acting. Makes responses measurably more reliable.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">MEMORY</span>
+        <span class="def" data-de>Drei Schichten: Kurzzeit f&#252;r die laufende Aufgabe, Session f&#252;r die laufende Session, Langzeit f&#252;r alles, was immer gilt.</span>
+        <span class="def" data-en>Three layers: short-term for the current task, session for the current session, long-term for everything that always applies.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">SELF-CORRECTION</span>
+        <span class="def" data-de>Die F&#228;higkeit, einen Fehler zu erkennen, zu interpretieren und einen anderen Weg zu probieren. Ohne diese F&#228;higkeit ist der Agent eine bessere Skript-Engine.</span>
+        <span class="def" data-en>The ability to recognize an error, interpret it, and try another path. Without this ability, the agent is a glorified script engine.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">GUARDRAIL</span>
+        <span class="def" data-de>Regeln und harte Limits, die den Agent vor sich selbst sch&#252;tzen. Maximal N Schritte. Maximal X Euro. Approval bei kritischen Aktionen.</span>
+        <span class="def" data-en>Rules and hard limits that protect the agent from itself. Maximum N steps. Maximum X euros. Approval for critical actions.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 09</span><span data-de>&#xB7; N&#xC4;CHSTE LEHRTAFEL</span><span data-en>&#xB7; NEXT ARTICLE</span></div>
+    <h2 class="serif" data-de>Du kennst das Denken.<br/>Was kommt als N&#228;chstes?</h2>
+    <h2 class="serif" data-en>You know the thinking.<br/>What&#x2019;s next?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">03</p>
+        <h3 class="serif" style="margin-top:8px"><span data-de>Tools, MCPs, Plugins</span><span data-en>Tools, MCPs, Plugins</span></h3>
+        <p data-de>Was Agents an Werkzeugen haben. Was du f&#252;r dich anbinden kannst. Wie das alles zusammensteckt. Inkl. realer Beispiele.</p>
+        <p data-en>What tools agents have. What you can connect for yourself. How it all fits together. Including real examples.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">04</p>
+        <h3 class="serif" style="margin-top:8px"><span data-de>Risiko, Kontrolle, Trust</span><span data-en>Risk, Control, Trust</span></h3>
+        <p data-de>Wo Agents schiefgehen, wie man sie absichert, wann Mensch im Loop sein muss. Mit Checkliste f&#252;r eigene Setups.</p>
+        <p data-en>Where agents go wrong, how to secure them, when humans must be in the loop. With checklist for your own setups.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">05</p>
+        <h3 class="serif" style="margin-top:8px"><span data-de>Dein erster Agent</span><span data-en>Your First Agent</span></h3>
+        <p data-de>Vom Anwendungsfall bis zum Prototyp. Welche Schritte, welche Werkzeuge, welche Stolperfallen.</p>
+        <p data-en>From use case to prototype. What steps, what tools, what pitfalls.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="./01_was-ist-ai-und-agentic-ai.html"><span>&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&#xDC;CK ZU LEHRTAFEL 01</span><span data-en>BACK TO ARTICLE 01</span></a>
+      <a class="cta" href="./03_tools-mcps-plugins.html" style="border-color:var(--copper);color:var(--copper)"><span data-de>LEHRTAFEL 03 LESEN</span><span data-en>READ ARTICLE 03</span> <span>&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== FOOTER =========================== -->
+<footer class="footer-codex">
+  <div class="wrap">
+    <div class="footer-grid-c">
+      <div>
+        <div class="footer-brand-c">Readix<span style="color:var(--copper)">.</span></div>
+        <div class="footer-brand-sub-c">Learn &#xB7; Engineering Codex</div>
+        <p class="footer-desc-c" data-de>Lehrtafeln f&#252;r die Praxis. Keine Buzzwords, keine Hype-Artikel. Nur das, was du wirklich brauchst, um mit AI-Agenten zu arbeiten.</p>
+        <p class="footer-desc-c" data-en>Articles for practitioners. No buzzwords, no hype. Just what you actually need to work with AI agents.</p>
+      </div>
+      <div>
+        <div class="footer-col-head-c"><span data-de>Lehrtafeln</span><span data-en>Articles</span></div>
+        <div class="footer-links-c">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="footer-link-c"><span data-de>01 &#xB7; Was ist AI?</span><span data-en>01 &#xB7; What is AI?</span></a>
+          <a href="./02_wie-ein-agent-denkt.html" class="footer-link-c" style="color:#B87333"><span data-de>02 &#xB7; Wie ein Agent denkt</span><span data-en>02 &#xB7; How an Agent Thinks</span></a>
+          <a href="./03_tools-mcps-plugins.html" class="footer-link-c"><span data-de>03 &#xB7; Tools &amp; MCPs</span><span data-en>03 &#xB7; Tools &amp; MCPs</span></a>
+          <a href="./04_risiko-und-trust.html" class="footer-link-c"><span data-de>04 &#xB7; Risiko &amp; Trust</span><span data-en>04 &#xB7; Risk &amp; Trust</span></a>
+          <span class="footer-link-c dim"><span data-de>05 &#xB7; Dein erster Agent</span><span data-en>05 &#xB7; Your First Agent</span></span>
+          <span class="footer-link-c dim"><span data-de>06 &#xB7; Agentic Workflows</span><span data-en>06 &#xB7; Agentic Workflows</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c">Readix Platform</div>
+        <div class="footer-links-c">
+          <a href="https://readix.net" class="footer-link-c">readix.net</a>
+          <span class="footer-link-c dim">Dashboard</span>
+          <span class="footer-link-c dim">API Docs</span>
+          <span class="footer-link-c dim">Changelog</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c"><span data-de>Rechtliches</span><span data-en>Legal</span></div>
+        <div class="footer-links-c">
+          <span class="footer-link-c dim"><span data-de>Impressum</span><span data-en>Imprint</span></span>
+          <span class="footer-link-c dim"><span data-de>Datenschutz</span><span data-en>Privacy</span></span>
+          <span class="footer-link-c dim"><span data-de>AGB</span><span data-en>Terms</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-c">
+      <span class="footer-meta-c">&#xA9; 2026 <span class="cu">Readix</span> &#xB7; <span data-de>Codex Lehrtafel 02</span><span data-en>Codex Article 02</span> &#xB7; Build <span class="cu">v.2026.05</span></span>
+      <button class="motion-btn-c" onclick="toggleMotion()">Motion: <span id="motion-state">On</span></button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ========== Language Toggle ==========
+function getLang() {
+  return document.body.classList.contains('lang-en') ? 'en' : 'de';
+}
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'How an Agent Thinks \xB7 Codex Article 02'
+    : 'Wie ein Agent denkt \xB7 Codex Lehrtafel 02';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  // update SVG caption
+  var cap = document.getElementById('svg-caption');
+  if (cap) cap.textContent = lang === 'en' ? 'Three steps. Any number of rounds.' : 'Drei Schritte. Beliebig viele Runden.';
+  // update reset state
+  var detailEl = document.getElementById('trace-detail');
+  if (detailEl && detailEl.querySelector('.label') && detailEl.querySelector('.label').textContent.trim() === (lang === 'en' ? 'BEREIT' : 'READY')) {
+    showResetState();
+  }
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+}
+
+// ========== Loop interaktiv ==========
+const cells = document.querySelectorAll('#loop-stage .loop-cell');
+cells.forEach(c => {
+  c.addEventListener('click', () => {
+    cells.forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+let loopIdx = 0;
+setInterval(() => {
+  if (document.querySelector('#loop-stage .loop-cell:hover')) return;
+  loopIdx = (loopIdx + 1) % cells.length;
+  cells.forEach((x,i) => x.classList.toggle('active', i === loopIdx));
+}, 3000);
+
+// ========== Memory Toggle ==========
+const memBtns = document.querySelectorAll('#mem-toggle button');
+const memRows = document.querySelectorAll('#mem-body tr');
+memBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    memBtns.forEach(b => { b.style.borderColor = '#7C7468'; b.style.color = '#7C7468'; });
+    btn.style.borderColor = 'var(--copper)'; btn.style.color = 'var(--copper)';
+    const view = btn.dataset.view;
+    memRows.forEach(r => {
+      r.style.display = (view === 'all' || r.dataset.cat === view) ? '' : 'none';
+    });
+  });
+});
+
+// ========== Trace Engine ==========
+const traceDE = [
+  {tag:'PLAN', label:'Plan', title:'Ziel zerlegen.',
+   body:'Der Agent liest den Auftrag und teilt ihn in sechs Teilziele. Erst Datenquellen kl\xe4ren, dann Inhalte sammeln, dann Report bauen, dann verteilen.',
+   quote:'> Ziel: Wettbewerber-Report letzte Woche an Leadership.\n> Teilziele:\n>   1. Wettbewerber-Liste laden\n>   2. News der letzten 7 Tage\n>   3. LinkedIn-Signale\n>   4. Zusammenfassen\n>   5. Report bauen\n>   6. Versenden (mit Approval)',
+   meta:['DAUER \xB7 0.4S','TOKEN \xB7 312']},
+  {tag:'ACT', label:'Tool', title:'CRM lesen.',
+   body:'Der Agent ruft das erste Werkzeug auf: das CRM. Dort liegt die Wettbewerberliste, die das Marketing pflegt.',
+   quote:'crm_query(list="competitor_set_v3")\n→ 12 Eintr\xe4ge zur\xfcck',
+   meta:['DAUER \xB7 1.1S','API \xB7 CRM']},
+  {tag:'OBSERVE', label:'Observe', title:'Liste vollst\xe4ndig.',
+   body:'12 Eintr\xe4ge sind vollst\xe4ndig. Keine Duplikate. Der Agent merkt sich die Liste im Kurzzeit-Memory und schreitet fort.',
+   quote:'Status: OK\n12/12 Eintr\xe4ge sauber.',
+   meta:['MEMORY \xB7 KURZ','OK']},
+  {tag:'ACT', label:'Tool', title:'News scannen.',
+   body:'Pro Wettbewerber wird eine News-Suche der letzten 7 Tage gemacht. Parallel, nicht seriell, sonst dauert es ewig.',
+   quote:'news_scan(competitors=12, range=7d)\n→ 86 Treffer',
+   meta:['DAUER \xB7 4.8S','PARALLEL']},
+  {tag:'OBSERVE', label:'Observe', title:'Schrott aussortieren.',
+   body:'Von 86 Treffern sind 23 Duplikate, 11 irrelevant. Der Agent dedupliziert und filtert. Bleiben 52.',
+   quote:'Nach Dedup & Relevanz-Filter:\n52 valide Artikel.',
+   meta:['REDUKTION \xB7 41%']},
+  {tag:'ACT', label:'Tool', title:'LinkedIn-Signale.',
+   body:'Hiring-Posts, F\xfchrungs-Wechsel, Produkt-Ank\xfcndigungen. Diese Signale verraten oft mehr als News.',
+   quote:'linkedin_signals(comp=12, types=[hiring, exec_change, product])\n→ 24 Signale',
+   meta:['DAUER \xB7 3.2S']},
+  {tag:'PLAN', label:'Replan', title:'Korrektur n\xf6tig.',
+   body:'Bei zwei Wettbewerbern fehlen Signale ganz. Der Agent \xfcberlegt: ist das relevant? Entscheidet: ja, in den Report als "kein Signal" aufnehmen, statt verschweigen.',
+   quote:'Anomalie: 2/12 ohne LinkedIn-Signal.\nEntscheidung: explizit ausweisen.',
+   meta:['SELF-CORRECTION']},
+  {tag:'ACT', label:'Tool', title:'LLM zusammenfassen.',
+   body:'Pro Wettbewerber wird eine 200-W\xf6rter-Zusammenfassung erzeugt. Tonalit\xe4t aus dem Langzeit-Memory: n\xfcchtern, faktisch, keine Adjektiv-Wolken.',
+   quote:'llm_summarize(per_comp=200w, tone="codex_neutral")\n→ 12 Bl\xf6cke generiert',
+   meta:['MODELL \xB7 CLAUDE','TOKEN \xB7 14.2K']},
+  {tag:'ACT', label:'Tool', title:'Report bauen.',
+   body:'Aus den Bl\xf6cken entsteht ein strukturiertes Dokument: Executive Summary, Wettbewerber-Sektionen, Ausblick. Vorlage aus dem Drive.',
+   quote:'doc_build(template="weekly_v3", sections=["exec","comp","outlook"])\n→ 9 Seiten',
+   meta:['DOC \xB7 GDOC','SEITEN \xB7 9']},
+  {tag:'OBSERVE', label:'Observe', title:'Quellen pr\xfcfen.',
+   body:'Letzter Check vor dem Versand. Jede Behauptung im Report muss eine Quelle haben. Halluzinationen werden hier rausgekehrt.',
+   quote:'fact_check(report)\n→ 47 Behauptungen, 47 Quellen, 0 unbelegte.',
+   meta:['NULL HALLUZINATION']},
+  {tag:'ACT', label:'Approval', title:'Halt vor dem Versand.',
+   body:'Der Agent verschickt nicht. Noch nicht. Er legt den Report ins Drive und pingt dich. Du entscheidest, ob raus.',
+   quote:'approval_request(target=user, link="drive/report.pdf")\n→ wartet ...',
+   meta:['HUMAN-IN-LOOP','GATE OFFEN']},
+  {tag:'OBSERVE', label:'Done', title:'Auftrag erf\xfcllt.',
+   body:'Du gibst gr\xfcn. Der Agent versendet, protokolliert die Aktion im Langzeit-Memory und schlie\xdft den Loop.',
+   quote:'send_email(to=leadership, attach=report.pdf)\n→ ok\nlog(action="weekly_report_dispatched")\n→ ok',
+   meta:['GESAMT \xB7 11.4S','TOKEN \xB7 18.9K','KOSTEN \xB7 0.42 EUR']}
+];
+
+const traceEN = [
+  {tag:'PLAN', label:'Plan', title:'Break down the goal.',
+   body:'The agent reads the assignment and splits it into six sub-goals. First clarify data sources, then gather content, then build report, then distribute.',
+   quote:'> Goal: Competitor report last week to leadership.\n> Sub-goals:\n>   1. Load competitor list\n>   2. News of the last 7 days\n>   3. LinkedIn signals\n>   4. Summarize\n>   5. Build report\n>   6. Send (with approval)',
+   meta:['DURATION \xB7 0.4S','TOKENS \xB7 312']},
+  {tag:'ACT', label:'Tool', title:'Read CRM.',
+   body:"The agent calls the first tool: the CRM. That's where the competitor list maintained by marketing lives.",
+   quote:'crm_query(list="competitor_set_v3")\n→ 12 entries returned',
+   meta:['DURATION \xB7 1.1S','API \xB7 CRM']},
+  {tag:'OBSERVE', label:'Observe', title:'List complete.',
+   body:'12 entries are complete. No duplicates. The agent stores the list in short-term memory and moves on.',
+   quote:'Status: OK\n12/12 entries clean.',
+   meta:['MEMORY \xB7 SHORT','OK']},
+  {tag:'ACT', label:'Tool', title:'Scan news.',
+   body:'A news search of the last 7 days is run for each competitor. In parallel, not sequential, otherwise it takes forever.',
+   quote:'news_scan(competitors=12, range=7d)\n→ 86 hits',
+   meta:['DURATION \xB7 4.8S','PARALLEL']},
+  {tag:'OBSERVE', label:'Observe', title:'Filter out junk.',
+   body:'Of 86 hits, 23 are duplicates, 11 irrelevant. The agent deduplicates and filters. 52 remain.',
+   quote:'After dedup & relevance filter:\n52 valid articles.',
+   meta:['REDUCTION \xB7 41%']},
+  {tag:'ACT', label:'Tool', title:'LinkedIn signals.',
+   body:'Hiring posts, leadership changes, product announcements. These signals often reveal more than news.',
+   quote:'linkedin_signals(comp=12, types=[hiring, exec_change, product])\n→ 24 signals',
+   meta:['DURATION \xB7 3.2S']},
+  {tag:'PLAN', label:'Replan', title:'Correction needed.',
+   body:'Two competitors have no signals at all. The agent considers: is this relevant? Decides: yes, include in report as "no signal" rather than omitting.',
+   quote:'Anomaly: 2/12 without LinkedIn signal.\nDecision: flag explicitly.',
+   meta:['SELF-CORRECTION']},
+  {tag:'ACT', label:'Tool', title:'LLM summarize.',
+   body:'A 200-word summary is generated per competitor. Tone from long-term memory: sober, factual, no adjective clouds.',
+   quote:'llm_summarize(per_comp=200w, tone="codex_neutral")\n→ 12 blocks generated',
+   meta:['MODEL \xB7 CLAUDE','TOKENS \xB7 14.2K']},
+  {tag:'ACT', label:'Tool', title:'Build report.',
+   body:'A structured document is built from the blocks: executive summary, competitor sections, outlook. Template from the drive.',
+   quote:'doc_build(template="weekly_v3", sections=["exec","comp","outlook"])\n→ 9 pages',
+   meta:['DOC \xB7 GDOC','PAGES \xB7 9']},
+  {tag:'OBSERVE', label:'Observe', title:'Check sources.',
+   body:'Final check before sending. Every claim in the report must have a source. Hallucinations are swept out here.',
+   quote:'fact_check(report)\n→ 47 claims, 47 sources, 0 unsupported.',
+   meta:['ZERO HALLUCINATION']},
+  {tag:'ACT', label:'Approval', title:'Stop before sending.',
+   body:"The agent doesn't send. Not yet. It puts the report in the drive and pings you. You decide whether to go.",
+   quote:'approval_request(target=user, link="drive/report.pdf")\n→ waiting ...',
+   meta:['HUMAN-IN-LOOP','GATE OPEN']},
+  {tag:'OBSERVE', label:'Done', title:'Assignment complete.',
+   body:'You give the green light. The agent sends, logs the action in long-term memory, and closes the loop.',
+   quote:'send_email(to=leadership, attach=report.pdf)\n→ ok\nlog(action="weekly_report_dispatched")\n→ ok',
+   meta:['TOTAL \xB7 11.4S','TOKENS \xB7 18.9K','COST \xB7 0.42 EUR']}
+];
+
+const timelineEl = document.getElementById('trace-timeline');
+const detailEl = document.getElementById('trace-detail');
+const progressEl = document.getElementById('progress-bar');
+
+function getTrace() { return getLang() === 'en' ? traceEN : traceDE; }
+
+// Build timeline from traceDE (labels are same in both)
+traceDE.forEach((step, i) => {
+  const div = document.createElement('div');
+  div.className = 'trace-step';
+  const t = step.tag.toLowerCase();
+  const tagClass = t.includes('plan') ? 'plan' : (t.includes('observe') || t.includes('done')) ? 'observe' : 'act';
+  div.innerHTML = `<span class="num">${String(i+1).padStart(2,'0')}</span>${step.title}<span class="tag tag-${tagClass}">${step.tag}</span>`;
+  div.addEventListener('click', () => render(i));
+  timelineEl.appendChild(div);
+});
+
+function render(idx) {
+  const tlSteps = document.querySelectorAll('.trace-step');
+  tlSteps.forEach((s,i) => {
+    s.classList.remove('active','done');
+    if (i < idx) s.classList.add('done');
+    if (i === idx) s.classList.add('active');
+  });
+  const trace = getTrace();
+  const s = trace[idx];
+  // also update timeline label to current lang
+  tlSteps[idx].innerHTML = `<span class="num">${String(idx+1).padStart(2,'0')}</span>${s.title}<span class="tag tag-${s.tag.toLowerCase().includes('plan') ? 'plan' : (s.tag.toLowerCase().includes('observe') || s.tag.toLowerCase().includes('done')) ? 'observe' : 'act'}">${s.tag}</span>`;
+  detailEl.innerHTML = `
+    <div class="label">STEP ${String(idx+1).padStart(2,'0')} \xB7 ${s.label.toUpperCase()}</div>
+    <div class="head">${s.title}</div>
+    <div class="body">${s.body}</div>
+    <div class="quote">${s.quote}</div>
+    <div class="meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+  `;
+  progressEl.style.width = `${((idx+1)/trace.length)*100}%`;
+}
+
+function showResetState() {
+  const lang = getLang();
+  detailEl.innerHTML = lang === 'en'
+    ? `<div class="label">READY</div><div class="head" style="color:#7C7468;font-style:italic">Press Play or click a step on the left.</div>`
+    : `<div class="label">BEREIT</div><div class="head" style="color:#7C7468;font-style:italic">Dr\xfcck Play oder klick einen Schritt links.</div>`;
+}
+
+let playing = false, playIdx = 0, playTimer = null;
+const playBtn = document.getElementById('play-btn');
+const resetBtn = document.getElementById('reset-btn');
+
+function step() {
+  const trace = getTrace();
+  if (playIdx >= trace.length) { playing = false; playBtn.textContent = '▶ PLAY'; return; }
+  render(playIdx);
+  playIdx++;
+  playTimer = setTimeout(step, 1800);
+}
+playBtn.addEventListener('click', () => {
+  if (playing) {
+    playing = false; clearTimeout(playTimer);
+    playBtn.textContent = '▶ PLAY';
+  } else {
+    playing = true; playBtn.textContent = '❚❚ PAUSE';
+    step();
+  }
+});
+resetBtn.addEventListener('click', () => {
+  clearTimeout(playTimer); playing = false; playIdx = 0;
+  playBtn.textContent = '▶ PLAY';
+  progressEl.style.width = '0';
+  document.querySelectorAll('.trace-step').forEach(s => s.classList.remove('active','done'));
+  showResetState();
+});
+resetBtn.click();
+
+// ========== Motion Toggle ==========
+function toggleMotion() {
+  var body = document.body;
+  var state = document.getElementById('motion-state');
+  var on = !body.classList.contains('no-motion');
+  body.classList.toggle('no-motion', on);
+  if (state) state.textContent = on ? 'Off' : 'On';
+  try { localStorage.setItem('rl-motion', on ? 'off' : 'on'); } catch(e) {}
+}
+
+(function initPrefs() {
+  try {
+    if (localStorage.getItem('rl-motion') === 'off') {
+      document.body.classList.add('no-motion');
+      var el = document.getElementById('motion-state');
+      if (el) el.textContent = 'Off';
+    }
+    var lang = localStorage.getItem('rl-lang');
+    if (lang === 'en') { setLang('en'); }
+  } catch(e) {}
+})();
+</script>
+
+</body>
+</html>

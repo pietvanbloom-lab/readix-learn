@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 32px; background: var(--ink-black); display: flex; flex-direction: column; gap: 18px; }
+  .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--copper); margin-bottom: 6px; }
+  input, textarea, select { width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--gray-800); color: var(--paper-warm); font-family: var(--font-sans); font-size: 18px; padding: 8px 0; outline: none; }
+  input:focus, textarea:focus { border-bottom-color: var(--copper); }
+  .hint { font-family: var(--font-mono); font-size: 11px; color: var(--gray-400); letter-spacing: 0.05em; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div>
+  <div class="lbl">● FIELD 01 · THE QUESTION</div>
+  <input value="What's eating into our gross margin?" />
+  <div class="hint">One question. Sharper is faster.</div>
+</div>
+<div>
+  <div class="lbl">● FIELD 02 · DEPTH</div>
+  <input value="The Brief: 8 pages, 48h, 5–10 sources" />
+</div>
+</body>
+</html>

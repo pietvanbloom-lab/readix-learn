@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Readix — Engineering Codex marketing site</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="mobile-nav.css">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="components/Machines.jsx"></script>
+<script type="text/babel" src="components/tweaks-panel.jsx"></script>
+<script type="text/babel" src="components/Theme.jsx"></script>
+<script type="text/babel" src="components/Primitives.jsx"></script>
+<script type="text/babel" src="components/MobileNav.jsx"></script>
+<script type="text/babel" src="components/Pages.jsx"></script>
+<script type="text/babel" src="components/Auth.jsx"></script>
+<script type="text/babel">
+const { useState } = React;
+
+function App() {
+  const [route, setRoute] = useState('home');
+  const [session, setSession] = useState(() => readSession());
+  const [theme, setTheme] = useTheme();
+  const go = (r) => { setRoute(r); window.scrollTo(0,0); };
+  const onAuth = (s) => { writeSession(s); setSession(s); };
+  const signOut = () => { writeSession(null); setSession(null); go('home'); };
+  const guarded = (r) => session ? r : 'gate';
+
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "mood": "codex",
+    "drama": 3,
+    "density": "magazine",
+    "mobileNav": "bottom"
+  }/*EDITMODE-END*/;
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  // Mood repaint
+  const moodVars = {
+    codex: { bg:'#0A0A0B', paper:'#F0E6D2', paper2:'#E0D2B5', ink:'#2A1810', inkDeep:'#1A0F08', accent:'#D97757', accentDeep:'#8B3A1F' },
+    blueprint: { bg:'#0B1220', paper:'#D9E4F2', paper2:'#B8CADF', ink:'#0E2A4A', inkDeep:'#06182E', accent:'#3FA9D9', accentDeep:'#1B5E8E' },
+    nocturne: { bg:'#06070A', paper:'#1B1F26', paper2:'#10141B', ink:'#E8DCC0', inkDeep:'#FAF3E0', accent:'#FFC47C', accentDeep:'#D97757' },
+  }[t.mood] || {};
+  const densityVars = {
+    manifesto: { hero:'clamp(4.5rem, 9vw, 7.5rem)', sectionPad:'128px 32px', leadSize:'24px' },
+    magazine:  { hero:'clamp(3.5rem, 7vw, 5.5rem)', sectionPad:'96px 32px',  leadSize:'20px' },
+    dossier:   { hero:'clamp(2.6rem, 4.5vw, 3.6rem)', sectionPad:'64px 32px', leadSize:'17px' },
+  }[t.density];
+
+  const styleOverride = `
+    :root {
+      --ink-black: ${moodVars.bg};
+      --paper-warm: ${moodVars.paper};
+      --paper-warm-2: ${moodVars.paper2};
+      --ink-mood: ${moodVars.ink};
+      --ink-mood-deep: ${moodVars.inkDeep};
+      --copper: ${moodVars.accent};
+      --copper-deep: ${moodVars.accentDeep};
+      --hero-size: ${densityVars.hero};
+      --section-pad: ${densityVars.sectionPad};
+      --lead-size: ${densityVars.leadSize};
+    }
+    .hero h1 { font-size: var(--hero-size) !important; }
+    .hero .lead { font-size: var(--lead-size) !important; }
+    .section { padding: var(--section-pad) !important; }
+    .section.tight { padding: calc(${densityVars.sectionPad.split(' ')[0]} * 0.6) 32px !important; }
+    ${t.mood==='nocturne' ? '.section.paper { background: #14171C !important; color: #E8DCC0 !important; } .section.paper .stat .num, .section.paper .section-head h2 { color: #FAF3E0 !important; } .machine-ink { stroke: #E8DCC0 !important; } .machine-deep { stroke: #FAF3E0 !important; }' : ''}
+    ${t.mood==='blueprint' ? '.machine-ink { stroke: #0E2A4A !important; } .machine-deep { stroke: #06182E !important; } .machine-fine { stroke: #2C5274 !important; } .machine-accent { stroke: #1B5E8E !important; } .machine-accent-fill { fill: #3FA9D9 !important; }' : ''}
+    /* Drama level — controls visibility of theatrical elements */
+    ${t.drama < 1 ? '.machine-burst, .machine-action-lines, .machine-steam, .machine-swoosh, .machine-pulse { display: none; }' : ''}
+    ${t.drama < 2 ? '.machine-burst, .machine-pulse { display: none; }' : ''}
+    ${t.drama < 3 ? '' : '.machine-burst { transform-origin: center; transform: scale(1.25); }'}
+  `;
+
+  return (
+    <div className="app" data-mood={t.mood} data-drama={t.drama} data-density={t.density} data-theme={theme}>
+      <style>{styleOverride}</style>
+      <Nav route={route} go={go} session={session} signOut={signOut} />
+      <MobileNav pattern={t.mobileNav} route={route} go={go} session={session} signOut={signOut} />
+      {route==='home' && <Home go={go} />}
+      {route==='method' && <Methodology />}
+      {route==='library' && <Library />}
+      {route==='brief' && <Brief go={go} theme={theme} setTheme={setTheme} />}
+      {route==='notes' && <FieldNotes />}
+      {route==='signin' && <SignIn go={go} onAuth={onAuth} />}
+      {route==='gate' && <Gate go={go} />}
+      {route==='live' && (session ? <LiveBriefs session={session} go={go} theme={theme} setTheme={setTheme} /> : <Gate go={go} />)}
+      {route==='radar' && (session ? <RadarFrame session={session} go={go} theme={theme} setTheme={setTheme} /> : <Gate go={go} />)}
+      <Footer />
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Mood">
+          <TweakRadio label="Palette" value={t.mood} onChange={v => setTweak('mood', v)}
+            options={[{value:'codex',label:'Codex'},{value:'blueprint',label:'Blueprint'},{value:'nocturne',label:'Nocturne'}]} />
+        </TweakSection>
+        <TweakSection title="Mechanical drama">
+          <TweakSlider label="Theatrical level" value={t.drama} min={0} max={3} step={1}
+            onChange={v => setTweak('drama', v)}
+            format={v => ['Technical','Restrained','Pulp','Maximal'][v]} />
+        </TweakSection>
+        <TweakSection title="Editorial density">
+          <TweakRadio label="Voice" value={t.density} onChange={v => setTweak('density', v)}
+            options={[{value:'manifesto',label:'Manifesto'},{value:'magazine',label:'Magazine'},{value:'dossier',label:'Dossier'}]} />
+        </TweakSection>
+        <TweakSection title="Mobile nav (≤640px)">
+          <TweakRadio label="Pattern" value={t.mobileNav} onChange={v => setTweak('mobileNav', v)}
+            options={[{value:'hamburger',label:'Hamburger'},{value:'bottom',label:'Bottom tabs'}]} />
+        </TweakSection>
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

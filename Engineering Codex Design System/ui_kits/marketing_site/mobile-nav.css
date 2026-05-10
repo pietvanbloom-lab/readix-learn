@@ -1,0 +1,185 @@
+/* ===========================================================
+   MOBILE NAV — chrome for both patterns.
+   Only rendered on phones (≤640px); see mobile.css for layout.
+   =========================================================== */
+
+.mnav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 56px; z-index: 60;
+  background: rgba(10, 10, 11, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-800);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px;
+}
+.mnav-mark {
+  font-family: var(--font-display); font-weight: 600; font-size: 18px;
+  letter-spacing: -0.01em; color: var(--paper-warm);
+  cursor: pointer;
+}
+.mnav-mark .am { color: var(--copper); }
+.mnav-right { display: flex; align-items: center; gap: 10px; }
+
+.mnav-cta {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--copper);
+  border: 1px solid var(--copper); background: transparent;
+  padding: 8px 12px; min-height: 36px; cursor: pointer;
+}
+.mnav-cta.primary { background: var(--copper); color: var(--ink-black); }
+
+.mnav-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+  color: var(--copper); border: 1px solid var(--copper);
+  padding: 4px 8px; text-transform: uppercase;
+}
+.mnav-pill .pip { width: 6px; height: 6px; border-radius: 50%; background: var(--copper); }
+
+/* ---- Hamburger button ---- */
+.mnav-burger {
+  width: 44px; height: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; background: transparent; border: 1px solid var(--gray-800);
+  cursor: pointer; padding: 0;
+}
+.mnav-burger span {
+  display: block; width: 18px; height: 1.5px; background: var(--paper-warm);
+  transition: transform 200ms, opacity 200ms;
+}
+.mnav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.mnav-burger.open span:nth-child(2) { opacity: 0; }
+.mnav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ---- Drawer ---- */
+.mnav-drawer {
+  position: fixed; top: 56px; left: 0; right: 0; bottom: 0;
+  background: var(--ink-black);
+  z-index: 55;
+  transform: translateX(100%);
+  transition: transform 280ms cubic-bezier(0.32, 0.72, 0.4, 1);
+  overflow-y: auto;
+}
+.mnav-drawer.open { transform: translateX(0); }
+.mnav-drawer-inner {
+  padding: 32px 24px 40px;
+  display: flex; flex-direction: column; gap: 24px;
+  min-height: 100%;
+}
+.mnav-drawer-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--copper);
+}
+.mnav-drawer-list { display: flex; flex-direction: column; gap: 0; }
+.mnav-drawer-list a {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--gray-800);
+  cursor: pointer;
+}
+.mnav-drawer-list a .num {
+  font-family: var(--font-mono); font-size: 11px; color: var(--copper);
+  letter-spacing: 0.1em;
+}
+.mnav-drawer-list a .lbl {
+  font-family: var(--font-display); font-size: 26px; font-weight: 500;
+  letter-spacing: -0.01em; color: var(--paper-warm);
+}
+.mnav-drawer-list a .arr {
+  font-family: var(--font-mono); color: var(--gray-400);
+}
+.mnav-drawer-list a.active .lbl { font-style: italic; color: var(--copper); }
+.mnav-drawer-list a.active .arr { color: var(--copper); }
+
+.mnav-drawer-cta {
+  margin-top: 8px;
+  display: flex; flex-direction: column; gap: 16px; align-items: stretch;
+}
+.mnav-drawer-cta .btn-primary {
+  width: 100%; min-height: 52px; font-size: 13px !important;
+}
+.mnav-drawer-out {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gray-400); cursor: pointer;
+  text-align: center; padding: 14px;
+  background: transparent; border: 0;
+}
+.mnav-drawer-foot {
+  margin-top: auto; padding-top: 24px; border-top: 1px solid var(--gray-800);
+  font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+  letter-spacing: 0.05em;
+}
+
+/* ---- Bottom tab bar pattern ---- */
+.mnav-top-min {
+  /* Same as .mnav top bar — used for branding above bottom-tabs */
+}
+.mnav-tabs {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 72px; z-index: 60;
+  background: rgba(10, 10, 11, 0.96);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--gray-800);
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding: 4px 0 8px;
+}
+.mnav-tab {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; min-height: 60px;
+  background: transparent; border: 0; cursor: pointer; padding: 0;
+  font-family: var(--font-mono);
+  color: var(--gray-400);
+  border-top: 2px solid transparent;
+}
+.mnav-tab .ico { font-size: 18px; line-height: 1; }
+.mnav-tab .lbl {
+  font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.mnav-tab.active {
+  color: var(--copper);
+  border-top-color: var(--copper);
+}
+
+/* ---- "More" sheet for bottom-tab pattern ---- */
+.mnav-more-sheet {
+  position: fixed; inset: 0; z-index: 65;
+  background: rgba(10, 10, 11, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end;
+  animation: mnavfade 200ms ease;
+}
+@keyframes mnavfade { from { opacity: 0; } to { opacity: 1; } }
+.mnav-more-card {
+  width: 100%; background: var(--ink-black);
+  border-top: 1px solid var(--gray-800);
+  padding: 24px 24px calc(80px + env(safe-area-inset-bottom));
+  animation: mnavslide 280ms cubic-bezier(0.32, 0.72, 0.4, 1);
+}
+@keyframes mnavslide { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.mnav-more-list { display: flex; flex-direction: column; margin: 16px 0; }
+.mnav-more-list a {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 0; border-bottom: 1px solid var(--gray-800); cursor: pointer;
+}
+.mnav-more-list a .lbl {
+  font-family: var(--font-display); font-size: 22px; color: var(--paper-warm);
+}
+.mnav-more-list a .arr { font-family: var(--font-mono); color: var(--gray-400); }
+.mnav-more-close {
+  width: 100%; min-height: 44px; padding: 12px;
+  background: transparent; border: 1px solid var(--gray-800);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--paper-warm); cursor: pointer;
+  margin-top: 12px;
+}
+
+/* Hide all mnav by default; mobile.css enables on ≤640 only.
+   .mnav-show forces visibility (used by the comparison page's phone shells). */
+@media (min-width: 641px) {
+  body:not(.mnav-show) .mnav,
+  body:not(.mnav-show) .mnav-tabs,
+  body:not(.mnav-show) .mnav-drawer,
+  body:not(.mnav-show) .mnav-more-sheet { display: none !important; }
+}

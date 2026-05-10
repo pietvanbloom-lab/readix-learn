@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dein erster Agent · Codex Lehrtafel 05</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Codex Tokens v.2026.05
+   ============================================================ */
+:root{
+  --ink-black:#0A0A0B;
+  --ink-deep:#14151A;
+  --ink-night:#091423;
+  --paper-light:#FAF9F5;
+  --paper-warm:#F0E6D2;
+  --paper-aged:#E8DCC0;
+
+  --copper:#D97757;
+  --copper-deep:#B85F40;
+  --ochre:#FFC47C;
+
+  --ink-blue:#4A6FA5;
+  --data-cyan:#52AEFF;
+  --patina:#788C5D;
+  --rust:#8B3A1F;
+  --success:#6B8E5A;
+
+  --gray-100:#EBEBEB;
+  --gray-200:#C8C9CC;
+  --gray-400:#8A8F98;
+  --gray-600:#4D4D4D;
+  --gray-800:#222326;
+  --gray-900:#16171A;
+
+  --fg-on-ink:#E8E8E8;
+  --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A;
+  --fg-on-paper-mute:#6B5D45;
+
+  --border-on-ink:#222326;
+  --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+
+  --w-container:1180px;
+  --w-prose:64ch;
+
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+.lora{font-family:'Lora',serif}
+
+/* Layout */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+/* Eyebrow */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+/* Headlines */
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+/* Prose */
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+/* Rules */
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+/* Hero */
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){
+  .hero-stats{grid-template-columns:1fr}
+  .hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}
+}
+
+/* CTA */
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+/* Two-col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+/* Card */
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+/* Diagramm */
+.diagram-wrap{padding:40px;border:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .diagram-wrap{border:1px solid var(--border-on-paper);background:var(--paper-aged)}
+
+/* Compare table */
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+/* Process */
+.process{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+.process.cols-2{grid-template-columns:repeat(2,1fr)}
+.process.cols-6{grid-template-columns:repeat(6,1fr)}
+@media(max-width:880px){.process,.process.cols-6,.process.cols-2{grid-template-columns:1fr}}
+
+/* Builder Demo */
+.demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.demo-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.demo-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.demo-tabs{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.demo-tab{padding:18px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;background:transparent;border-top:none;border-bottom:none;border-left:none}
+.demo-tab:last-child{border-right:none}
+.demo-tab.active{background:var(--copper);color:var(--ink-black)}
+.demo-tab:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.demo-tab .step-num{display:block;font-size:9px;color:var(--gray-600);margin-bottom:4px}
+.demo-tab.active .step-num{color:rgba(10,10,11,.5)}
+.demo-body{padding:32px;min-height:380px}
+.demo-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+.demo-title{font-family:'Source Serif 4',serif;font-size:26px;color:var(--fg-on-ink);margin-bottom:14px;line-height:1.2}
+.demo-text{font-family:'Lora',serif;font-size:18px;line-height:1.6;color:var(--gray-200);margin-bottom:20px;max-width:64ch}
+.demo-code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;background:var(--ink-black);border:1px solid var(--border-on-ink);border-left:2px solid var(--copper);padding:18px 22px;color:var(--gray-100);white-space:pre-wrap;overflow-x:auto}
+.demo-meta{display:flex;gap:24px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;margin-top:22px;padding-top:16px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap}
+
+/* Glossar */
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+/* Grids */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:32px}
+.grid-5 > div{padding:28px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper);background:var(--paper-aged)}
+@media(max-width:880px){.grid-3{grid-template-columns:1fr}.grid-5{grid-template-columns:1fr}}
+
+/* Pull Quote */
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+/* Footer */
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 05</span><span>· LEHRTAFEL · DEIN ERSTER AGENT</span></div>
+    <h1 class="serif">Dein erster Agent<br/><em>in 60 Minuten</em>.</h1>
+    <p class="kicker">Vom Use-Case bis zum lauffähigen Prototyp. Kein Framework-Marathon, keine Cloud-Migration. Eine klare Reihenfolge: Ziel, Bestandteile, sechs Schritte, ein Test-Run, ein Echo. Diese Tafel ist die Anleitung, die du brauchst, wenn du das erste Mal selbst einen Agent zusammensteckst.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">60</div>
+        <div class="label">Minuten bis zum Prototyp</div>
+      </div>
+      <div class="stat">
+        <div class="num">6</div>
+        <div class="label">Schritte vom Ziel zum Run</div>
+      </div>
+      <div class="stat">
+        <div class="num">5</div>
+        <div class="label">Anti-Patterns, die du meidest</div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1">METHODE LESEN <span class="arrow">┌──→</span></a>
+      <a class="cta" href="#kapitel-3" style="border-color:var(--gray-600);color:var(--gray-400)">DIREKT ZUM BUILD <span class="arrow">┌──→</span></a>
+    </div>
+
+    <div class="meta">
+      <span>FILE · 05 / SERIE AI &amp; AGENTIC EXPLAINED</span>
+      <span>LESEZEIT · 14 MINUTEN</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 1: USE-CASE WAEHLEN =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 06</span><span>· DIE WAHL</span></div>
+    <h2 class="serif">Welcher Use-Case <em>zuerst</em>?</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora">Der erste Agent scheitert oder gelingt schon vor dem Bauen. An der Wahl des Use-Cases. Ein guter erster Use-Case ist klein genug, dass du ihn fertig bekommst, und groß genug, dass das Ergebnis spürbar Zeit spart. Drei Fragen helfen, ihn zu finden.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th>FRAGE</th>
+          <th style="color:var(--success)">GUT GEEIGNET</th>
+          <th style="color:var(--rust)">EHER NICHT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-label">Wie oft kommt es vor?</td><td>Mehrmals pro Woche</td><td>Einmal im Quartal</td></tr>
+        <tr><td class="col-label">Wie klar ist das Ziel?</td><td>In einem Satz erklärbar</td><td>Hängt vom Bauchgefühl ab</td></tr>
+        <tr><td class="col-label">Wie viele Quellen?</td><td>Zwei bis fünf, klar abgegrenzt</td><td>Offenes Internet, beliebige Domänen</td></tr>
+        <tr><td class="col-label">Was kostet ein Fehler?</td><td>Reversibel, intern</td><td>Externe Wirkung, irreversibel</td></tr>
+        <tr><td class="col-label">Wer prüft das Ergebnis?</td><td>Du, in unter einer Minute</td><td>Niemand, oder zu spät</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">×3</div>
+      <div>
+        <p class="label">FAUSTREGEL · USE-CASE</p>
+        <p class="text">Wenn du eine Aufgabe in dieser Woche dreimal selbst gemacht hast, ist sie ein guter Kandidat. Einmaliges baut man nicht als Agent. Repeatables verdienen einen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 2: ANATOMIE =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 07</span><span>· ANATOMIE</span></div>
+    <h2 class="serif">Fünf Bestandteile,<br/>eine <em>Architektur</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker">Egal ob du in Claude, OpenAI, einem Plugin-System oder selbst gebauter Pipeline arbeitest, jeder funktionierende Agent besteht aus fünf Teilen. Wer einen weglässt, baut keinen Agent, sondern einen netten Chatbot.</p>
+
+    <div class="process cols-2" style="margin-top:48px">
+      <div class="step">
+        <span class="num">01 · ZIEL</span>
+        <h4 class="serif">Die Zielbeschreibung.</h4>
+        <p>Ein Satz, der das Ergebnis konkret beschreibt. Nicht das Verfahren. Beispiel: "Liste der fünf interessantesten Wettbewerber-News der letzten 7 Tage, mit Quellen."</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · TOOLS</span>
+        <h4 class="serif">Der Werkzeuggürtel.</h4>
+        <p>Drei bis sieben Tools. Mehr verwirrt das Modell. Jedes Tool mit klarer Beschreibung und engem Scope. Lieber eines weglassen als zu viele zulassen.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · MEMORY</span>
+        <h4 class="serif">Das Gedächtnis.</h4>
+        <p>Mindestens Kurzzeit für den laufenden Run. Falls du dem Agent Vorlieben mitgibst, auch Langzeit. Ohne Memory kein lernender Agent.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · GUARDRAILS</span>
+        <h4 class="serif">Die Schutzschicht.</h4>
+        <p>Step-Limit, Token-Budget, Approval-Gates an heiklen Stellen. Aus Tafel 04 übernehmen, je nach Risiko der Aktionen.</p>
+      </div>
+      <div class="step">
+        <span class="num">05 · ERFOLGSMASS</span>
+        <h4 class="serif">Die Messlatte.</h4>
+        <p>Ein Kriterium, an dem du erkennst, ob der Run gut war. Beispiel: "Mindestens 3 verifizierte Quellen pro Wettbewerber, Tonalität neutral." Ohne Maß keine Verbesserung.</p>
+      </div>
+      <div class="step" style="background:rgba(217,119,87,.04)">
+        <span class="num" style="color:var(--copper-deep)">+ ITERATION</span>
+        <h4 class="serif">Der sechste, unsichtbare Teil.</h4>
+        <p>Kein einziger Agent läuft im ersten Wurf. Drei bis fünf Iterationen sind Standard, bevor er das tut, was du dir vorgestellt hast. Plane sie ein.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 3: SECHS SCHRITTE =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 08</span><span>· DER BUILD</span></div>
+    <h2 class="serif">Sechs Schritte zum<br/>ersten <em>Run</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora">Reihenfolge zählt. Wer mit Tools anfängt, baut sich in eine Sackgasse. Wer mit dem Erfolgsmaß anfängt, kommt schneller ans Ziel als gedacht. Die folgenden sechs Schritte sind die kürzeste Strecke, die in der Praxis funktioniert.</p>
+
+    <div class="process cols-6" style="margin-top:48px">
+      <div class="step">
+        <span class="num">1.0</span>
+        <h4 class="serif" style="font-size:18px">Ziel.</h4>
+        <p>Ein Satz. Konkret. Kein Verfahren, nur Ergebnis.</p>
+      </div>
+      <div class="step">
+        <span class="num">2.0</span>
+        <h4 class="serif" style="font-size:18px">Erfolg.</h4>
+        <p>Wie messbar gut sieht der Run aus?</p>
+      </div>
+      <div class="step">
+        <span class="num">3.0</span>
+        <h4 class="serif" style="font-size:18px">Tools.</h4>
+        <p>3 bis 7. Mit Scope, mit Beschreibung.</p>
+      </div>
+      <div class="step">
+        <span class="num">4.0</span>
+        <h4 class="serif" style="font-size:18px">Schutz.</h4>
+        <p>Limits, Approval-Gates, Kill-Switch.</p>
+      </div>
+      <div class="step">
+        <span class="num">5.0</span>
+        <h4 class="serif" style="font-size:18px">Test.</h4>
+        <p>Drei Beispielfälle. Manuell prüfen.</p>
+      </div>
+      <div class="step">
+        <span class="num">6.0</span>
+        <h4 class="serif" style="font-size:18px">Run.</h4>
+        <p>Live mit Audit. Erste Stichproben.</p>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top:48px">In dieser Reihenfolge fällt jeder Schritt leicht, weil der vorherige geklärt ist. Wer Test überspringt, zahlt es im Run. Wer Erfolg überspringt, weiß nie, ob es funktioniert hat. Wer Schutz überspringt, lernt seine Lektion einmalig und teuer.</p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 4: LIVE-BUILDER =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 09</span><span>· LIVE-BUILDER</span></div>
+    <h2 class="serif">Ein echter Setup<br/>im <em>Aufbau</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker">Beispiel: ein Agent, der jeden Montag fünf Wettbewerber-News zusammenstellt. Klick durch die fünf Phasen und sieh, wie aus einem Satz eine lauffähige Konfiguration wird. Die JSON-Schnipsel sind echte Agent-Konfigurationen, gekürzt zur Lesbarkeit.</p>
+
+    <div class="demo" style="margin-top:48px">
+      <div class="demo-head">
+        <div class="title">Use-Case: "Wöchentliche Wettbewerbs-News, jeden Montag früh."</div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em">BUILDER · v.2026.05</div>
+      </div>
+      <div class="demo-tabs" id="demo-tabs">
+        <button class="demo-tab active" data-step="0"><span class="step-num">01</span>ZIEL</button>
+        <button class="demo-tab" data-step="1"><span class="step-num">02</span>ERFOLG</button>
+        <button class="demo-tab" data-step="2"><span class="step-num">03</span>TOOLS</button>
+        <button class="demo-tab" data-step="3"><span class="step-num">04</span>SCHUTZ</button>
+        <button class="demo-tab" data-step="4"><span class="step-num">05</span>RUN</button>
+      </div>
+      <div class="demo-body" id="demo-body"></div>
+    </div>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px">SIMULATION · BUILDER-OBERFLÄCHEN UNTERSCHEIDEN SICH JE PLATTFORM, DAS PRINZIP IST IDENTISCH.</p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 5: STOLPERFALLEN =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 10</span><span>· FALLEN</span></div>
+    <h2 class="serif">Fünf Anti-Patterns,<br/>die <em>teuer werden</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora">Die folgenden fünf Fehler tauchen in fast jedem ersten Setup auf. Wer sie kennt, vermeidet sie. Wer sie ignoriert, lernt sie über Schmerz. Beides funktioniert, das eine ist günstiger.</p>
+
+    <div class="grid-5">
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">A · ZU VIELE TOOLS</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">15 statt 5</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Der Agent verzettelt sich, wählt das falsche Werkzeug, dreht im Kreis. Cut on six.</p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">B · KEIN ZIELSATZ</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Vage Beschreibung</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">"Hilf mir mit Wettbewerbern" ist kein Ziel. Ohne klaren Satz kein klarer Output.</p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">C · KEIN MASS</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Erfolg unklar</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Ohne Erfolgsmaß weißt du nicht, wann du fertig bist. Iteration ohne Maß ist Bastelei.</p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">D · KEIN BUDGET</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Token frei laufen lassen</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Ein vergessener Loop verbrennt in zehn Minuten dein Monatsbudget. Limits sind Pflicht.</p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">E · PRODUCTION ZUERST</p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25">Test ausgelassen</h4>
+        <p style="font-size:14px;line-height:1.55;color:var(--gray-600)">Wer ohne drei Test-Runs live geht, lernt seine Failure-Modi vor Publikum kennen.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">3</div>
+      <div>
+        <p class="label">FAUSTREGEL · TEST-RUNS</p>
+        <p class="text">Drei Test-Runs vor dem ersten produktiven sind das Minimum. Idealerweise mit drei verschiedenen Eingabe-Typen, damit der Agent in der Bandbreite getestet ist und nicht nur im Idealfall glänzt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 6: GLOSSAR =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 11</span><span>· GLOSSAR</span></div>
+    <h2 class="serif">Sechs Begriffe<br/>aus dem Werkraum.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <span class="term">USE-CASE</span>
+        <span class="def">Die konkrete Aufgabe, die der Agent erledigen soll. Klein genug zum Fertigwerden, groß genug zum Spürbar-Zeit-Sparen. Jeder Agent beginnt hier.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">PROTOTYP</span>
+        <span class="def">Die erste lauffähige Version. Funktioniert für den Hauptfall, ist noch nicht produktionsreif. Wird durch Iteration zum echten Werkzeug.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">EVAL</span>
+        <span class="def">Ein wiederholbarer Test gegen das Erfolgsmaß. Drei bis fünf typische Eingaben, dieselben Erwartungen. Bleibt während der Iteration erhalten.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">ITERATION</span>
+        <span class="def">Eine Runde aus Test, Diagnose, Anpassung, neuer Test. Drei bis fünf Iterationen sind Standard, bevor ein erster Agent das tut, was er soll.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">ERFOLGSMASS</span>
+        <span class="def">Ein klar formuliertes Kriterium, an dem du erkennst, ob ein Run gut war. Ohne Maß keine Verbesserung, ohne Verbesserung kein guter Agent.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">PRODUCTION</span>
+        <span class="def">Der Agent läuft echt, mit echten Daten, an echten Tagen. Davor stehen mindestens drei saubere Test-Runs und ein Audit-Trail. Keine Abkürzung.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 12</span><span>· N&Auml;CHSTE LEHRTAFEL</span></div>
+    <h2 class="serif">Du hast deinen ersten Agent.<br/>Was kommt als Nächstes?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">06</p>
+        <h3 class="serif" style="margin-top:8px">Agent-Teams</h3>
+        <p>Mehrere Agents, die zusammen arbeiten. Rollen, Übergaben, Orchestrierung. Wann das funktioniert und wann nicht.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">07</p>
+        <h3 class="serif" style="margin-top:8px">Was kommt danach?</h3>
+        <p>Wohin sich Agentic AI bewegt. Welche Trends bleiben, welche verschwinden, was du jetzt schon einüben solltest.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">∞</p>
+        <h3 class="serif" style="margin-top:8px">Iteration</h3>
+        <p>Dein erster Agent ist nie fertig. Wie du ihn pflegst, nachschärfst und Schritt für Schritt zu einem ernsthaften Werkzeug machst.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> ZURÜCK ZU 01</a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> ZURÜCK ZU 02</a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> ZURÜCK ZU 03</a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> ZURÜCK ZU 04</a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)">LEHRTAFEL 06 ANFORDERN <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 05</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05 · DRAFT</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============== Live-Builder Demo ==============
+const stages = [
+  {
+    label: 'PHASE 01 · ZIEL',
+    title: 'Ein Satz, der das Ergebnis beschreibt.',
+    text: 'Wir formulieren das Ziel so, dass es nicht das Verfahren beschreibt, sondern das gewünschte Ergebnis. Konkret, prüfbar, in einem Satz. Der Agent leitet daraus seinen Plan ab.',
+    code: `// agent.config.json
+{
+  "goal": "Liste der 5 wichtigsten Wettbewerber-News der letzten 7 Tage,
+           mit Quelle, Kurzfassung und Relevanz-Score 1-5.",
+  "frequency": "weekly · Monday 08:00 Europe/Berlin",
+  "delivery": "Slack-Channel #competitive-intel"
+}`,
+    meta: ['ZIELLÄNGE · 1 SATZ','PRÜFBAR · JA']
+  },
+  {
+    label: 'PHASE 02 · ERFOLG',
+    title: 'Wie sieht ein guter Run aus?',
+    text: 'Vor dem ersten Tool-Call muss klar sein, woran wir Erfolg erkennen. Mindestens 5 Treffer, jeder mit Quelle, Tonalität neutral, Lieferung pünktlich. Was nicht messbar ist, wird nicht besser.',
+    code: `// success_criteria.json
+{
+  "min_results": 5,
+  "must_have": ["source_url", "published_at", "summary"],
+  "max_age_days": 7,
+  "tone": "neutral · no marketing language",
+  "delivery_window": "Mo 08:00 ± 30min",
+  "human_review_within": "30min"
+}`,
+    meta: ['KRITERIEN · 6','MESSBAR · ALLE']
+  },
+  {
+    label: 'PHASE 03 · TOOLS',
+    title: 'Drei bis sieben, jedes mit engem Scope.',
+    text: 'Wir wählen die kleinste sinnvolle Tool-Liste. Jedes mit klarer Beschreibung, jedem die minimal nötige Berechtigung. Mehr Tools heißt nicht besserer Agent, sondern verwirrteres Modell.',
+    code: `// tools.json
+[
+  { "name": "news_search",     "scope": "read",  "rate": "60/min" },
+  { "name": "linkedin_signal", "scope": "read",  "rate": "30/min" },
+  { "name": "site_diff",       "scope": "read",  "rate": "20/min" },
+  { "name": "llm_summarize",   "scope": "model", "tone": "neutral" },
+  { "name": "slack_post",      "scope": "write", "channel": "competitive-intel" }
+]`,
+    meta: ['TOOLS · 5','SCOPES · 4 READ, 1 WRITE']
+  },
+  {
+    label: 'PHASE 04 · SCHUTZ',
+    title: 'Limits, Gates, Notbremse.',
+    text: 'Aus Tafel 04 übernommen: Step-Limit, Token-Budget, Approval vor jedem Slack-Post, Audit-Log für jede Entscheidung. Eskalation an dich, wenn Anomalien auftreten.',
+    code: `// guardrails.json
+{
+  "max_steps": 25,
+  "max_tokens_per_run": 30000,
+  "max_cost_eur": 0.80,
+  "approval_required_for": ["slack_post"],
+  "kill_switch": "stop-agent.sh",
+  "audit_log": "drive://logs/competitive-intel/",
+  "escalate_on": ["timeout", "tool_error_rate>20%"]
+}`,
+    meta: ['LIMITS · 3','GATES · 1','LOG · AKTIV']
+  },
+  {
+    label: 'PHASE 05 · RUN',
+    title: 'Drei Tests, dann live.',
+    text: 'Wir starten mit drei Test-Runs an drei verschiedenen Wochen aus dem Archiv. Erst wenn alle drei das Erfolgsmaß treffen, läuft er produktiv. Erste produktive Wochen mit Stichproben, dann auf Auto.',
+    code: `// run.log (Auszug)
+[2026-05-04 09:14] TEST RUN 1/3
+  → 6 News, 6 Quellen, 0 Halluzinationen
+  → Score: 5/5  ✓
+[2026-05-04 09:21] TEST RUN 2/3
+  → 5 News, 5 Quellen, 1 Doppel-Treffer (dedup ergänzt)
+  → Score: 4/5  → fix → re-test
+[2026-05-04 09:28] TEST RUN 3/3
+  → 5 News, 5 Quellen, 0 Halluzinationen
+  → Score: 5/5  ✓
+[2026-05-11 08:02] PRODUCTION RUN 1
+  → ok · gepostet · 4 min Laufzeit · 0.42 EUR`,
+    meta: ['TESTS · 3/3','LIVE · WOCHE 1']
+  }
+];
+
+const tabs = document.querySelectorAll('#demo-tabs .demo-tab');
+const body = document.getElementById('demo-body');
+function renderStage(idx){
+  tabs.forEach((t,i)=>t.classList.toggle('active', i===idx));
+  const s = stages[idx];
+  body.innerHTML = `
+    <div class="demo-label">${s.label}</div>
+    <div class="demo-title">${s.title}</div>
+    <div class="demo-text">${s.text}</div>
+    <pre class="demo-code">${s.code}</pre>
+    <div class="demo-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+  `;
+}
+tabs.forEach((t,i)=>t.addEventListener('click', ()=>renderStage(i)));
+renderStage(0);
+</script>
+
+</body>
+</html>

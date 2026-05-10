@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Womit ein Agent arbeitet · Codex Lehrtafel 03</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Codex Tokens v.2026.05
+   ============================================================ */
+:root{
+  --ink-black:#0A0A0B;
+  --ink-deep:#14151A;
+  --ink-night:#091423;
+  --paper-light:#FAF9F5;
+  --paper-warm:#F0E6D2;
+  --paper-aged:#E8DCC0;
+
+  --copper:#D97757;
+  --copper-deep:#B85F40;
+  --ochre:#FFC47C;
+
+  --ink-blue:#4A6FA5;
+  --data-cyan:#52AEFF;
+  --patina:#788C5D;
+  --rust:#8B3A1F;
+
+  --gray-100:#EBEBEB;
+  --gray-200:#C8C9CC;
+  --gray-400:#8A8F98;
+  --gray-600:#4D4D4D;
+  --gray-800:#222326;
+  --gray-900:#16171A;
+
+  --fg-on-ink:#E8E8E8;
+  --fg-on-ink-mute:#8A8A8A;
+  --fg-on-ink-faint:#4D4D4D;
+  --fg-on-paper:#1A1A1A;
+  --fg-on-paper-mute:#6B5D45;
+  --fg-on-paper-faint:#A89A7A;
+
+  --border-on-ink:#222326;
+  --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+
+  --w-container:1180px;
+  --w-prose:64ch;
+
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+.lora{font-family:'Lora',serif}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+.wrap-prose{max-width:var(--w-prose);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+/* ---------- Eyebrow ---------- */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+/* ---------- Headlines ---------- */
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+/* ---------- Prose ---------- */
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+/* ---------- Rules ---------- */
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+/* ---------- Hero ---------- */
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase}
+@media(max-width:880px){
+  .hero-stats{grid-template-columns:1fr}
+  .hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}
+}
+
+/* ---------- CTA ---------- */
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+/* ---------- Two-col ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+/* ---------- Card ---------- */
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+/* ---------- Diagramm ---------- */
+.diagram-wrap{padding:40px;border:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .diagram-wrap{border:1px solid var(--border-on-paper);background:var(--paper-aged)}
+
+/* ---------- Vergleichstabelle ---------- */
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+/* ---------- Process Steps ---------- */
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+@media(max-width:880px){.process{grid-template-columns:1fr}}
+
+/* ---------- Live Demo (Tool-Call) ---------- */
+.demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.demo-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.demo-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.demo-stages{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.demo-stage{padding:18px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);transition:all .2s}
+.demo-stage:last-child{border-right:none}
+.demo-stage.active{background:var(--copper);color:var(--ink-black)}
+.demo-stage:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.demo-stage .step-num{display:block;font-size:9px;color:var(--gray-600);margin-bottom:4px}
+.demo-stage.active .step-num{color:rgba(10,10,11,.5)}
+.demo-body{padding:32px;min-height:340px}
+.demo-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+.demo-title{font-family:'Source Serif 4',serif;font-size:26px;color:var(--fg-on-ink);margin-bottom:14px;line-height:1.2}
+.demo-text{font-family:'Lora',serif;font-size:18px;line-height:1.6;color:var(--gray-200);margin-bottom:20px;max-width:64ch}
+.demo-code{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7;background:var(--ink-black);border:1px solid var(--border-on-ink);border-left:2px solid var(--copper);padding:18px 22px;color:var(--gray-100);white-space:pre-wrap;overflow-x:auto}
+.demo-meta{display:flex;gap:24px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;margin-top:22px;padding-top:16px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap}
+
+/* ---------- MCP Architektur Diagramm ---------- */
+.mcp-arch{padding:48px;border:1px solid var(--border-on-ink);background:var(--ink-deep);position:relative}
+section.parchment .mcp-arch{border-color:var(--border-on-paper);background:var(--paper-aged)}
+
+/* ---------- Glossar ---------- */
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+/* ---------- Grid-3 ---------- */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:880px){.grid-3{grid-template-columns:1fr}}
+
+/* ---------- Pull Quote ---------- */
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+/* ---------- Footer ---------- */
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+/* ---------- Animationen ---------- */
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+@media (prefers-reduced-motion: reduce){
+  .flow,.pulse{animation:none}
+  *{transition:none !important;animation:none !important}
+}
+
+/* ─── Nav (Codex) ─── */
+nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* ─── Parchment grain ─── */
+section.parchment{position:relative;overflow:hidden}
+section.parchment::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+section.parchment>.wrap{position:relative;z-index:1}
+
+
+/* ─── Footer (Codex) ─── */
+.footer-codex{background:var(--ink-black);border-top:1px solid var(--border-on-ink);padding:64px 0 40px}
+.footer-grid-c{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:48px}
+.footer-brand-c{font-family:'Source Serif 4',serif;font-size:26px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1;margin-bottom:4px}
+.footer-brand-sub-c{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:20px}
+.footer-desc-c{font-family:'Lora',serif;font-size:14px;line-height:1.65;color:var(--gray-400)}
+.footer-col-head-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gray-400);margin-bottom:20px}
+.footer-links-c{display:flex;flex-direction:column;gap:12px}
+.footer-link-c{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:var(--gray-400);transition:color .15s}
+.footer-link-c:hover{color:var(--copper)}
+.footer-link-c.dim{opacity:.5;pointer-events:none}
+.footer-bottom-c{border-top:1px solid var(--border-on-ink);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-meta-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-400)}
+.footer-meta-c .cu{color:var(--copper)}
+.motion-btn-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:6px 14px;cursor:pointer;transition:border-color .15s,color .15s}
+.motion-btn-c:hover{border-color:var(--copper);color:var(--copper)}
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{transition:none!important;animation:none!important}
+
+/* ─── Language Toggle ─── */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+</style>
+</head>
+<body>
+
+<nav aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back"><span data-de>&#x2190; Alle Tafeln</span><span data-en>&#x2190; All Articles</span></a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link"><span data-de>01 &#x2192; Was ist AI?</span><span data-en>01 &#x2192; What is AI?</span></a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link"><span data-de>02 &#x2192; Wie ein Agent denkt</span><span data-en>02 &#x2192; How an Agent Thinks</span></a>
+      <a href="./04_risiko-und-trust.html" class="nav-link"><span data-de>04 &#x2192; Risiko &amp; Trust</span><span data-en>04 &#x2192; Risk &amp; Trust</span></a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-lang">
+        <button class="lang-btn" id="btn-de" aria-pressed="true" onclick="setLang('de')">DE</button>
+        <span class="lang-sep">/</span>
+        <button class="lang-btn" id="btn-en" aria-pressed="false" onclick="setLang('en')">EN</button>
+      </div>
+      <a href="https://readix.net" class="nav-cta-a" style="margin-left:12px">Readix Platform &#x250C;&#x2500;&#x2500;&#x2192;</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 03</span><span data-de>&#xB7; LEHRTAFEL &#xB7; DIE WERKZEUGE</span><span data-en>&#xB7; ARTICLE &#xB7; THE TOOLS</span></div>
+    <h1 class="serif" data-de>Womit ein Agent<br/><em>arbeitet</em>.</h1>
+    <h1 class="serif" data-en>What an Agent<br/><em>works with</em>.</h1>
+    <p class="kicker" data-de>Tools sind die H&#228;nde eines Agents. MCP ist der Stecker. Skills sind vorbereitete Werkzeugg&#252;rtel. Wer das versteht, wei&#223; warum ein Agent etwas Reales tun kann und warum er manchmal scheitert. Diese Tafel zeigt das Innere des Werkzeugkastens.</p>
+    <p class="kicker" data-en>Tools are an agent&#x2019;s hands. MCP is the connector. Skills are pre-prepared tool belts. Understanding this reveals why an agent can do real things and why it sometimes fails. This article shows the inside of the toolbox.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">12</div>
+        <div class="label"><span data-de>Werkzeugfamilien</span><span data-en>Tool families</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">1</div>
+        <div class="label"><span data-de>Offener Standard &#xB7; MCP</span><span data-en>Open standard &#xB7; MCP</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">0</div>
+        <div class="label"><span data-de>Magie</span><span data-en>Magic</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1"><span data-de>METHODE LESEN</span><span data-en>READ THE APPROACH</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+      <a class="cta" href="./02_wie-ein-agent-denkt.html" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-de>ZUR&#xDC;CK ZU 02</span><span data-en>BACK TO 02</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+    </div>
+
+    <div class="meta">
+      <span><span data-de>FILE &#xB7; 03 / SERIE AI &amp; AGENTIC EXPLAINED</span><span data-en>FILE &#xB7; 03 / SERIES AI &amp; AGENTIC EXPLAINED</span></span>
+      <span><span data-de>LESEZEIT &#xB7; 11 MINUTEN</span><span data-en>READING TIME &#xB7; 11 MINUTES</span></span>
+      <span>VERSION &#xB7; v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 1: WAS TOOLS SIND =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 04</span><span data-de>&#xB7; DIE GRUNDLAGE</span><span data-en>&#xB7; THE FOUNDATION</span></div>
+    <h2 class="serif" data-de>Was Tools <em>wirklich</em> sind.</h2>
+    <h2 class="serif" data-en>What Tools <em>really</em> are.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Ein Tool ist eine Funktion mit klarem Namen, klaren Eingaben und einer klaren Antwort. Nicht mehr, nicht weniger. Der Agent liest die Beschreibung, entscheidet wann er es ruft, und nutzt das Ergebnis im n&#228;chsten Gedanken.</p>
+    <p class="kicker lora" data-en>A tool is a function with a clear name, clear inputs, and a clear response. Nothing more, nothing less. The agent reads the description, decides when to call it, and uses the result in the next thought.</p>
+
+    <div class="two" style="margin-top:64px">
+      <div>
+        <h3 class="serif" data-de>Drei Bestandteile pro Tool</h3>
+        <h3 class="serif" data-en>Three components per tool</h3>
+        <p class="prose" style="font-size:17px" data-de>Jedes Tool hat einen Namen, eine kurze Beschreibung in nat&#252;rlicher Sprache und ein Schema f&#252;r die Parameter. Mehr braucht es nicht. Der Agent versteht aus dem Schema, was hineinpasst und was nicht.</p>
+        <p class="prose" style="font-size:17px" data-en>Every tool has a name, a short natural-language description, and a schema for its parameters. Nothing else is needed. The agent understands from the schema what fits and what doesn&#x2019;t.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em">FORMEL</p>
+        <p class="mono" style="font-size:14px;color:var(--gray-600);margin-top:8px">NAME &nbsp;&#x250C;&#x2500;&#x2500;&#x2192;&nbsp; SCHEMA &nbsp;&#x250C;&#x2500;&#x2500;&#x2192;&nbsp; FUNKTION</p>
+        <div class="rule"></div>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6;color:var(--gray-600)" data-de>Die Beschreibung ist wichtiger als der Code. Sie ist das, was der Agent liest. Schlechte Beschreibung, schlechte Wahl.</p>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6;color:var(--gray-600)" data-en>The description matters more than the code. It&#x2019;s what the agent reads. Bad description, bad choice.</p>
+      </div>
+
+      <div class="diagram-wrap">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em;margin-bottom:18px"><span data-de>EIN TOOL &#xB7; IM SCHEMA</span><span data-en>ONE TOOL &#xB7; IN THE SCHEMA</span></p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.85;color:var(--gray-600);background:var(--paper-light);padding:22px;border:1px solid var(--border-on-paper)">
+          <div><span style="color:var(--copper-deep)">name</span>: send_email</div>
+          <div data-de><span style="color:var(--copper-deep)">desc</span>: Sendet eine E-Mail an einen Empf&#228;nger.</div>
+          <div data-en><span style="color:var(--copper-deep)">desc</span>: Sends an email to a recipient.</div>
+          <div><span style="color:var(--copper-deep)">params</span>:</div>
+          <div style="padding-left:18px">to: string &#xB7; <span data-de>Pflicht</span><span data-en>required</span></div>
+          <div style="padding-left:18px">subject: string &#xB7; <span data-de>Pflicht</span><span data-en>required</span></div>
+          <div style="padding-left:18px">body: string &#xB7; <span data-de>Pflicht</span><span data-en>required</span></div>
+          <div style="padding-left:18px">cc: string[] &#xB7; <span data-de>optional</span><span data-en>optional</span></div>
+          <div><span style="color:var(--copper-deep)">returns</span>: { ok, message_id }</div>
+        </div>
+        <p class="mono" style="margin-top:14px;font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em"><span data-de>Vereinfacht. Reale Schemas folgen JSON-Schema-Konventionen.</span><span data-en>Simplified. Real schemas follow JSON Schema conventions.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 2: DREI FAMILIEN =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 05</span><span data-de>&#xB7; DREI FAMILIEN</span><span data-en>&#xB7; THREE FAMILIES</span></div>
+    <h2 class="serif" data-de>Lesen, schreiben, <em>handeln</em>.</h2>
+    <h2 class="serif" data-en>Read, write, <em>act</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker" data-de>Tools fallen in drei klare Familien, je nachdem, was sie mit der Welt machen. Die Unterscheidung ist nicht akademisch. Sie entscheidet dar&#252;ber, welches Risiko bei einem falschen Aufruf entsteht und wie viel Aufsicht ein Agent braucht.</p>
+    <p class="kicker" data-en>Tools fall into three clear families, depending on what they do to the world. The distinction isn&#x2019;t academic. It determines what risk a wrong call creates and how much oversight an agent needs.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th><span data-de>DIMENSION</span><span data-en>DIMENSION</span></th>
+          <th style="color:var(--ink-blue)">READ</th>
+          <th style="color:var(--copper)">WRITE</th>
+          <th style="color:var(--rust)">ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-label"><span data-de>Tut was</span><span data-en>Does what</span></td>
+          <td><span data-de>Holt Information</span><span data-en>Fetches information</span></td>
+          <td><span data-de>Ver&#228;ndert Daten</span><span data-en>Changes data</span></td>
+          <td><span data-de>Bewegt Reales</span><span data-en>Moves real things</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Beispiele</span><span data-en>Examples</span></td>
+          <td>web_search, db_query, calendar_read</td>
+          <td>db_update, doc_edit, file_save</td>
+          <td>send_email, payment_run, deploy_release</td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Risiko bei Fehler</span><span data-en>Risk if wrong</span></td>
+          <td><span data-de>Falsche Antwort</span><span data-en>Wrong answer</span></td>
+          <td><span data-de>Besch&#228;digte Daten</span><span data-en>Corrupted data</span></td>
+          <td><span data-de>Echte Konsequenz drau&#223;en</span><span data-en>Real consequence outside</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Empfohlene Aufsicht</span><span data-en>Recommended oversight</span></td>
+          <td><span data-de>Stichprobe</span><span data-en>Spot check</span></td>
+          <td><span data-de>Diff-Vorschau, Undo</span><span data-en>Diff preview, undo</span></td>
+          <td><span data-de>Approval-Gate, Rate-Limit</span><span data-en>Approval gate, rate limit</span></td>
+        </tr>
+        <tr>
+          <td class="col-label"><span data-de>Reversibel</span><span data-en>Reversible</span></td>
+          <td><span data-de>Ja, immer</span><span data-en>Yes, always</span></td>
+          <td><span data-de>Meist, mit Undo</span><span data-en>Usually, with undo</span></td>
+          <td><span data-de>Selten, oft gar nicht</span><span data-en>Rarely, often not at all</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="mono" style="font-size:11px;color:var(--copper);margin-top:24px;letter-spacing:.12em"><span data-de>&#x250C;&#x2500;&#x2500;&#x2192; EINE FAUSTREGEL: JE WEITER RECHTS, DESTO STRENGER DIE GUARDRAIL.</span><span data-en>&#x250C;&#x2500;&#x2500;&#x2192; A RULE OF THUMB: THE FURTHER RIGHT, THE STRICTER THE GUARDRAIL.</span></p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 3: MCP =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 06</span><span data-de>&#xB7; DER STANDARD</span><span data-en>&#xB7; THE STANDARD</span></div>
+    <h2 class="serif" data-de>MCP: ein Stecker f&#252;r <em>alles</em>.</h2>
+    <h2 class="serif" data-en>MCP: one connector for <em>everything</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Bevor MCP da war, schrieb jedes Team eigene Adapter, jeder Hersteller eigenes Schema, jeder Agent eigene Konventionen. Heute gibt es einen offenen Standard, der das alles eindampft. Model Context Protocol. Stell es dir wie USB f&#252;r AI vor.</p>
+    <p class="kicker lora" data-en>Before MCP existed, every team wrote its own adapters, every vendor its own schema, every agent its own conventions. Today there&#x2019;s an open standard that distills it all. Model Context Protocol. Think of it like USB for AI.</p>
+
+    <div class="two" style="margin-top:56px">
+      <div class="mcp-arch">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em;margin-bottom:24px">MCP &#xB7; <span data-de>ARCHITEKTUR</span><span data-en>ARCHITECTURE</span></p>
+        <svg viewBox="0 0 480 320" style="width:100%">
+          <defs>
+            <marker id="ar3" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L8,5 L0,10 z" fill="#B85F40"/>
+            </marker>
+          </defs>
+
+          <rect x="20" y="120" width="120" height="80" fill="#FAF9F5" stroke="#1A1A1A" stroke-width="1.5"/>
+          <text x="80" y="150" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#1A1A1A">CLIENT</text>
+          <text x="80" y="168" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#6B5D45">DEIN AGENT</text>
+          <text x="80" y="185" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#6B5D45">CLAUDE / GPT / ETC.</text>
+
+          <rect x="160" y="135" width="160" height="50" fill="none" stroke="#B85F40" stroke-width="2" stroke-dasharray="4 3"/>
+          <text x="240" y="158" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#B85F40">MCP</text>
+          <text x="240" y="174" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#B85F40">PROTOCOL</text>
+
+          <line x1="140" y1="160" x2="158" y2="160" stroke="#B85F40" stroke-width="1.5" marker-end="url(#ar3)" class="flow"/>
+          <line x1="320" y1="160" x2="338" y2="160" stroke="#B85F40" stroke-width="1.5" marker-end="url(#ar3)" class="flow"/>
+
+          <rect x="340" y="40" width="120" height="50" fill="#FAF9F5" stroke="#1A1A1A" stroke-width="1.5"/>
+          <text x="400" y="62" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1A1A1A">SERVER &#xB7; GMAIL</text>
+          <text x="400" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#6B5D45">3 TOOLS</text>
+
+          <rect x="340" y="135" width="120" height="50" fill="#FAF9F5" stroke="#1A1A1A" stroke-width="1.5"/>
+          <text x="400" y="157" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1A1A1A">SERVER &#xB7; NOTION</text>
+          <text x="400" y="173" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#6B5D45">7 TOOLS</text>
+
+          <rect x="340" y="230" width="120" height="50" fill="#FAF9F5" stroke="#1A1A1A" stroke-width="1.5"/>
+          <text x="400" y="252" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1A1A1A">SERVER &#xB7; CRM</text>
+          <text x="400" y="268" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#6B5D45">12 TOOLS</text>
+
+          <line x1="320" y1="148" x2="338" y2="80" stroke="#B85F40" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+          <line x1="320" y1="172" x2="338" y2="248" stroke="#B85F40" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+
+          <text x="240" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#B85F40" letter-spacing="2">EIN PROTOKOLL &#xB7; BELIEBIG VIELE SERVER</text>
+          <line x1="100" y1="42" x2="380" y2="42" stroke="#B85F40" stroke-width="1"/>
+
+          <text x="240" y="305" text-anchor="middle" font-family="Lora" font-style="italic" font-size="13" fill="#6B5D45">Jeder Server bringt seine eigenen Tools mit.</text>
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="serif" data-de>Was MCP konkret leistet</h3>
+        <h3 class="serif" data-en>What MCP concretely does</h3>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em"><span data-de>01 &#xB7; ENTDECKUNG</span><span data-en>01 &#xB7; DISCOVERY</span></p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-de>Der Agent fragt einen Server: was kannst du? Der Server antwortet mit einer Liste seiner Tools, mitsamt Beschreibung und Schema.</p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-en>The agent asks a server: what can you do? The server responds with a list of its tools, including description and schema.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em"><span data-de>02 &#xB7; AUFRUF</span><span data-en>02 &#xB7; CALL</span></p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-de>Der Agent ruft ein Tool mit den geforderten Parametern. Der Server f&#252;hrt aus, antwortet mit Ergebnis oder Fehler. Immer im selben Format.</p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-en>The agent calls a tool with the required parameters. The server executes, responds with result or error. Always in the same format.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em">03 &#xB7; KONTEXT / CONTEXT</p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-de>Server k&#246;nnen Dateien, Prompts oder Wissen mitgeben. Nicht nur Tools, auch Kontext flie&#223;t durch denselben Stecker.</p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-en>Servers can provide files, prompts, or knowledge. Not just tools, context also flows through the same connector.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em"><span data-de>04 &#xB7; OFFEN</span><span data-en>04 &#xB7; OPEN</span></p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-de>Spec ist offen, Implementierungen sind frei. Wer einen Server schreibt, ist sofort kompatibel mit jedem Client am Markt.</p>
+        <p style="font-size:16px;color:var(--gray-600);margin-top:6px" data-en>The spec is open, implementations are free. Anyone who writes a server is immediately compatible with every client on the market.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 4: LIVE-ANATOMIE =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 07</span><span>&#xB7; LIVE-ANATOMIE</span></div>
+    <h2 class="serif" data-de>Ein Tool-Call, von <em>nah</em>.</h2>
+    <h2 class="serif" data-en>A tool call, up <em>close</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker" data-de>F&#252;nf Phasen, ein einziger Tool-Call. Klick durch und sieh, was zwischen Agent und Server tats&#228;chlich hin und her l&#228;uft. Die JSON-Beispiele entsprechen einem realen MCP-Aufruf, gek&#252;rzt f&#252;r die Lesbarkeit.</p>
+    <p class="kicker" data-en>Five phases, one single tool call. Click through and see what actually passes back and forth between agent and server. The JSON examples correspond to a real MCP call, shortened for readability.</p>
+
+    <div class="demo" style="margin-top:48px">
+      <div class="demo-head">
+        <div class="title" data-de>Auftrag: &#x201E;Finde freie Slots f&#252;r ein Kundengespr&#228;ch n&#228;chste Woche.&#x201C;</div>
+        <div class="title" data-en>Task: &#x201C;Find free slots for a customer call next week.&#x201D;</div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em">SERVER &#xB7; CALENDAR</div>
+      </div>
+      <div class="demo-stages" id="demo-stages">
+        <button class="demo-stage active" data-step="0"><span class="step-num">01</span>DISCOVER</button>
+        <button class="demo-stage" data-step="1"><span class="step-num">02</span>SELECT</button>
+        <button class="demo-stage" data-step="2"><span class="step-num">03</span>CALL</button>
+        <button class="demo-stage" data-step="3"><span class="step-num">04</span>EXECUTE</button>
+        <button class="demo-stage" data-step="4"><span class="step-num">05</span>OBSERVE</button>
+      </div>
+      <div class="demo-body" id="demo-body"></div>
+    </div>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px"><span data-de>SIMULATION &#xB7; VEREINFACHTER MCP-AUFRUF.</span><span data-en>SIMULATION &#xB7; SIMPLIFIED MCP CALL.</span></p>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 5: SKILLS UND PLUGINS =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 08</span><span data-de>&#xB7; B&#xDC;NDELUNG</span><span data-en>&#xB7; BUNDLING</span></div>
+    <h2 class="serif" data-de>Skills b&#252;ndeln <em>Tools</em>.</h2>
+    <h2 class="serif" data-en>Skills bundle <em>tools</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Ein einzelnes Tool ist eine Funktion. Ein Skill ist ein vorbereiteter Workflow: mehrere Tools, Reihenfolge, Tonalit&#228;t, Beispiele. Plugins gehen einen Schritt weiter und liefern fertige Skill-Pakete f&#252;r ganze Berufsfelder. So musst du nicht jedes Mal von vorn anfangen.</p>
+    <p class="kicker lora" data-en>A single tool is a function. A skill is a prepared workflow: multiple tools, sequence, tone, examples. Plugins go a step further and deliver ready-made skill packages for entire domains. So you don&#x2019;t have to start from scratch every time.</p>
+
+    <div class="process">
+      <div class="step">
+        <span class="num">1.0 &#xB7; TOOL</span>
+        <h4 class="serif" data-de>Eine Funktion.</h4>
+        <h4 class="serif" data-en>One function.</h4>
+        <p data-de>Ein Aufruf, eine Antwort. Beispiel: <span class="mono" style="font-size:13px">send_email</span>. Das kleinste Bauteil im Werkzeugkasten.</p>
+        <p data-en>One call, one response. Example: <span class="mono" style="font-size:13px">send_email</span>. The smallest building block in the toolbox.</p>
+      </div>
+      <div class="step">
+        <span class="num">2.0 &#xB7; MCP-SERVER</span>
+        <h4 class="serif" data-de>Mehrere Tools.</h4>
+        <h4 class="serif" data-en>Multiple tools.</h4>
+        <p data-de>Ein Server b&#252;ndelt verwandte Tools eines Anbieters. Beispiel: Gmail-Server mit lesen, suchen, senden, archivieren.</p>
+        <p data-en>A server bundles related tools from one provider. Example: Gmail server with read, search, send, archive.</p>
+      </div>
+      <div class="step">
+        <span class="num">3.0 &#xB7; SKILL</span>
+        <h4 class="serif" data-de>Eine Anleitung.</h4>
+        <h4 class="serif" data-en>A workflow guide.</h4>
+        <p data-de>Ein Skill ist ein dokumentierter Workflow plus die Tools, die er braucht. Beispiel: &#x201E;Wettbewerber-Report bauen&#x201C;, inkl. Reihenfolge und Tonalit&#228;t.</p>
+        <p data-en>A skill is a documented workflow plus the tools it needs. Example: &#x201C;Build competitor report&#x201D;, including sequence and tone.</p>
+      </div>
+      <div class="step">
+        <span class="num">4.0 &#xB7; PLUGIN</span>
+        <h4 class="serif" data-de>Ein Berufspaket.</h4>
+        <h4 class="serif" data-en>A domain package.</h4>
+        <p data-de>Ein Plugin liefert mehrere Skills plus Server, die zusammen einen Use-Case abdecken. Beispiel: Sales-Plugin mit Recherche, Outreach, Pipeline-Sicht.</p>
+        <p data-en>A plugin delivers multiple skills plus servers that together cover a use case. Example: sales plugin with research, outreach, pipeline view.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">&#xD7;4</div>
+      <div>
+        <p class="label"><span data-de>VERVIERFACHUNG &#xB7; TYPISCHER EFFEKT</span><span data-en>QUADRUPLICATION &#xB7; TYPICAL EFFECT</span></p>
+        <p class="text" data-de>Ein Skill, der drei bis f&#252;nf Tools sinnvoll kombiniert, liefert in der Praxis das Vier- bis F&#252;nffache an verl&#228;sslichem Output gegen&#252;ber rohem Tool-Use. Der Grund ist nicht das Modell, sondern die Anleitung.</p>
+        <p class="text" data-en>A skill that meaningfully combines three to five tools delivers in practice four to five times the reliable output compared to raw tool use. The reason isn&#x2019;t the model, it&#x2019;s the instructions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 6: SICHERHEIT =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 09</span><span data-de>&#xB7; SICHERHEIT</span><span data-en>&#xB7; SECURITY</span></div>
+    <h2 class="serif" data-de>Wer darf <em>was</em>?</h2>
+    <h2 class="serif" data-en>Who may do <em>what</em>?</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker" data-de>Ein Tool, das mehr darf als n&#246;tig, ist eine offene T&#252;r. Drei Mechanismen kommen in jedem ernsthaften Setup zum Einsatz, oft kombiniert: Scopes, Approval-Gates, Audit-Trails.</p>
+    <p class="kicker" data-en>A tool that can do more than necessary is an open door. Three mechanisms are used in every serious setup, often combined: scopes, approval gates, audit trails.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">A &#xB7; SCOPES</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Der minimale Schl&#252;sselbund</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>The minimal keychain</h3>
+        <p data-de>Ein Tool bekommt nur die Rechte, die es wirklich braucht. Lesen reicht f&#252;r eine Recherche, Schreibrechte sind tabu. Wer Scopes weit zieht, baut sich ein Loch.</p>
+        <p data-en>A tool gets only the permissions it actually needs. Read access suffices for research, write permissions are off-limits. Setting scopes wide builds in a vulnerability.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">B &#xB7; APPROVAL-GATES</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Halt vor der Aktion</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Stop before the action</h3>
+        <p data-de>Bei Action-Tools wartet der Agent auf eine Freigabe. Du siehst, was er tun will, pr&#252;fst kurz, dr&#252;ckst Ja oder Nein. Maximal zwei Klicks.</p>
+        <p data-en>For action tools, the agent waits for approval. You see what it wants to do, review briefly, press yes or no. Maximum two clicks.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">C &#xB7; AUDIT-TRAIL</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Jeder Aufruf wird protokolliert</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Every call is logged</h3>
+        <p data-de>Jeder Tool-Call landet im Log. Wer hat was wann gerufen, mit welchen Parametern, mit welchem Ergebnis. Im Zweifel forensisch nachvollziehbar.</p>
+        <p data-en>Every tool call lands in the log. Who called what when, with which parameters, with which result. Forensically traceable if needed.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:56px;border-color:var(--rust);background:rgba(139,58,31,.08)">
+      <div class="num" style="color:var(--rust)">3</div>
+      <div>
+        <p class="label" style="color:var(--rust)"><span data-de>FAUSTREGEL &#xB7; SICHERHEIT</span><span data-en>RULE OF THUMB &#xB7; SECURITY</span></p>
+        <p class="text" style="color:var(--gray-200)" data-de>Drei Fragen vor jedem neuen Tool: Was darf es lesen? Was darf es &#228;ndern? Wer bekommt eine Benachrichtigung, wenn es ausschl&#228;gt? Wer eine davon nicht beantworten kann, sollte das Tool nicht verbinden.</p>
+        <p class="text" style="color:var(--gray-200)" data-en>Three questions before each new tool: What can it read? What can it change? Who gets notified when it fires? Anyone who can&#x2019;t answer one of them shouldn&#x2019;t connect the tool.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== KAPITEL 7: GLOSSAR =========================== -->
+<section id="kapitel-7" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 10</span><span data-de>&#xB7; GLOSSAR</span><span data-en>&#xB7; GLOSSARY</span></div>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>f&#252;r die Werkstatt.</h2>
+    <h2 class="serif" data-en>Six terms<br/>for the workshop.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--paper-aged);padding:48px;border:1px solid var(--border-on-paper)">
+      <div class="gloss">
+        <span class="term">TOOL</span>
+        <span class="def" data-de>Eine Funktion mit Namen, Schema und Beschreibung. Der kleinste Baustein, mit dem ein Agent die Welt anf&#228;sst.</span>
+        <span class="def" data-en>A function with a name, schema, and description. The smallest building block with which an agent touches the world.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">FUNCTION CALLING</span>
+        <span class="def" data-de>Die Technik, mit der ein Modell Tools ausw&#228;hlt und aufruft. Hei&#223;t bei manchen Anbietern auch Tool Use. Gleiche Idee.</span>
+        <span class="def" data-en>The technique by which a model selects and calls tools. Some vendors also call it Tool Use. Same idea.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">MCP</span>
+        <span class="def" data-de>Model Context Protocol. Offener Standard, mit dem Agents Tools und Kontext anbinden. Wie USB f&#252;r AI: ein Stecker, beliebig viele Ger&#228;te.</span>
+        <span class="def" data-en>Model Context Protocol. Open standard for connecting tools and context to agents. Like USB for AI: one connector, any number of devices.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">MCP-SERVER</span>
+        <span class="def" data-de>Ein Programm, das Tools &#252;ber MCP bereitstellt. Anbieter wie Notion, GitHub, Slack liefern eigene Server, jeder mit seiner Tool-Liste.</span>
+        <span class="def" data-en>A program that provides tools via MCP. Providers like Notion, GitHub, and Slack ship their own servers, each with its tool list.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">SKILL</span>
+        <span class="def" data-de>Ein dokumentierter Workflow plus die Tools, die er nutzt. Liefert dem Agent die Anleitung, nicht nur die Werkzeuge.</span>
+        <span class="def" data-en>A documented workflow plus the tools it uses. Gives the agent the instructions, not just the tools.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">SCOPE</span>
+        <span class="def" data-de>Die Berechtigungsgrenze eines Tools. Lesen, Schreiben, Senden. Der wichtigste Hebel f&#252;r Sicherheit. Eng setzen, niemals offen lassen.</span>
+        <span class="def" data-en>The permission boundary of a tool. Read, write, send. The most important lever for security. Set it narrow, never leave it open.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">&#x25CF; 11</span><span data-de>&#xB7; N&#xC4;CHSTE LEHRTAFEL</span><span data-en>&#xB7; NEXT ARTICLE</span></div>
+    <h2 class="serif" data-de>Du kennst die Werkzeuge.<br/>Was kommt als N&#228;chstes?</h2>
+    <h2 class="serif" data-en>You know the tools.<br/>What&#x2019;s next?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">04</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Risiko und Trust</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Risk and Trust</h3>
+        <p data-de>Wo Agents schiefgehen, wie du sie absicherst, wann der Mensch im Loop bleiben muss. Mit Checkliste f&#252;r eigene Setups.</p>
+        <p data-en>Where agents go wrong, how to secure them, when humans must stay in the loop. With checklist for your own setups.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">05</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Dein erster Agent</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Your First Agent</h3>
+        <p data-de>Vom Anwendungsfall bis zum Prototyp. Welche Schritte, welche Werkzeuge, welche Stolperfallen.</p>
+        <p data-en>From use case to prototype. What steps, what tools, what pitfalls.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">06</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Agent-Teams</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Agent Teams</h3>
+        <p data-de>Mehrere Agents, die zusammen arbeiten. Rollen, &#xDC;bergaben, Orchestrierung. Wo das funktioniert und wo nicht.</p>
+        <p data-en>Multiple agents working together. Roles, handoffs, orchestration. Where this works and where it doesn&#x2019;t.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="./01_was-ist-ai-und-agentic-ai.html"><span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&#xDC;CK ZU 01</span><span data-en>BACK TO 01</span></a>
+      <a class="cta" href="./02_wie-ein-agent-denkt.html"><span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span> <span data-de>ZUR&#xDC;CK ZU 02</span><span data-en>BACK TO 02</span></a>
+      <a class="cta" href="./04_risiko-und-trust.html" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-de>LEHRTAFEL 04 LESEN</span><span data-en>READ ARTICLE 04</span> <span class="arrow">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer class="footer-codex">
+  <div class="wrap">
+    <div class="footer-grid-c">
+      <div>
+        <div class="footer-brand-c">Readix<span style="color:var(--copper)">.</span></div>
+        <div class="footer-brand-sub-c">Learn &#xB7; Engineering Codex</div>
+        <p class="footer-desc-c" data-de>Lehrtafeln f&#252;r die Praxis. Keine Buzzwords, keine Hype-Artikel. Nur das, was du wirklich brauchst, um mit AI-Agenten zu arbeiten.</p>
+        <p class="footer-desc-c" data-en>Articles for practitioners. No buzzwords, no hype. Just what you actually need to work with AI agents.</p>
+      </div>
+      <div>
+        <div class="footer-col-head-c"><span data-de>Lehrtafeln</span><span data-en>Articles</span></div>
+        <div class="footer-links-c">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="footer-link-c"><span data-de>01 &#xB7; Was ist AI?</span><span data-en>01 &#xB7; What is AI?</span></a>
+          <a href="./02_wie-ein-agent-denkt.html" class="footer-link-c"><span data-de>02 &#xB7; Wie ein Agent denkt</span><span data-en>02 &#xB7; How an Agent Thinks</span></a>
+          <a href="./03_tools-mcps-plugins.html" class="footer-link-c" style="color:#D97757"><span data-de>03 &#xB7; Tools &amp; MCPs</span><span data-en>03 &#xB7; Tools &amp; MCPs</span></a>
+          <a href="./04_risiko-und-trust.html" class="footer-link-c"><span data-de>04 &#xB7; Risiko &amp; Trust</span><span data-en>04 &#xB7; Risk &amp; Trust</span></a>
+          <span class="footer-link-c dim"><span data-de>05 &#xB7; Dein erster Agent</span><span data-en>05 &#xB7; Your First Agent</span></span>
+          <span class="footer-link-c dim"><span data-de>06 &#xB7; Agentic Workflows</span><span data-en>06 &#xB7; Agentic Workflows</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c">Readix Platform</div>
+        <div class="footer-links-c">
+          <a href="https://readix.net" class="footer-link-c">readix.net</a>
+          <span class="footer-link-c dim">Dashboard</span>
+          <span class="footer-link-c dim">API Docs</span>
+          <span class="footer-link-c dim">Changelog</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c"><span data-de>Rechtliches</span><span data-en>Legal</span></div>
+        <div class="footer-links-c">
+          <span class="footer-link-c dim"><span data-de>Impressum</span><span data-en>Imprint</span></span>
+          <span class="footer-link-c dim"><span data-de>Datenschutz</span><span data-en>Privacy</span></span>
+          <span class="footer-link-c dim"><span data-de>AGB</span><span data-en>Terms</span></span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-c">
+      <span class="footer-meta-c">&#xA9; 2026 <span class="cu">Readix</span> &#xB7; <span data-de>Codex Lehrtafel 03</span><span data-en>Codex Article 03</span> &#xB7; Build <span class="cu">v.2026.05</span></span>
+      <button class="motion-btn-c" onclick="toggleMotion()">Motion: <span id="motion-state">On</span></button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ========== Language Toggle ==========
+function getLang() {
+  return document.body.classList.contains('lang-en') ? 'en' : 'de';
+}
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'What an Agent Works With \xB7 Codex Article 03'
+    : 'Womit ein Agent arbeitet \xB7 Codex Lehrtafel 03';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  // re-render current demo stage
+  var activeStage = document.querySelector('.demo-stage.active');
+  if (activeStage) renderStage(parseInt(activeStage.dataset.step));
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+}
+
+// ============== Live-Anatomie eines Tool-Calls ==============
+const stagesDE = [
+  {
+    label: 'PHASE 01 \xB7 DISCOVER',
+    title: 'Der Agent fragt: Wer kann was?',
+    text: 'Bevor irgendein Tool gerufen werden kann, muss der Agent wissen, dass es existiert. Beim Verbinden eines MCP-Servers fordert der Client die Tool-Liste an. Der Server antwortet mit Namen, Beschreibung und Schema jedes Tools.',
+    code: `// Client → Server
+{
+  "method": "tools/list",
+  "params": {}
+}
+
+// Server → Client
+{
+  "tools": [
+    { "name": "calendar_read", "description": "Liest Termine aus einem Kalender", ... },
+    { "name": "calendar_freebusy", "description": "Findet freie Slots", ... },
+    { "name": "calendar_create", "description": "Erstellt einen Termin", ... }
+  ]
+}`,
+    meta: ['DAUER \xB7 80MS','TOOLS GEFUNDEN \xB7 3']
+  },
+  {
+    label: 'PHASE 02 \xB7 SELECT',
+    title: 'Er w\xe4hlt das passende Tool.',
+    text: 'Der Agent liest die Beschreibungen und gleicht sie mit seinem aktuellen Plan ab. F\xfcr die Aufgabe „freie Slots finden“ passt calendar_freebusy am besten. Die anderen werden verworfen.',
+    code: `// Internes Reasoning
+> Aufgabe: freie Slots n\xe4chste Woche.
+> Tools im Angebot:
+>   calendar_read       → liefert Events, nicht L\xfccken.
+>   calendar_freebusy   → liefert genau das.   ★
+>   calendar_create     → w\xfcrde ver\xe4ndern, nicht passend.
+> Wahl: calendar_freebusy`,
+    meta: ['MODELL \xB7 CLAUDE','DENKZEIT \xB7 0.3S']
+  },
+  {
+    label: 'PHASE 03 \xB7 CALL',
+    title: 'Der formale Aufruf.',
+    text: 'Das Modell formuliert den Tool-Call als JSON. Schema-konform, mit allen Pflichtparametern. Wenn ein Parameter fehlt, weigert sich der Agent zu rufen und fragt zur\xfcck.',
+    code: `// Client → Server
+{
+  "method": "tools/call",
+  "params": {
+    "name": "calendar_freebusy",
+    "arguments": {
+      "calendar_id": "primary",
+      "from": "2026-05-12T08:00",
+      "to": "2026-05-16T18:00",
+      "duration_min": 30
+    }
+  }
+}`,
+    meta: ['SCHEMA \xB7 OK','PFLICHTPARAMETER \xB7 4/4']
+  },
+  {
+    label: 'PHASE 04 \xB7 EXECUTE',
+    title: 'Der Server tut die Arbeit.',
+    text: 'Au\xdferhalb des Modells. Der Server f\xfchrt den echten API-Call gegen den Kalenderdienst aus, sammelt die L\xfccken und packt sie in eine Antwort. Hier passiert die Aktion in der echten Welt.',
+    code: `// Inside Server
+google_calendar.api.freebusy({
+  calendarId: 'primary',
+  timeMin: '2026-05-12T08:00',
+  timeMax: '2026-05-16T18:00',
+  granularity: 30
+})
+→ 7 freie Slots gefunden.`,
+    meta: ['API \xB7 GOOGLE CAL','DAUER \xB7 240MS']
+  },
+  {
+    label: 'PHASE 05 \xB7 OBSERVE',
+    title: 'Antwort zur\xfcck, Modell denkt weiter.',
+    text: 'Der Server liefert ein strukturiertes Ergebnis. Der Agent liest, pr\xfcft, integriert es in seinen Plan. Falls leer oder fehlerhaft: Replan. Falls gut: n\xe4chster Schritt im Loop.',
+    code: `// Server → Client
+{
+  "result": {
+    "free_slots": [
+      "2026-05-12T10:00 → 2026-05-12T10:30",
+      "2026-05-13T14:00 → 2026-05-13T14:30",
+      "2026-05-15T09:30 → 2026-05-15T10:00"
+    ],
+    "count": 7
+  }
+}
+
+// Modell, intern
+> 7 Slots vorhanden. Top 3 dem Nutzer vorschlagen.`,
+    meta: ['ERGEBNIS \xB7 7 SLOTS','N\xc4CHSTER SCHRITT \xB7 VORSCHLAG']
+  }
+];
+
+const stagesEN = [
+  {
+    label: 'PHASE 01 \xB7 DISCOVER',
+    title: 'The agent asks: Who can do what?',
+    text: 'Before any tool can be called, the agent must know it exists. When connecting an MCP server, the client requests the tool list. The server responds with the name, description, and schema of each tool.',
+    code: `// Client → Server
+{
+  "method": "tools/list",
+  "params": {}
+}
+
+// Server → Client
+{
+  "tools": [
+    { "name": "calendar_read", "description": "Reads events from a calendar", ... },
+    { "name": "calendar_freebusy", "description": "Finds free slots", ... },
+    { "name": "calendar_create", "description": "Creates an event", ... }
+  ]
+}`,
+    meta: ['DURATION \xB7 80MS','TOOLS FOUND \xB7 3']
+  },
+  {
+    label: 'PHASE 02 \xB7 SELECT',
+    title: 'It picks the right tool.',
+    text: "The agent reads the descriptions and matches them to its current plan. For the task 'find free slots', calendar_freebusy fits best. The others are discarded.",
+    code: `// Internal reasoning
+> Task: free slots next week.
+> Tools available:
+>   calendar_read       → returns events, not gaps.
+>   calendar_freebusy   → returns exactly that.   ★
+>   calendar_create     → would modify, not suitable.
+> Choice: calendar_freebusy`,
+    meta: ['MODEL \xB7 CLAUDE','THINK TIME \xB7 0.3S']
+  },
+  {
+    label: 'PHASE 03 \xB7 CALL',
+    title: 'The formal call.',
+    text: 'The model formulates the tool call as JSON. Schema-compliant, with all required parameters. If a parameter is missing, the agent refuses to call and asks back.',
+    code: `// Client → Server
+{
+  "method": "tools/call",
+  "params": {
+    "name": "calendar_freebusy",
+    "arguments": {
+      "calendar_id": "primary",
+      "from": "2026-05-12T08:00",
+      "to": "2026-05-16T18:00",
+      "duration_min": 30
+    }
+  }
+}`,
+    meta: ['SCHEMA \xB7 OK','REQUIRED PARAMS \xB7 4/4']
+  },
+  {
+    label: 'PHASE 04 \xB7 EXECUTE',
+    title: 'The server does the work.',
+    text: 'Outside the model. The server makes the real API call against the calendar service, collects the gaps, and packs them into a response. Here the action happens in the real world.',
+    code: `// Inside Server
+google_calendar.api.freebusy({
+  calendarId: 'primary',
+  timeMin: '2026-05-12T08:00',
+  timeMax: '2026-05-16T18:00',
+  granularity: 30
+})
+→ 7 free slots found.`,
+    meta: ['API \xB7 GOOGLE CAL','DURATION \xB7 240MS']
+  },
+  {
+    label: 'PHASE 05 \xB7 OBSERVE',
+    title: 'Response back, model thinks on.',
+    text: 'The server delivers a structured result. The agent reads, checks, integrates it into its plan. If empty or faulty: replan. If good: next step in the loop.',
+    code: `// Server → Client
+{
+  "result": {
+    "free_slots": [
+      "2026-05-12T10:00 → 2026-05-12T10:30",
+      "2026-05-13T14:00 → 2026-05-13T14:30",
+      "2026-05-15T09:30 → 2026-05-15T10:00"
+    ],
+    "count": 7
+  }
+}
+
+// Model, internally
+> 7 slots available. Suggest top 3 to user.`,
+    meta: ['RESULT \xB7 7 SLOTS','NEXT STEP \xB7 SUGGESTION']
+  }
+];
+
+function getStages() { return getLang() === 'en' ? stagesEN : stagesDE; }
+
+const body = document.getElementById('demo-body');
+const stageBtns = document.querySelectorAll('.demo-stage');
+
+function renderStage(idx) {
+  stageBtns.forEach((b,i) => b.classList.toggle('active', i === idx));
+  const s = getStages()[idx];
+  body.innerHTML = `
+    <div class="demo-label">${s.label}</div>
+    <div class="demo-title">${s.title}</div>
+    <div class="demo-text">${s.text}</div>
+    <pre class="demo-code">${s.code}</pre>
+    <div class="demo-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+  `;
+}
+stageBtns.forEach((b,i) => b.addEventListener('click', () => renderStage(i)));
+renderStage(0);
+
+// ========== Motion Toggle ==========
+function toggleMotion() {
+  var body = document.body;
+  var state = document.getElementById('motion-state');
+  var on = !body.classList.contains('no-motion');
+  body.classList.toggle('no-motion', on);
+  if (state) state.textContent = on ? 'Off' : 'On';
+  try { localStorage.setItem('rl-motion', on ? 'off' : 'on'); } catch(e) {}
+}
+(function initPrefs() {
+  try {
+    if (localStorage.getItem('rl-motion') === 'off') {
+      document.body.classList.add('no-motion');
+      var el = document.getElementById('motion-state');
+      if (el) el.textContent = 'Off';
+    }
+    var lang = localStorage.getItem('rl-lang');
+    if (lang === 'en') { setLang('en'); }
+  } catch(e) {}
+})();
+</script>
+
+</body>
+</html>

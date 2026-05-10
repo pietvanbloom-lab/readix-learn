@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 24px; background: var(--ink-black); display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: end; }
+  .demo { aspect-ratio: 1.6; background: var(--paper-warm); border: 1px solid var(--border-on-paper); padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-on-paper-mute); }
+  .val { font-family: var(--font-mono); font-size: 11px; color: var(--copper-deep); margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="demo" style="border-radius:0">
+  <div class="lbl">r-0 default</div>
+  <div class="val">0 px · everywhere</div>
+</div>
+<div class="demo" style="border-radius:0; box-shadow:0 24px 48px -16px rgba(0,0,0,0.45)">
+  <div class="lbl">shadow-card</div>
+  <div class="val">0 24 48 -16 / .45</div>
+</div>
+<div class="demo" style="border-radius:0; box-shadow:0 18px 36px -12px rgba(60,40,20,0.18)">
+  <div class="lbl">shadow-card-paper</div>
+  <div class="val">0 18 36 -12 / .18</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 32px; background: var(--ink-black); display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .row { display: flex; gap: 14px; align-items: center; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); width: 80px; }
+  .hover { background: var(--copper) !important; color: var(--ink-black) !important; }
+  .hover::before { color: var(--ink-black) !important; transform: translateX(4px); }
+  .sb { border-bottom: 1px solid var(--copper) !important; }
+</style>
+</head>
+<body>
+<div class="row"><div class="lbl">PRIMARY</div><button class="btn-primary">Start a brief</button><button class="btn-primary hover">Hover state</button></div>
+<div class="row"><div class="lbl">SECONDARY</div><button class="btn-secondary">See a sample</button><button class="btn-secondary sb">Hover state</button></div>
+</body>
+</html>

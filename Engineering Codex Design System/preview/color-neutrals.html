@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 24px; background: var(--ink-black); }
+  .row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .sw { aspect-ratio: 1.2; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid var(--gray-800); }
+  .name { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hex { font-family: var(--font-mono); font-size: 10px; opacity: 0.6; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="sw" style="background:#EBEBEB;color:#0A0A0B"><div class="name">100</div><div class="hex">#EBEBEB</div></div>
+  <div class="sw" style="background:#C8C9CC;color:#0A0A0B"><div class="name">200</div><div class="hex">#C8C9CC</div></div>
+  <div class="sw" style="background:#8A8F98;color:#0A0A0B"><div class="name">400</div><div class="hex">#8A8F98</div></div>
+  <div class="sw" style="background:#4D4D4D;color:#FAF9F5"><div class="name">600</div><div class="hex">#4D4D4D</div></div>
+  <div class="sw" style="background:#222326;color:#FAF9F5"><div class="name">800</div><div class="hex">#222326</div></div>
+  <div class="sw" style="background:#16171A;color:#FAF9F5"><div class="name">900</div><div class="hex">#16171A</div></div>
+</div>
+</body>
+</html>

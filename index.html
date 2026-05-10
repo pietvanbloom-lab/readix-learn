@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Readix Learn — KI &amp; Agentic erklärt</title>
+<meta name="description" content="Eine illustrierte Lehrserie über KI, agentische Systeme und die Technologien, die unsere Arbeit neu definieren. Klar erklärt, ohne Hype.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://learn.readix.net/">
+<meta property="og:title" content="Readix Learn — KI &amp; Agentic erklärt">
+<meta property="og:description" content="Illustrierte Explainer zu KI, agentischen Systemen und Robotik. Kein Hype. Keine Vereinfachung.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://learn.readix.net/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Tokens ─── */
+:root {
+  --canvas:        #0E1116;
+  --canvas-2:      #161B22;
+  --canvas-3:      #1C2128;
+  --parchment:     #F2EBDB;
+  --parchment-2:   #E8DFC9;
+  --parchment-3:   #DDD5C0;
+  --ink:           #0B0E13;
+  --ink-soft:      #2A2F38;
+  --paper-text:    #1A1D23;
+  --paper-muted:   #5A5346;
+  --copper:        #B87333;
+  --copper-bright: #D08A45;
+  --rule:          #2E3440;
+  --rule-light:    #C9C0A8;
+  --text:          #E8E6DF;
+  --muted:         #8A8F99;
+  --ok:            #5BAA6F;
+  --ease:          cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body.no-motion *, body.no-motion *::before, body.no-motion *::after {
+  transition: none !important;
+  animation: none !important;
+}
+img, svg { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ─── Layout ─── */
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+/* ─── Nav ─── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 56px;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.wm-readix {
+  font-family: 'Source Serif 4', serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+  color: var(--text);
+  line-height: 1;
+}
+.wm-rule { width: 1px; height: 18px; background: var(--rule); flex-shrink: 0; }
+.wm-learn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--copper);
+  line-height: 1;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .15s var(--ease);
+}
+.nav-link:hover { color: var(--copper); }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text);
+  border: 1px solid var(--rule);
+  padding: 7px 16px;
+  background: none;
+  cursor: pointer;
+  transition: border-color .15s var(--ease), color .15s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-cta:hover { border-color: var(--copper); color: var(--copper); }
+.nav-lang { display: flex; align-items: center; gap: 2px; }
+.lang-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: var(--muted);
+  transition: color .15s;
+}
+.lang-btn.active { color: var(--copper); }
+.lang-btn:hover:not(.active) { color: var(--text); }
+.lang-sep { color: var(--rule); font-size: 14px; line-height: 1; }
+
+/* ─── Eyebrow ─── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--copper);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--copper);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* ─── Copper rule ─── */
+.cu-rule { width: 40px; height: 1px; background: var(--copper); margin: 28px 0; }
+
+/* ─── Type scale ─── */
+h1, h2, h3 {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 400;
+  letter-spacing: -.015em;
+}
+h1 { font-size: clamp(3.5rem, 8vw, 7rem); line-height: 1.02; margin-bottom: 32px; }
+h2 { font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.06; margin-bottom: 24px; }
+h3 { font-size: clamp(1.25rem, 2.2vw, 1.7rem); line-height: 1.18; margin-bottom: 14px; }
+
+/* ─── Sections ─── */
+.s-ink  { background: var(--canvas);   padding: 96px 0; border-top: 1px solid var(--rule); }
+.s-mid  { background: var(--canvas-2); padding: 96px 0; border-top: 1px solid var(--rule); }
+.s-parchment {
+  background: var(--parchment);
+  color: var(--paper-text);
+  padding: 160px 0;
+  border-top: 1px solid var(--rule-light);
+  position: relative;
+  overflow: hidden;
+}
+.s-parchment .eyebrow  { color: var(--copper); }
+.s-parchment .cu-rule  { background: var(--copper); }
+.s-parchment h2, .s-parchment h3 { color: var(--paper-text); }
+
+/* Parchment grain */
+.s-parchment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.s-parchment > .wrap { position: relative; z-index: 1; }
+
+/* ─── Hero ─── */
+.hero {
+  background: var(--canvas);
+  padding: 140px 0 96px;
+}
+.hero-staccato {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 680px;
+  margin-bottom: 72px;
+}
+.hero-staccato em { color: var(--text); font-style: italic; }
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--rule);
+}
+.stat {
+  padding: 32px 0;
+  border-right: 1px solid var(--rule);
+  padding-right: 32px;
+}
+.stat:first-child { padding-left: 0; }
+.stat:last-child { border-right: none; }
+.stat-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--copper);
+  letter-spacing: -.02em;
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+.stat-l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ─── Cards grid ─── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  margin-top: 48px;
+}
+.card {
+  background: var(--canvas-3);
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  transition: transform .2s var(--ease), background .15s;
+  position: relative;
+}
+.card:not(.upcoming):hover { transform: translateY(-2px); background: #222832; }
+.card.upcoming { opacity: .42; }
+.card > a { display: flex; flex-direction: column; height: 100%; }
+.card-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  margin-bottom: 22px;
+  width: fit-content;
+  border: 1px solid;
+  line-height: 1.5;
+}
+.card-status.live { color: var(--ok); border-color: rgba(91,170,111,.28); }
+.card-status.soon { color: var(--muted); border-color: var(--rule); }
+.card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.card-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.2;
+  flex: 1;
+  margin-bottom: 18px;
+}
+.card-teaser {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+.card-cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: auto;
+  display: inline-block;
+  transition: color .15s var(--ease), transform .15s var(--ease);
+}
+.card:hover .card-cta { color: var(--copper); transform: translateX(4px); }
+
+/* ─── Drop cap ─── */
+.drop-cap::first-letter {
+  float: left;
+  font-family: 'Source Serif 4', serif;
+  font-size: 5.4em;
+  line-height: 0.76;
+  margin: 0.04em 0.13em 0 0;
+  color: var(--copper);
+  font-weight: 600;
+}
+
+/* ─── Lora prose ─── */
+.prose {
+  font-family: 'Lora', serif;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--paper-muted);
+  max-width: 720px;
+}
+.prose p + p { margin-top: 1.4em; }
+
+/* ─── Staccato block ─── */
+.staccato {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+  line-height: 1.5;
+  letter-spacing: -.01em;
+}
+.staccato em { color: var(--copper); font-style: italic; }
+.staccato.on-parchment { color: var(--paper-text); }
+.staccato.on-canvas { color: var(--text); }
+
+/* ─── Pillar grid ─── */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  margin-top: 48px;
+}
+.pillar {
+  background: var(--canvas-2);
+  padding: 48px 36px;
+}
+.pillar-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--copper);
+  opacity: .2;
+  line-height: 1;
+  margin-bottom: 28px;
+  letter-spacing: -.04em;
+}
+.pillar-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.pillar-body {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--muted);
+}
+.pillar-cliff {
+  font-family: 'Source Serif 4', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--copper);
+  margin-top: 22px;
+  line-height: 1.45;
+}
+
+/* ─── Readix split ─── */
+.readix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.p-block {
+  background: var(--parchment-2);
+  padding: 48px;
+  box-shadow: 0 24px 48px -16px rgba(0,0,0,.45);
+}
+.p-block-row {
+  padding: 24px 0;
+  border-top: 1px solid var(--rule-light);
+}
+.p-block-row:first-child { border-top: none; padding-top: 0; }
+.p-block-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--paper-muted);
+  margin-bottom: 8px;
+}
+.p-block-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 17px;
+  color: var(--paper-text);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+.p-block-body {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  color: var(--paper-muted);
+  line-height: 1.65;
+}
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: 1px solid;
+  background: none;
+  cursor: pointer;
+  transition: background .15s var(--ease), color .15s var(--ease), border-color .15s var(--ease);
+}
+.btn-canvas { color: var(--text); border-color: var(--rule); }
+.btn-canvas:hover { background: var(--copper); color: var(--ink); border-color: var(--copper); }
+.btn-parchment { color: var(--paper-text); border-color: var(--rule-light); }
+.btn-parchment:hover { background: var(--copper); color: var(--parchment); border-color: var(--copper); }
+.btn .arrow { transition: transform .15s var(--ease); display: inline-block; }
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* ─── Footer ─── */
+footer {
+  background: var(--canvas);
+  border-top: 1px solid var(--rule);
+  padding: 64px 0 40px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 56px;
+  margin-bottom: 48px;
+}
+.footer-brand {
+  font-family: 'Source Serif 4', serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.footer-brand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--copper);
+  margin-bottom: 20px;
+}
+.footer-desc {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.footer-col-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.footer-links { display: flex; flex-direction: column; gap: 12px; }
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--muted);
+  transition: color .15s;
+}
+.footer-link:hover { color: var(--copper); }
+.footer-link.dim { opacity: .5; cursor: default; }
+.footer-bottom {
+  border-top: 1px solid var(--rule);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.footer-meta .cu { color: var(--copper); }
+.motion-toggle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.motion-toggle:hover { border-color: var(--copper); color: var(--copper); }
+
+/* ─── Language toggle ─── */
+[data-en] { display: none; }
+body.lang-en [data-de] { display: none; }
+body.lang-en [data-en] { display: revert; }
+
+/* ─── Responsive ─── */
+@media (max-width: 1100px) {
+  .cards-grid   { grid-template-columns: repeat(2, 1fr); }
+  .pillar-grid  { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid  { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  .readix-grid  { grid-template-columns: 1fr; gap: 48px; }
+  .stats-strip  { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(2) { border-right: none; }
+  .stat:nth-child(3) { border-top: 1px solid var(--rule); }
+}
+@media (max-width: 640px) {
+  .wrap         { padding: 0 24px; }
+  .s-ink, .s-mid { padding: 64px 0; }
+  .s-parchment  { padding: 96px 0; }
+  .hero         { padding: 80px 0 64px; }
+  .cards-grid   { grid-template-columns: 1fr; }
+  .pillar-grid  { grid-template-columns: 1fr; }
+  .footer-grid  { grid-template-columns: 1fr; }
+  .stats-strip  { grid-template-columns: 1fr; }
+  .stat         { border-right: none; border-top: 1px solid var(--rule); }
+  .stat:first-child { border-top: none; }
+  .nav-links    { display: none; }
+}
+@media (max-width: 420px) {
+  .nav-cta      { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav aria-label="Hauptnavigation">
+  <div class="wrap nav-inner">
+    <a href="https://readix.net" class="wordmark" aria-label="Readix Startseite">
+      <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+      <span class="wm-rule" aria-hidden="true"></span>
+      <span class="wm-learn">Learn</span>
+    </a>
+    <div class="nav-links" role="navigation" aria-label="Abschnitte">
+      <a href="#series"     class="nav-link"><span data-de>Lehrtafeln</span><span data-en>Articles</span></a>
+      <a href="#philosophy" class="nav-link"><span data-de>Die Serie</span><span data-en>About</span></a>
+      <a href="#roadmap"    class="nav-link"><span data-de>Was folgt</span><span data-en>Coming up</span></a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta">
+        <span data-de>Readix Platform</span><span data-en>Readix Platform</span>
+        <span aria-hidden="true">&#x250C;&#x2500;&#x2500;&#x2192;</span>
+      </a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn active" id="btn-de" onclick="setLang('de')" aria-pressed="true">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO: Fitzek staccato ═══ -->
+<section class="hero" aria-labelledby="hero-h">
+  <div class="wrap">
+    <div class="eyebrow" aria-hidden="true">
+      <span class="dot"></span>
+      <span data-de>01 · Codex Lehrtafeln</span>
+      <span data-en>01 · Codex Series</span>
+    </div>
+
+    <h1 id="hero-h">
+      <span data-de>
+        Etwas verändert sich.<br>
+        Nicht langsam.<br>
+        <em>Jetzt.</em>
+      </span>
+      <span data-en>
+        Something is changing.<br>
+        Not slowly.<br>
+        <em>Now.</em>
+      </span>
+    </h1>
+
+    <div class="hero-staccato">
+      <span data-de>
+        KI plant. KI handelt. KI korrigiert sich selbst.<br>
+        Die Frage ist nicht, ob du das verstehst.<br>
+        Die Frage ist: <em>wann.</em>
+      </span>
+      <span data-en>
+        AI plans. AI acts. AI corrects itself.<br>
+        The question is not whether you understand this.<br>
+        The question is: <em>when.</em>
+      </span>
+    </div>
+
+    <div class="stats-strip" role="list">
+      <div class="stat" role="listitem">
+        <span class="stat-n">04</span>
+        <span class="stat-l"><span data-de>Tafeln erschienen</span><span data-en>Published</span></span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="stat-n">DE · EN</span>
+        <span class="stat-l"><span data-de>Zweisprachig</span><span data-en>Bilingual</span></span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="stat-n">&#x221E;</span>
+        <span class="stat-l"><span data-de>Laufende Serie</span><span data-en>Ongoing series</span></span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="stat-n">0 &#8364;</span>
+        <span class="stat-l"><span data-de>Kostenlos</span><span data-en>Free to read</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERIES ═══ -->
+<section class="s-mid" id="series" aria-labelledby="series-h">
+  <div class="wrap">
+    <div class="eyebrow" aria-hidden="true">
+      <span class="dot"></span>
+      <span data-de>02 · Die Lehrtafeln</span>
+      <span data-en>02 · The Articles</span>
+    </div>
+    <h2 id="series-h">
+      <span data-de>Was bisher erschienen ist.</span>
+      <span data-en>What has been published.</span>
+    </h2>
+
+    <div class="cards-grid">
+
+      <div class="card">
+        <a href="./01_was-ist-ai-und-agentic-ai.html">
+          <span class="card-status live">&#x25CF; <span data-de>Verfügbar</span><span data-en>Available</span></span>
+          <span class="card-num">Lehrtafel · 01</span>
+          <span class="card-title">
+            <span data-de>Was ist AI und Agentic AI?</span>
+            <span data-en>What is AI and Agentic AI?</span>
+          </span>
+          <span class="card-teaser">
+            <span data-de>Was KI ist. Was sie kann. Und warum der Unterschied zur Agentic AI wichtiger ist, als du denkst.</span>
+            <span data-en>What AI is. What it can do. And why the difference from Agentic AI matters more than you think.</span>
+          </span>
+          <span class="card-cta">&#x250C;&#x2500;&#x2500;&#x2192; <span data-de>Lesen</span><span data-en>Read</span></span>
+        </a>
+      </div>
+
+      <div class="card">
+        <a href="./02_wie-ein-agent-denkt.html">
+          <span class="card-status live">&#x25CF; <span data-de>Verfügbar</span><span data-en>Available</span></span>
+          <span class="card-num">Lehrtafel · 02</span>
+          <span class="card-title">
+            <span data-de>Wie ein Agent denkt</span>
+            <span data-en>How an agent thinks</span>
+          </span>
+          <span class="card-teaser">
+            <span data-de>Er denkt laut. Nicht für dich. Für sich selbst. Hier liegt die Grenze zwischen Agent und Chatbot.</span>
+            <span data-en>It thinks out loud. Not for you. For itself. Here lies the divide between an agent and a chatbot.</span>
+          </span>
+          <span class="card-cta">&#x250C;&#x2500;&#x2500;&#x2192; <span data-de>Lesen</span><span data-en>Read</span></span>
+        </a>
+      </div>
+
+      <div class="card">
+        <a href="./03_tools-mcps-plugins.html">
+          <span class="card-status live">&#x25CF; <span data-de>Verfügbar</span><span data-en>Available</span></span>
+          <span class="card-num">Lehrtafel · 03</span>
+          <span class="card-title">
+            <span data-de>Tools, MCPs &amp; Plugins</span>
+            <span data-en>Tools, MCPs &amp; Plugins</span>
+          </span>
+          <span class="card-teaser">
+            <span data-de>Werkzeuge sind nicht das Werkzeug. Verstehe, wie Agenten zugreifen, was sie greifen, und warum das alles verändert.</span>
+            <span data-en>Tools are not the tool. Understand how agents reach, what they grab, and why that changes everything.</span>
+          </span>
+          <span class="card-cta">&#x250C;&#x2500;&#x2500;&#x2192; <span data-de>Lesen</span><span data-en>Read</span></span>
+        </a>
+      </div>
+
+      <div class="card">
+        <a href="./04_risiko-und-trust.html">
+          <span class="card-status live">&#x25CF; <span data-de>Verfügbar</span><span data-en>Available</span></span>
+          <span class="card-num">Lehrtafel · 04</span>
+          <span class="card-title">
+            <span data-de>Risiko und Trust</span>
+            <span data-en>Risk and Trust</span>
+          </span>
+          <span class="card-teaser">
+            <span data-de>Vertrauen ist keine Einstellung. Es ist eine Architektur. Hier zeigt sich, ob der Agent wirklich denkt.</span>
+            <span data-en>Trust is not a setting. It is an architecture. Here lies the test of whether the agent truly thinks.</span>
+          </span>
+          <span class="card-cta">&#x250C;&#x2500;&#x2500;&#x2192; <span data-de>Lesen</span><span data-en>Read</span></span>
+        </a>
+      </div>
+
+      <div class="card">
+        <a href="./05_dein-erster-agent.html">
+          <span class="card-status live">&#x25CF; <span data-de>Verfügbar</span><span data-en>Available</span></span>
+          <span class="card-num">Lehrtafel · 05</span>
+          <span class="card-title">
+            <span data-de>Dein erster Agent</span>
+            <span data-en>Your first agent</span>
+          </span>
+          <span class="card-teaser">
+            <span data-de>Vom Anwendungsfall bis zum Prototyp. Welche Schritte, welche Werkzeuge, welche Stolperfallen.</span>
+            <span data-en>From use case to prototype. Which steps, which tools, which pitfalls.</span>
+          </span>
+          <span class="card-cta">&#x250C;&#x2500;&#x2500;&#x2192; <span data-de>Lesen</span><span data-en>Read</span></span>
+        </a>
+      </div>
+
+      <div class="card upcoming" aria-hidden="true">
+        <span class="card-status soon">&#x25CF; <span data-de>Demnächst</span><span data-en>Coming soon</span></span>
+        <span class="card-num">Lehrtafel · 06</span>
+        <span class="card-title" style="color:var(--muted)">
+          <span data-de>KI in der Praxis</span>
+          <span data-en>AI in the wild</span>
+        </span>
+      </div>
+
+      <div class="card upcoming" aria-hidden="true">
+        <span class="card-status soon">&#x25CF; <span data-de>Geplant</span><span data-en>Planned</span></span>
+        <span class="card-num">Lehrtafel · 07</span>
+        <span class="card-title" style="color:var(--muted)">
+          <span data-de>Robotik &amp; physische KI</span>
+          <span data-en>Robotics &amp; physical AI</span>
+        </span>
+      </div>
+
+      <div class="card upcoming" aria-hidden="true">
+        <span class="card-status soon">&#x25CF; <span data-de>Geplant</span><span data-en>Planned</span></span>
+        <span class="card-num">Lehrtafel · 08+</span>
+        <span class="card-title" style="color:var(--muted)">
+          <span data-de>Mehr folgt</span>
+          <span data-en>More to follow</span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHILOSOPHY: Schätzing long-read ═══ -->
+<section class="s-parchment" id="philosophy" aria-labelledby="philosophy-h">
+  <div class="wrap">
+    <div class="eyebrow" aria-hidden="true">
+      <span class="dot"></span>
+      <span data-de>03 · Warum diese Serie</span>
+      <span data-en>03 · Why this series</span>
+    </div>
+
+    <h2 id="philosophy-h">
+      <span data-de>Ein altes Wort<br>für etwas Neues.</span>
+      <span data-en>An old word<br>for something new.</span>
+    </h2>
+
+    <div class="cu-rule"></div>
+
+    <!-- Schätzing long-read prose -->
+    <div class="prose" data-de>
+      <p class="drop-cap">Jede technologische Revolution hat einen Moment, an dem die alten Worte nicht mehr greifen. Die Dampfmaschine hieß "Feuerross". Das Automobil hieß "horseless carriage". Beide Worte beschreiben das, was fehlt. Nicht das, was beginnt.</p>
+      <p>KI heißt noch immer "Werkzeug". Aber ein Werkzeug wartet. Es tut nichts ohne Befehl, nichts ohne Berührung, nichts ohne einen Menschen, der weiß, was er will. Ein Mensch ohne Gedächtnis wäre kein Mensch, sondern ein Reflex. Ein Werkzeug ohne Absicht dahinter ist kein Werkzeug, sondern Materie.</p>
+      <p>Der Agent wartet nicht. Er beobachtet seine Umgebung, wählt sein nächstes Werkzeug, korrigiert sich, wenn er falsch liegt. Er greift zum Werkzeug. Er prüft das Ergebnis. Er wählt das nächste. Der Agent denkt laut. Nicht für dich. Für sich selbst. Und wenn der Prozess endet, liegt das Ergebnis vor dir, ohne dass du einmal gefragt wärst, was als nächstes zu tun sei.</p>
+    </div>
+    <div class="prose" data-en>
+      <p class="drop-cap">Every technological revolution has a moment when the old words no longer fit. The steam engine was called a "fire horse". The automobile was called a "horseless carriage". Both names describe what is missing. Not what is beginning.</p>
+      <p>AI is still called a "tool". But a tool waits. It does nothing without command, without touch, without a human who knows what they want. A person without memory would not be a person but a reflex. A tool without intent behind it is not a tool but matter.</p>
+      <p>The agent does not wait. It observes its environment, chooses its next tool, corrects itself when wrong. It reaches for the tool. It checks the result. It chooses the next. The agent thinks out loud. Not for you. For itself. And when the process ends, the result lies before you, without you ever having been asked what to do next.</p>
+    </div>
+
+    <!-- Staccato punch: tempo change after long-read -->
+    <div class="cu-rule"></div>
+
+    <div class="staccato on-parchment" data-de>
+      Was genau ist hier passiert?<br><br>
+      Diese Frage beantwortet die Codex Lehrtafeln-Serie.<br>
+      Nicht mit Hype. Nicht mit falscher Vereinfachung.<br>
+      <em>Mit dem Respekt, den eine ehrliche Antwort verdient.</em>
+    </div>
+    <div class="staccato on-parchment" data-en>
+      What exactly happened here?<br><br>
+      That is the question the Codex series answers.<br>
+      Not with hype. Not with false simplification.<br>
+      <em>With the respect an honest answer deserves.</em>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ROADMAP ═══ -->
+<section class="s-ink" id="roadmap" aria-labelledby="roadmap-h">
+  <div class="wrap">
+    <div class="eyebrow" aria-hidden="true">
+      <span class="dot"></span>
+      <span data-de>04 · Wohin es führt</span>
+      <span data-en>04 · Where it leads</span>
+    </div>
+
+    <h2 id="roadmap-h">
+      <span data-de>Von Konzepten<br>zu Maschinen.</span>
+      <span data-en>From concepts<br>to machines.</span>
+    </h2>
+
+    <div class="pillar-grid">
+
+      <div class="pillar">
+        <div class="pillar-n">01</div>
+        <div class="pillar-title">
+          <span data-de>KI Grundlagen</span>
+          <span data-en>AI Fundamentals</span>
+        </div>
+        <div class="pillar-body">
+          <span data-de>Was KI ist, wie sie denkt, warum sie sich von allem unterscheidet, was vorher "Software" hieß. Vier Tafeln erschienen.</span>
+          <span data-en>What AI is, how it thinks, why it differs from everything that used to be called "software". Four articles published.</span>
+        </div>
+        <div class="pillar-cliff">
+          <span data-de>"Der erste Schritt ist immer der falsch beschriftete."</span>
+          <span data-en>"The first step is always the mislabeled one."</span>
+        </div>
+      </div>
+
+      <div class="pillar">
+        <div class="pillar-n">02</div>
+        <div class="pillar-title">
+          <span data-de>Agentische Systeme</span>
+          <span data-en>Agentic Systems</span>
+        </div>
+        <div class="pillar-body">
+          <span data-de>Agenten, Tools, MCPs: wie autonome Systeme planen, entscheiden und ausführen. Ohne auf Erlaubnis zu warten.</span>
+          <span data-en>Agents, tools, MCPs: how autonomous systems plan, decide, and execute. Without waiting for permission.</span>
+        </div>
+        <div class="pillar-cliff">
+          <span data-de>"Wenn das Modell selbst entscheidet, was als nächstes kommt."</span>
+          <span data-en>"When the model itself decides what comes next."</span>
+        </div>
+      </div>
+
+      <div class="pillar">
+        <div class="pillar-n">03</div>
+        <div class="pillar-title">
+          <span data-de>Robotik &amp; Physische KI</span>
+          <span data-en>Robotics &amp; Physical AI</span>
+        </div>
+        <div class="pillar-body">
+          <span data-de>Wenn KI die digitale Welt verlässt. Körper, Sensoren, Entscheidungen in Echtzeit, in der physischen Welt.</span>
+          <span data-en>When AI leaves the digital world. Bodies, sensors, decisions in real time, in the physical world.</span>
+        </div>
+        <div class="pillar-cliff">
+          <span data-de>"Hier beginnt das, was wir noch nicht benennen können."</span>
+          <span data-en>"Here begins what we cannot yet name."</span>
+        </div>
+      </div>
+
+      <div class="pillar">
+        <div class="pillar-n">04</div>
+        <div class="pillar-title">
+          <span data-de>Gesellschaft &amp; Zukunft</span>
+          <span data-en>Society &amp; Future</span>
+        </div>
+        <div class="pillar-body">
+          <span data-de>Risiko, Vertrauen, Regulierung. Die größeren Fragen, die keine einzelne Tafel allein beantworten kann.</span>
+          <span data-en>Risk, trust, regulation. The bigger questions that no single article can answer alone.</span>
+        </div>
+        <div class="pillar-cliff">
+          <span data-de>"Hier zeigt sich, was wirklich auf dem Spiel steht."</span>
+          <span data-en>"Here lies what is truly at stake."</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ READIX ═══ -->
+<section class="s-parchment" aria-labelledby="readix-h">
+  <div class="wrap">
+    <div class="eyebrow" aria-hidden="true">
+      <span class="dot"></span>
+      <span>05 · Readix</span>
+    </div>
+
+    <div class="readix-grid">
+      <div>
+        <h2 id="readix-h">
+          <em>Research engineered,<br>not generated.</em>
+        </h2>
+        <div class="cu-rule"></div>
+
+        <!-- Fitzek staccato -->
+        <div class="staccato on-parchment" style="margin-bottom:24px">
+          <span data-de>
+            Readix liefert Analysen,<br>
+            wenn Entscheidungen auf dem Spiel stehen.<br>
+            Schnell. Präzise. Mit verifizierten Quellen.
+          </span>
+          <span data-en>
+            Readix delivers analysis<br>
+            when decisions are on the line.<br>
+            Fast. Precise. Verified sources.
+          </span>
+        </div>
+
+        <!-- Schätzing bridge -->
+        <p style="font-family:'Lora',serif;font-size:1rem;line-height:1.75;color:var(--paper-muted);margin-bottom:36px">
+          <span data-de>Die Lehrserie ist unser öffentlicher Beitrag: kostenlos, ohne Agenda, für alle, die verstehen wollen, was gerade passiert. Die Plattform dahinter liefert das, was Entscheidungen brauchen.</span>
+          <span data-en>The learning series is our public contribution: free, without agenda, for everyone who wants to understand what is happening right now. The platform behind it delivers what decisions need.</span>
+        </p>
+
+        <a href="https://readix.net" class="btn btn-parchment">
+          <span data-de>Zur Plattform</span><span data-en>To the platform</span>
+          <span class="arrow" aria-hidden="true">&#x250C;&#x2500;&#x2500;&#x2192;</span>
+        </a>
+      </div>
+
+      <div>
+        <div class="p-block">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper);margin-bottom:24px">
+            &#x25CF; <span data-de>Was Readix macht</span><span data-en>What Readix does</span>
+          </div>
+          <div class="p-block-row">
+            <div class="p-block-label" data-de>48 Stunden</div>
+            <div class="p-block-label" data-en>48 hours</div>
+            <div class="p-block-title" data-de>Entscheidungsreife Analysen</div>
+            <div class="p-block-title" data-en>Decision-grade analysis</div>
+            <div class="p-block-body" data-de>Fertig in 48 Stunden, nicht in 48 Tagen.</div>
+            <div class="p-block-body" data-en>Ready in 48 hours, not 48 days.</div>
+          </div>
+          <div class="p-block-row">
+            <div class="p-block-label" data-de>5+ Quellen</div>
+            <div class="p-block-label" data-en>5+ sources</div>
+            <div class="p-block-title" data-de>Verifizierte Quellen</div>
+            <div class="p-block-title" data-en>Verified sources</div>
+            <div class="p-block-body" data-de>Kein generierter Content. Echte Recherche, echte Verweise.</div>
+            <div class="p-block-body" data-en>No generated content. Real research, real references.</div>
+          </div>
+          <div class="p-block-row">
+            <div class="p-block-label" data-de>8 Seiten</div>
+            <div class="p-block-label" data-en>8 pages</div>
+            <div class="p-block-title" data-de>Präzise Briefings</div>
+            <div class="p-block-title" data-en>Precise briefings</div>
+            <div class="p-block-body" data-de>Kompakt genug zum Lesen. Tief genug zum Entscheiden.</div>
+            <div class="p-block-body" data-en>Compact enough to read. Deep enough to decide.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">Readix<span style="color:var(--copper)">.</span></div>
+        <div class="footer-brand-sub">Learn · learn.readix.net</div>
+        <p class="footer-desc" data-de>Illustrierte Erklärungen zu KI, Agenten und den Technologien, die unsere Arbeit neu definieren. Kein Hype. Keine Vereinfachung.</p>
+        <p class="footer-desc" data-en>Illustrated explanations on AI, agents, and the technologies redefining how we work. No hype. No oversimplification.</p>
+      </div>
+      <div>
+        <div class="footer-col-head" data-de>Lehrtafeln</div>
+        <div class="footer-col-head" data-en>Articles</div>
+        <div class="footer-links">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="footer-link"><span data-de>01 · Was ist AI?</span><span data-en>01 · What is AI?</span></a>
+          <a href="./02_wie-ein-agent-denkt.html"       class="footer-link"><span data-de>02 · Wie ein Agent denkt</span><span data-en>02 · How an agent thinks</span></a>
+          <a href="./03_tools-mcps-plugins.html"        class="footer-link"><span data-de>03 · Tools, MCPs &amp; Plugins</span><span data-en>03 · Tools, MCPs &amp; Plugins</span></a>
+          <a href="./04_risiko-und-trust.html"          class="footer-link"><span data-de>04 · Risiko und Trust</span><span data-en>04 · Risk and Trust</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head" data-de>Bald verfügbar</div>
+        <div class="footer-col-head" data-en>Coming soon</div>
+        <div class="footer-links">
+          <a class="footer-link" href="./05_dein-erster-agent.html"><span data-de>05 · Dein erster Agent</span><span data-en>05 · Your first agent</span></a>
+          <span class="footer-link dim"><span data-de>06 · KI in der Praxis</span><span data-en>06 · AI in the wild</span></span>
+          <span class="footer-link dim"><span data-de>07 · Robotik &amp; physische KI</span><span data-en>07 · Robotics &amp; physical AI</span></span>
+          <span class="footer-link dim"><span data-de>08+ · Mehr folgt</span><span data-en>08+ · More to follow</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head">Readix</div>
+        <div class="footer-links">
+          <a href="https://readix.net"          class="footer-link">readix.net</a>
+          <a href="https://readix.net/platform" class="footer-link"><span data-de>Die Plattform</span><span data-en>The platform</span></a>
+          <a href="https://readix.net/about"    class="footer-link"><span data-de>Über Readix</span><span data-en>About Readix</span></a>
+          <a href="https://readix.net/brief"    class="footer-link"><span data-de>Brief öffnen</span><span data-en>Open a brief</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-meta">
+        <span class="cu">Readix</span> · Learn · v.2026.05 · learn.readix.net
+      </div>
+      <button class="motion-toggle" id="motion-btn" onclick="toggleMotion()">
+        Motion: <span id="motion-state">On</span>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<script>
+function setLang(lang) {
+  var body = document.body;
+  var de = document.getElementById('btn-de');
+  var en = document.getElementById('btn-en');
+  if (lang === 'en') {
+    body.classList.add('lang-en');
+    en.classList.add('active');  en.setAttribute('aria-pressed', 'true');
+    de.classList.remove('active'); de.setAttribute('aria-pressed', 'false');
+    document.documentElement.lang = 'en';
+    document.title = 'Readix Learn — AI & Agentic explained';
+  } else {
+    body.classList.remove('lang-en');
+    de.classList.add('active');  de.setAttribute('aria-pressed', 'true');
+    en.classList.remove('active'); en.setAttribute('aria-pressed', 'false');
+    document.documentElement.lang = 'de';
+    document.title = 'Readix Learn — KI & Agentic erklärt';
+  }
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+}
+
+function toggleMotion() {
+  var body = document.body;
+  var state = document.getElementById('motion-state');
+  var on = !body.classList.contains('no-motion');
+  body.classList.toggle('no-motion', on);
+  state.textContent = on ? 'Off' : 'On';
+  try { localStorage.setItem('rl-motion', on ? 'off' : 'on'); } catch(e) {}
+}
+
+(function init() {
+  try {
+    if (localStorage.getItem('rl-lang') === 'en') setLang('en');
+    if (localStorage.getItem('rl-motion') === 'off') {
+      document.body.classList.add('no-motion');
+      var el = document.getElementById('motion-state');
+      if (el) el.textContent = 'Off';
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

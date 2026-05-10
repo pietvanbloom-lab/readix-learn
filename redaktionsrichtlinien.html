@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redaktionsrichtlinien · AI & Agentic Educational Content</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0d0b;
+    --bg-elev: #16140f;
+    --bg-card: #1c1a14;
+    --ink: #f4ede0;
+    --ink-dim: #a89e8a;
+    --ink-mute: #6b6452;
+    --copper: #c97a3a;
+    --copper-soft: #d99a5e;
+    --line: #2a2620;
+    --good: #8aa672;
+    --bad: #c66552;
+    --warn: #d4a85a;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at top right, rgba(201,122,58,0.08), transparent 50%),
+      radial-gradient(ellipse at bottom left, rgba(201,122,58,0.04), transparent 50%);
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    border-bottom: 1px solid var(--line);
+    padding: 32px 48px 24px;
+    position: sticky;
+    top: 0;
+    background: rgba(14,13,11,0.92);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--copper-soft);
+  }
+
+  .subtitle {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--ink-dim);
+    font-family: var(--mono);
+  }
+
+  /* ============ NAV ============ */
+  nav.tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 24px;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav.tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    padding: 12px 20px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--ink-dim); }
+  .tab.active {
+    color: var(--copper);
+    border-bottom-color: var(--copper);
+  }
+
+  /* ============ SEARCH ============ */
+  .search-bar {
+    margin-top: 16px;
+    position: relative;
+  }
+  .search-bar input {
+    width: 100%;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 10px 14px 10px 38px;
+    font-family: var(--mono);
+    font-size: 13px;
+    border-radius: 2px;
+    outline: none;
+  }
+  .search-bar input:focus {
+    border-color: var(--copper);
+  }
+  .search-bar::before {
+    content: "⌕";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-mute);
+    font-size: 16px;
+  }
+
+  /* ============ MAIN ============ */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============ SECTION ============ */
+  section.rule {
+    margin-bottom: 56px;
+    border-top: 1px solid var(--line);
+    padding-top: 32px;
+  }
+  section.rule:first-child { border-top: none; padding-top: 0; }
+
+  .rule-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--copper);
+    letter-spacing: 0.18em;
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 18px;
+    margin: 24px 0 8px;
+    color: var(--ink);
+  }
+
+  p {
+    color: var(--ink-dim);
+    margin-bottom: 12px;
+    max-width: 68ch;
+  }
+
+  p strong { color: var(--ink); font-weight: 500; }
+
+  ul, ol {
+    margin: 12px 0 16px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  ul li, ol li {
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+    max-width: 68ch;
+  }
+
+  ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--copper);
+    font-family: var(--mono);
+  }
+
+  ol { counter-reset: item; }
+  ol li {
+    counter-increment: item;
+  }
+  ol li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    color: var(--copper);
+    font-family: var(--mono);
+    font-size: 11px;
+    top: 4px;
+  }
+
+  /* ============ COMPARISON BOX ============ */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 700px) {
+    .compare { grid-template-columns: 1fr; }
+  }
+
+  .compare-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+    border-radius: 2px;
+    position: relative;
+  }
+  .compare-card.bad { border-left: 3px solid var(--bad); }
+  .compare-card.good { border-left: 3px solid var(--good); }
+
+  .compare-card .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .compare-card.bad .label { color: var(--bad); }
+  .compare-card.good .label { color: var(--good); }
+
+  .compare-card p {
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+    font-family: var(--serif);
+  }
+
+  /* ============ CALLOUT ============ */
+  .callout {
+    background: var(--bg-elev);
+    border-left: 3px solid var(--copper);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  .callout .callout-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 6px;
+  }
+  .callout p { color: var(--ink); margin: 0; }
+
+  /* ============ CHECKLIST ============ */
+  .checklist {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 24px 28px;
+    margin-top: 16px;
+  }
+
+  .checklist-section {
+    margin-bottom: 28px;
+  }
+  .checklist-section:last-child { margin-bottom: 0; }
+
+  .checklist-section h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { opacity: 0.85; }
+
+  .check-item input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--ink-mute);
+    border-radius: 2px;
+    margin-top: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    background: var(--bg);
+  }
+  .check-item input[type="checkbox"]:checked {
+    background: var(--copper);
+    border-color: var(--copper);
+  }
+  .check-item input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 700;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+  }
+  .check-item input[type="checkbox"]:checked + label {
+    color: var(--ink-mute);
+    text-decoration: line-through;
+  }
+
+  .check-item label {
+    color: var(--ink);
+    font-size: 14px;
+    cursor: pointer;
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  /* ============ ANALOGY BOX ============ */
+  .analogy {
+    background: linear-gradient(135deg, rgba(201,122,58,0.08), transparent);
+    border: 1px solid rgba(201,122,58,0.3);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-radius: 2px;
+  }
+  .analogy-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 8px;
+  }
+  .analogy p {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ============ TAGS ============ */
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    border-radius: 2px;
+  }
+  .tag.copper {
+    border-color: var(--copper);
+    color: var(--copper);
+  }
+
+  /* ============ INTRO ============ */
+  .intro {
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .intro p {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 70ch;
+  }
+  .intro p.lead-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--copper);
+    margin-top: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 48px;
+    margin-top: 48px;
+    text-align: center;
+  }
+  footer p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    margin: 0;
+  }
+
+  /* ============ HIDDEN (search) ============ */
+  .hidden-by-search { display: none !important; }
+
+  /* ============ STICKY PROGRESS ============ */
+  .progress-bar {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 10px 16px;
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: 0.1em;
+    z-index: 50;
+    display: none;
+  }
+  .progress-bar.show { display: block; }
+  .progress-bar strong { color: var(--copper); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Redaktionsrichtlinien · v1.0 · Mai 2026</div>
+  <h1>AI &amp; Agentic AI <em>für Menschen</em></h1>
+  <div class="subtitle">Educational Content · Deutsch · locker, klar, ohne Bullshit</div>
+
+  <nav class="tabs">
+    <button class="tab active" data-panel="grundsatz">Grundsatz</button>
+    <button class="tab" data-panel="tonalitaet">Tonalität &amp; Stil</button>
+    <button class="tab" data-panel="struktur">Struktur</button>
+    <button class="tab" data-panel="erklaeren">Erklärtechnik</button>
+    <button class="tab" data-panel="sprache">Sprachhandwerk</button>
+    <button class="tab" data-panel="quellen">Quellen &amp; Fakten</button>
+    <button class="tab" data-panel="checkliste">Checkliste</button>
+  </nav>
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Suche in den Richtlinien (z. B. 'Analogie', 'Anrede', 'Zahlen')...">
+  </div>
+</header>
+
+<main>
+
+<!-- ================ GRUNDSATZ ================ -->
+<div class="panel active" id="grundsatz">
+
+  <div class="intro">
+    <p>Wir schreiben für Menschen, die <strong>wissen wollen, wie KI tatsächlich funktioniert</strong> &mdash; nicht für Hype-Konsumenten, nicht für Forscher mit zwei PhDs. Unsere Leser sind klug, neugierig und haben keine Lust auf Marketing-Sprech, aber auch keine Lust auf trockene Lehrbücher.</p>
+    <p class="lead-meta">Ziel: Nach dem Lesen versteht jemand etwas, das er vorher nicht verstanden hat &mdash; und hat dabei nicht das Gefühl gehabt, in der Schule zu sitzen.</p>
+  </div>
+
+  <section class="rule">
+    <div class="rule-num">001 · Nordstern</div>
+    <h2>Verständnis schlägt Vollständigkeit</h2>
+    <p>Lieber drei Konzepte richtig vermitteln als zehn Konzepte streifen. Wenn der Leser nach dem Artikel <em>eine</em> Sache verstanden hat, die er vorher nicht verstanden hat, war der Artikel erfolgreich.</p>
+    <div class="callout">
+      <div class="callout-label">Faustregel</div>
+      <p>Wenn du beim Schreiben denkst „Das müsste ich auch noch erwähnen“ &mdash; lass es weg, oder mach einen eigenen Artikel daraus.</p>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">002 · Zielgruppe</div>
+    <h2>Wir schreiben für den klugen Quereinsteiger</h2>
+    <p>Stell dir vor: jemand mit 5+ Jahren Berufserfahrung in einem anderen Feld &mdash; Marketing, Logistik, Medizin, Handwerk &mdash; will verstehen, was es mit AI Agents auf sich hat. Diese Person ist <strong>nicht dumm</strong>, aber sie kennt die Begriffe nicht. Sie hat keine Geduld für Geschwafel, aber Lust, etwas Neues zu lernen.</p>
+    <div class="tag-row">
+      <span class="tag copper">Klug</span>
+      <span class="tag copper">Neugierig</span>
+      <span class="tag copper">Wenig Zeit</span>
+      <span class="tag">Kein Vorwissen vorausgesetzt</span>
+      <span class="tag">Will keinen Hype</span>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">003 · Versprechen</div>
+    <h2>Was wir nicht tun</h2>
+    <ul>
+      <li><strong>Kein Hype</strong>: keine „revolutionär“, „bahnbrechend“, „Game-Changer“ ohne Beleg.</li>
+      <li><strong>Kein Doomism</strong>: keine pauschalen Untergangsszenarien ohne Quellen.</li>
+      <li><strong>Kein „Du musst jetzt“</strong>: keine künstliche Dringlichkeit, keine FOMO-Hooks.</li>
+      <li><strong>Keine Buzzword-Bingos</strong>: wenn ein Begriff nicht erklärt wird, gehört er nicht in den Text.</li>
+      <li><strong>Kein „Stell dir vor, du könntest...“</strong> als Einstieg. Niemals.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ================ TONALITÄT ================ -->
+<div class="panel" id="tonalitaet">
+
+  <section class="rule">
+    <div class="rule-num">101 · Anrede</div>
+    <h2>Du, nicht Sie</h2>
+    <p>Wir duzen. Immer. Locker, aber nicht anbiedernd &mdash; wie ein Kollege, der dir am Whiteboard etwas erklärt, nicht wie ein Influencer auf TikTok.</p>
+    <div class="compare">
+      <div class="compare-card bad">
+        <div class="label">Zu steif</div>
+        <p>„Im Folgenden wird erläutert, wie sich Large Language Models von klassischen Algorithmen unterscheiden.“</p>
+      </div>
+      <div class="compare-card good">
+        <div class="label">Richtig</div>
+        <p>„Schauen wir uns mal an, was ein LLM eigentlich macht &mdash; und warum das nichts mit dem Algorithmus zu tun hat, den du aus deinem Newsfeed kennst.“</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="compare-card bad">
+        <div class="label">Zu kumpelig</div>
+        <p>„Yo Leute, heute zerlegen wir mal LLMs richtig, lass uns reingehen, das wird mega!“</p>
+      </div>
+      <div class="compare-card good">
+        <div class="label">Richtig</div>
+        <p>„LLMs sind seit zwei Jahren überall &mdash; aber was sie wirklich tun, wird selten erklärt. Heute also: Wie ein LLM tatsächlich auf eine Antwort kommt.“</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">102 · Persönlichkeit</div>
+    <h2>Klar, ehrlich, leicht trocken</h2>
+    <p>Wir dürfen Meinungen haben. Wir dürfen sagen, dass etwas überschätzt wird. Wir dürfen über Hype-Begriffe leise spotten &mdash; aber nicht herablassend werden.</p>
+    <p>Trockener Humor funktioniert. Ironie funktioniert, wenn sie deutlich genug ist. Sarkasmus funktioniert nicht (wirkt im Text immer bitter).</p>
+    <div class="callout">
+      <div class="callout-label">Tonleiter</div>
+      <p>Stell dir Hank Green oder Mai Thi Nguyen-Kim vor, wenn sie etwas erklären: bestimmt, freundlich, mit gelegentlichem Augenzwinkern, aber nie auf Kosten des Lesers.</p>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">103 · Distanz</div>
+    <h2>Wir-Form für Reise, Du-Form für Erkenntnis</h2>
+    <ul>
+      <li><strong>„Wir“</strong> wenn wir gemeinsam etwas durchgehen: <em>„Schauen wir uns das Beispiel an...“</em></li>
+      <li><strong>„Du“</strong> wenn der Leser etwas tut oder weiß: <em>„Du brauchst dafür kein Mathestudium.“</em></li>
+      <li><strong>„Ich“</strong> sparsam &mdash; nur wenn es um eine eigene Erfahrung oder Einschätzung geht.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ================ STRUKTUR ================ -->
+<div class="panel" id="struktur">
+
+  <section class="rule">
+    <div class="rule-num">201 · Einstieg</div>
+    <h2>Die ersten drei Sätze entscheiden alles</h2>
+    <p>Kein „In den letzten Jahren hat sich Künstliche Intelligenz...“. Niemals. Stattdessen: ein konkretes Bild, eine überraschende Beobachtung, oder eine ehrliche Frage.</p>
+    <div class="compare">
+      <div class="compare-card bad">
+        <div class="label">Generisch</div>
+        <p>„Künstliche Intelligenz ist eines der spannendsten Themen unserer Zeit. In diesem Artikel schauen wir uns AI Agents an...“</p>
+      </div>
+      <div class="compare-card good">
+        <div class="label">Mit Haken</div>
+        <p>„Ein AI Agent hat letzte Woche bei Shopify selbständig 100 Experimente über Nacht gemacht. Niemand musste ihm sagen, was er machen soll. Wie funktioniert sowas?“</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">202 · Aufbau</div>
+    <h2>Drei-Akt-Struktur, immer</h2>
+    <ol>
+      <li><strong>Haken</strong> (1&ndash;2 Absätze): Konkretes Bild oder überraschende Tatsache. Macht klar, warum das hier interessant ist.</li>
+      <li><strong>Aufklärung</strong> (Hauptteil): Wie funktioniert es? Was steckt dahinter? Mit Analogien, Beispielen, Vergleichen.</li>
+      <li><strong>Konsequenz</strong> (Schluss): Was heißt das jetzt? Was ist überschätzt, was unterschätzt? Optional: ein konkreter nächster Schritt.</li>
+    </ol>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">203 · Länge</div>
+    <h2>Kurz ist gut, präzise ist besser</h2>
+    <p>Richtwerte:</p>
+    <ul>
+      <li><strong>Erklär-Stück</strong> (ein Konzept tief): 800&ndash;1.400 Wörter</li>
+      <li><strong>Übersicht</strong> (mehrere Dinge nebeneinander): 1.200&ndash;2.000 Wörter</li>
+      <li><strong>News-Einordnung</strong>: 400&ndash;800 Wörter</li>
+    </ul>
+    <p>Wenn du mehr brauchst, splitte in eine Serie. Niemand liest 4.000 Wörter am Stück, außer es ist außergewöhnlich gut.</p>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">204 · Visuelle Pausen</div>
+    <h2>Whitespace ist Erklärung</h2>
+    <ul>
+      <li>Absätze: maximal 4 Sätze. Lieber kürzer.</li>
+      <li>Überschriften: alle 200&ndash;300 Wörter eine Zwischenüberschrift.</li>
+      <li>Fettungen: sparsam, aber bewusst. Was fett ist, sollte beim Überfliegen den Kerngedanken transportieren.</li>
+      <li>Listen: nur wenn die Reihenfolge egal ist und die Punkte parallel sind. Sonst Fließtext.</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">205 · Schluss</div>
+    <h2>Kein „Fazit“-Absatz</h2>
+    <p>Niemals mit „Zusammenfassend lässt sich sagen...“ enden. Auch nicht mit „Die Zukunft wird zeigen...“. Beides ist redaktionelles Aufgeben.</p>
+    <p>Stattdessen: Ein Gedanke, der den Leser noch eine Minute beschäftigt. Eine ehrliche Einschätzung. Eine offene Frage. Oder einfach: ein präziser letzter Satz, der das Bild aus dem Einstieg wieder aufnimmt.</p>
+  </section>
+</div>
+
+<!-- ================ ERKLÄRTECHNIK ================ -->
+<div class="panel" id="erklaeren">
+
+  <section class="rule">
+    <div class="rule-num">301 · Analogien</div>
+    <h2>Eine Analogie pro Konzept &mdash; und sie muss tragen</h2>
+    <p>Analogien sind das wichtigste Werkzeug. Aber sie funktionieren nur, wenn sie an das Vorwissen des Lesers andocken &mdash; nicht an unser eigenes.</p>
+    <div class="analogy">
+      <div class="analogy-label">Beispiel · LLMs erklären</div>
+      <p>„Ein LLM ist wie ein extrem belesener Praktikant, der jeden Text der Welt einmal gelesen hat &mdash; aber alles vergisst, sobald er aus dem Büro geht.“</p>
+    </div>
+    <div class="analogy">
+      <div class="analogy-label">Beispiel · AI Agent vs. Chatbot</div>
+      <p>„Ein Chatbot ist ein Kellner: du bestellst, er bringt. Ein AI Agent ist der Sous-Chef: du sagst, was abends auf den Tisch soll &mdash; den Rest organisiert er selbst.“</p>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Regel</div>
+      <p>Wenn du die Analogie selbst noch erklären musst, ist sie kaputt. Wegwerfen, neue suchen.</p>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">302 · Konkretes vor Abstraktem</div>
+    <h2>Erst zeigen, dann benennen</h2>
+    <p>Nicht: „Ein Embedding ist eine vektorielle Repräsentation semantischer Bedeutung.“</p>
+    <p>Sondern: „Stell dir eine Landkarte vor, auf der jedes Wort einen Punkt hat. ‚König‘ liegt nah bei ‚Königin‘. ‚Königin‘ minus ‚Frau‘ plus ‚Mann‘ landet ungefähr bei ‚König‘. Diese Karte nennt man Embedding.“</p>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">303 · Begriffe</div>
+    <h2>Englischer Fachbegriff einmal, dann deutsch</h2>
+    <p>Beim ersten Auftreten: deutscher Begriff (englischer Begriff in Klammern). Danach kann der gängigere von beiden verwendet werden.</p>
+    <ul>
+      <li><strong>Beispiel:</strong> „Der Aufmerksamkeitsmechanismus (<em>Attention</em>) entscheidet, welche Wörter im Satz wichtig sind.“</li>
+      <li>Wenn der englische Begriff im Feld dominanter ist (z. B. „Prompt“, „Token“, „Agent“), ohne Übersetzung, aber mit kurzer Erklärung beim ersten Mal.</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">304 · Ehrlich sein bei Vereinfachungen</div>
+    <h2>„Vereinfacht gesagt“ ist ein Vertrag</h2>
+    <p>Wenn wir vereinfachen, sagen wir das. Damit der Leser weiß: hier wird nicht die ganze Wahrheit erzählt, aber die Richtung stimmt.</p>
+    <ul>
+      <li>„Vereinfacht gesagt: ...“</li>
+      <li>„In Wahrheit etwas komplexer, aber als mentales Bild: ...“</li>
+      <li>„Wer’s ganz genau wissen will: <a>hier ist die Originalstudie</a>.“</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">305 · Beispiele</div>
+    <h2>Lieber ein gutes als drei mittelmäßige</h2>
+    <p>Ein durchgearbeitetes Beispiel, das wir zwei Mal aufgreifen, sticht jede Liste mit fünf flüchtig genannten Beispielen.</p>
+    <p>Wenn du ein Konzept einführst, halte das Beispiel im Hinterkopf. Komm später nochmal darauf zurück: <em>„Erinnerst du dich an unseren Sous-Chef? Genau hier wird es interessant...“</em></p>
+  </section>
+</div>
+
+<!-- ================ SPRACHE ================ -->
+<div class="panel" id="sprache">
+
+  <section class="rule">
+    <div class="rule-num">401 · Satzbau</div>
+    <h2>Kurz, aber nicht abgehackt</h2>
+    <p>Durchschnittliche Satzlänge: 12&ndash;18 Wörter. Wechsele bewusst zwischen kurzen und mittellangen Sätzen. Lange Sätze nur, wenn sie einen Gedanken tragen, der nicht zerteilt werden darf.</p>
+    <div class="compare">
+      <div class="compare-card bad">
+        <div class="label">Schachtelsatz</div>
+        <p>„Da AI Agents, die im Gegensatz zu klassischen Chatbots auch eigenständig Aktionen durchführen können, was sich vor allem in den letzten Monaten als wichtige Entwicklung herauskristallisiert hat, mittlerweile in zahlreichen Bereichen eingesetzt werden, ist es wichtig...“</p>
+      </div>
+      <div class="compare-card good">
+        <div class="label">Klar</div>
+        <p>„AI Agents können mehr als Chatbots: sie handeln. Das macht sie nützlicher &mdash; und gleichzeitig riskanter. Schauen wir uns an, warum.“</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">402 · Verben</div>
+    <h2>Aktiv, konkret, nicht aufgebläht</h2>
+    <ul>
+      <li><strong>Aktiv statt passiv</strong>: „Das Modell trainiert“ statt „Das Modell wird trainiert“.</li>
+      <li><strong>Konkrete Verben</strong>: „rechnen“ statt „durchführen“, „bauen“ statt „realisieren“, „prüfen“ statt „evaluieren“.</li>
+      <li><strong>Keine Nominalisierungen</strong>: „erklären“ statt „die Erklärung liefern“.</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">403 · Verbotene Wörter</div>
+    <h2>Die Sperrliste</h2>
+    <p>Diese Wörter und Phrasen sind in unseren Texten nicht erwünscht &mdash; entweder weil sie nichtssagend sind, weil sie nach Pressemitteilung klingen, oder weil sie überstrapaziert wurden:</p>
+    <div class="tag-row">
+      <span class="tag">revolutionär</span>
+      <span class="tag">bahnbrechend</span>
+      <span class="tag">Game-Changer</span>
+      <span class="tag">disruptiv</span>
+      <span class="tag">nahtlos</span>
+      <span class="tag">leveragen</span>
+      <span class="tag">deep dive</span>
+      <span class="tag">in der heutigen schnelllebigen Welt</span>
+      <span class="tag">letztendlich</span>
+      <span class="tag">essentiell</span>
+      <span class="tag">unzweifelhaft</span>
+      <span class="tag">zweifelsohne</span>
+      <span class="tag">faszinierend</span>
+      <span class="tag">spannend</span>
+      <span class="tag">unglaublich</span>
+    </div>
+    <div class="callout">
+      <div class="callout-label">Hausregel</div>
+      <p>Keine Gedankenstriche (—). Stattdessen Komma, Semikolon, Doppelpunkt, Punkt oder Klammern. Im HTML verwenden wir Halbgeviertstriche (&ndash;) für Bereiche, sonst nichts.</p>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">404 · Zahlen</div>
+    <h2>Zahlen kontextualisieren, nicht nur nennen</h2>
+    <p>Eine Zahl ohne Vergleich ist halb verloren. „GPT-4 hat 1,76 Billionen Parameter“ sagt niemandem was. „1,76 Billionen Parameter &mdash; das sind etwa so viele Schaltstellen, wie Sterne in zehn Galaxien“ macht es greifbar.</p>
+    <ul>
+      <li>Bis zwölf: ausgeschrieben („sieben Modelle“).</li>
+      <li>Ab 13: Ziffern („17 Modelle“).</li>
+      <li>Mit Einheit: immer Ziffern („3 GB“, „5 Sekunden“).</li>
+      <li>Tausendertrennung: deutscher Punkt („1.500“), englisches Komma vermeiden.</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">405 · Anglizismen</div>
+    <h2>Wenn das deutsche Wort die Sache nicht trifft &mdash; bleib beim englischen</h2>
+    <p>„Prompt“ ist kein „Aufforderungstext“. „Token“ ist kein „Wortbaustein“. „Agent“ ist (in unserem Kontext) kein „Agent“ im Sinne von Spion. Wo das deutsche Wort verwirrt, bleibt der englische Begriff.</p>
+    <p>Aber: wenn es ein gutes deutsches Wort gibt, nimm es. „Modell“ statt „Model“. „Schicht“ statt „Layer“. „Trainieren“ statt „trainen“.</p>
+  </section>
+</div>
+
+<!-- ================ QUELLEN ================ -->
+<div class="panel" id="quellen">
+
+  <section class="rule">
+    <div class="rule-num">501 · Quellenpflicht</div>
+    <h2>Jede konkrete Behauptung braucht eine Quelle</h2>
+    <p>Konkret heißt: Zahlen, Zitate, Studienergebnisse, Aussagen über reale Firmen oder Produkte. Allgemeines Wissen muss nicht belegt werden.</p>
+    <ul>
+      <li><strong>Quellenpflicht</strong>: „Anthropic hat Claude 4.7 im Mai 2026 veröffentlicht.“</li>
+      <li><strong>Keine Quelle nötig</strong>: „Sprachmodelle sagen das wahrscheinlichste nächste Wort vorher.“</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">502 · Quellen-Hierarchie</div>
+    <h2>Gute Quellen, in dieser Reihenfolge</h2>
+    <ol>
+      <li><strong>Primärquellen</strong>: Originalstudien (arXiv, peer-reviewed), Original-Blogposts der Firmen, offizielle Dokumentation, Pressemitteilungen.</li>
+      <li><strong>Hochwertige Sekundärquellen</strong>: The Information, Stratechery, Simon Willison's Blog, Anthropic Research, OpenAI Blog.</li>
+      <li><strong>Tech-Medien mit Track Record</strong>: Ars Technica, Heise, MIT Technology Review.</li>
+      <li><strong>Mit Vorsicht</strong>: TechCrunch, The Verge (oft schnell, manchmal ungenau).</li>
+      <li><strong>Niemals</strong>: KI-generierte Zusammenfassungen, „X User sagt“-Tweets ohne Verifikation, SEO-Spam-Seiten.</li>
+    </ol>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">503 · Datierung</div>
+    <h2>Was alt ist, ist alt</h2>
+    <p>Bei AI altert alles in Wochen. Studien älter als 12 Monate sind potentiell überholt. Wenn wir sie zitieren, müssen wir das Datum nennen und einordnen.</p>
+    <ul>
+      <li>„Eine Studie von Anthropic aus dem März 2025 zeigte...“</li>
+      <li>„Stand Mai 2026...“</li>
+      <li>Bei Preisen, Modell-Versionen, API-Limits: <strong>immer</strong> Datum dazu.</li>
+    </ul>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">504 · Eigenrecherche vs. AI-Recherche</div>
+    <h2>KI-Tools sind Recherchehilfen, keine Quellen</h2>
+    <p>Wir nutzen Claude, Perplexity, ChatGPT etc. zum Brainstormen, Strukturieren, Gegenchecken. Aber: <strong>jede Behauptung, die im Artikel steht, muss aus einer überprüfbaren Originalquelle stammen</strong>.</p>
+    <div class="callout">
+      <div class="callout-label">Faustregel</div>
+      <p>Wenn du etwas schreibst und nur eine KI-Antwort als „Beleg“ hast, ist es noch nicht recherchiert. Hol dir die Originalquelle, oder lass es weg.</p>
+    </div>
+  </section>
+
+  <section class="rule">
+    <div class="rule-num">505 · Korrekturen &amp; Transparenz</div>
+    <h2>Fehler werden offen ausgewiesen</h2>
+    <p>Wenn wir uns irren: am Ende des Artikels eine Korrektur-Notiz mit Datum und Beschreibung. Nicht stillschweigend ändern.</p>
+    <p>Wenn wir Inhalte mit KI-Unterstützung erstellt haben (Recherche, Strukturierung, Erstentwurf): das gehört in eine kurze Methoden-Notiz am Ende. EU AI Act und DSGVO sind nicht das einzige Argument &mdash; Transparenz ist auch redaktionelles Selbstverständnis.</p>
+  </section>
+</div>
+
+<!-- ================ CHECKLISTE ================ -->
+<div class="panel" id="checkliste">
+
+  <p style="margin-bottom: 24px; color: var(--ink);">Diese Checkliste durchgehen, bevor ein Artikel rausgeht. Hak ab, was passt &mdash; was übrig bleibt, ist die To-do-Liste.</p>
+
+  <div class="checklist">
+
+    <div class="checklist-section">
+      <h3>Vor dem Schreiben</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c1">
+        <label for="c1">Eine klare Kernbotschaft in einem Satz formuliert.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c2">
+        <label for="c2">Zielgruppe definiert: Wer soll das verstehen, was weiß die Person schon?</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c3">
+        <label for="c3">Mindestens 2 Primärquellen identifiziert.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c4">
+        <label for="c4">Eine tragende Analogie überlegt.</label>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <h3>Beim Schreiben &mdash; Tonalität</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c5">
+        <label for="c5">Geduzt (nie gesiezt).</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c6">
+        <label for="c6">Einstieg ist konkret und mit Haken (kein „In den letzten Jahren...“).</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c7">
+        <label for="c7">Keine Buzzwords aus der Sperrliste (revolutionär, bahnbrechend, nahtlos...).</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c8">
+        <label for="c8">Kein „Fazit“-Absatz am Ende.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c9">
+        <label for="c9">Keine Gedankenstriche (—) verwendet.</label>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <h3>Beim Schreiben &mdash; Erklärtechnik</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c10">
+        <label for="c10">Jeder Fachbegriff wird beim ersten Auftreten erklärt.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c11">
+        <label for="c11">Konkretes Beispiel kommt vor abstrakter Definition.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c12">
+        <label for="c12">Vereinfachungen sind als solche markiert („vereinfacht gesagt“).</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c13">
+        <label for="c13">Mindestens eine Analogie, die ohne Erklärung funktioniert.</label>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <h3>Beim Schreiben &mdash; Sprachhandwerk</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c14">
+        <label for="c14">Durchschnittliche Satzlänge unter 18 Wörtern.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c15">
+        <label for="c15">Aktiv vor Passiv, konkrete Verben, keine Nominalisierungen.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c16">
+        <label for="c16">Absätze maximal 4 Sätze, alle 200&ndash;300 Wörter eine Zwischenüberschrift.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c17">
+        <label for="c17">Zahlen sind kontextualisiert (Vergleich, Bezug).</label>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <h3>Quellen &amp; Compliance</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c18">
+        <label for="c18">Jede konkrete Behauptung hat eine überprüfbare Quelle.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c19">
+        <label for="c19">Studien/Quellen mit Datum versehen.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c20">
+        <label for="c20">Bei Preisen/Modell-Versionen/API-Limits: Datum „Stand Monat Jahr“ ergänzt.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c21">
+        <label for="c21">KI-Unterstützung beim Erstellen wird transparent gemacht (falls relevant).</label>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <h3>Letzter Durchgang</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c22">
+        <label for="c22">Laut gelesen &mdash; stolpert keine Stelle?</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c23">
+        <label for="c23">Erste 3 Sätze ziehen rein? Letzter Satz bleibt hängen?</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c24">
+        <label for="c24">Eine Sache kann man nach dem Lesen klar erklären, die man vorher nicht konnte?</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c25">
+        <label for="c25">Würdest du den Artikel selbst gerne lesen?</label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout" style="margin-top: 32px;">
+    <div class="callout-label">Final Check</div>
+    <p>Wenn die letzte Frage mit „eher nicht“ beantwortet wird, geh nochmal über den Einstieg und die Analogie. Beides ist wahrscheinlich noch nicht stark genug.</p>
+  </div>
+</div>
+
+</main>
+
+<div class="progress-bar" id="progress">Checkliste: <strong><span id="checked-count">0</span>/25</strong></div>
+
+<footer>
+  <p>Redaktionsrichtlinien · v1.0 · Living Document &mdash; iterieren, nicht versteinern</p>
+</footer>
+
+<script>
+  // ============ TABS ============
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.panel;
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('progress').classList.toggle('show', target === 'checkliste');
+    });
+  });
+
+  // ============ SEARCH ============
+  const search = document.getElementById('search');
+  search.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const sections = document.querySelectorAll('.panel section.rule, .panel .checklist-section, .panel .intro');
+
+    if (!q) {
+      sections.forEach(s => s.classList.remove('hidden-by-search'));
+      panels.forEach(p => p.classList.remove('hidden-by-search'));
+      return;
+    }
+
+    // Show all panels when searching, hide non-matching sections
+    panels.forEach(p => p.classList.add('active'));
+    sections.forEach(s => {
+      const text = s.textContent.toLowerCase();
+      if (text.includes(q)) {
+        s.classList.remove('hidden-by-search');
+      } else {
+        s.classList.add('hidden-by-search');
+      }
+    });
+  });
+
+  // ============ CHECKLIST PROGRESS ============
+  const checkboxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+  const checkedCount = document.getElementById('checked-count');
+
+  function updateCount() {
+    const checked = document.querySelectorAll('.check-item input[type="checkbox"]:checked').length;
+    checkedCount.textContent = checked;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      updateCount();
+      // Persist in storage
+      try {
+        const state = {};
+        checkboxes.forEach(c => state[c.id] = c.checked);
+        window.storage && window.storage.set('redax-checklist', JSON.stringify(state));
+      } catch (e) {}
+    });
+  });
+
+  // Restore checklist state
+  (async () => {
+    try {
+      if (window.storage) {
+        const r = await window.storage.get('redax-checklist');
+        if (r && r.value) {
+          const state = JSON.parse(r.value);
+          checkboxes.forEach(c => { if (state[c.id]) c.checked = true; });
+          updateCount();
+        }
+      }
+    } catch (e) {}
+  })();
+</script>
+
+</body>
+</html>

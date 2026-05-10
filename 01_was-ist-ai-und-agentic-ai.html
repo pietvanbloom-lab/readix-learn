@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Was ist AI und Agentic AI? · Codex Lehrtafel 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#0E1116;
+  --canvas-2:#161B22;
+  --parchment:#F2EBDB;
+  --parchment-2:#E8DFC9;
+  --ink:#0B0E13;
+  --ink-soft:#2A2F38;
+  --paper-text:#1A1D23;
+  --copper:#B87333;
+  --copper-bright:#D08A45;
+  --rule:#3A3F47;
+  --rule-light:#C9C0A8;
+  --ok:#5BAA6F;
+  --warn:#D08A45;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--canvas);color:#E8E6DF;font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+.lora{font-family:'Lora',serif}
+
+/* Layout */
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--rule)}
+section.parchment{background:var(--parchment);color:var(--paper-text);border-top:1px solid var(--rule-light)}
+section.parchment .eyebrow{color:var(--copper)}
+section.parchment .rule{background:var(--copper)}
+section.parchment .num{color:var(--copper)}
+
+/* Eyebrow */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--copper);display:inline-block}
+.eyebrow .num{font-weight:600}
+
+/* Headlines */
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(48px,7vw,96px);line-height:1.02;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:#CFCDC4}
+section.parchment .kicker{color:#3A3D44}
+
+/* Rule */
+.rule{height:1px;background:var(--rule);margin:24px 0}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+/* Hero */
+.hero{padding:120px 0 80px}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:64px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#9C9A92;letter-spacing:.06em;text-transform:uppercase}
+.hero .meta span{display:block}
+
+/* CTA */
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s}
+.cta:hover{background:var(--copper);color:var(--canvas)}
+.cta .arrow{font-family:'JetBrains Mono',monospace}
+
+/* Two-col */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.two.flip{grid-template-columns:1fr 1fr}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+/* Card */
+.card{border:1px solid var(--rule);padding:32px;background:var(--canvas-2)}
+section.parchment .card{border:1px solid var(--rule-light);background:var(--parchment-2)}
+.card h3{margin-bottom:16px}
+.card p{font-size:15px;color:#C7C5BD}
+section.parchment .card p{color:#3A3D44}
+
+/* Comparison Table */
+.compare{width:100%;border-collapse:collapse;font-size:14px;font-family:'Inter',sans-serif}
+.compare th,.compare td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--rule-light);vertical-align:top}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#7C7468;width:160px;font-weight:500}
+.compare tr:hover td{background:rgba(184,115,51,.06)}
+
+/* Diagramm Layout */
+.diagram-wrap{padding:40px;border:1px solid var(--rule);background:var(--canvas-2);position:relative}
+section.parchment .diagram-wrap{border:1px solid var(--rule-light);background:var(--parchment-2)}
+
+/* Demo Box */
+.demo{border:1px solid var(--rule);background:var(--canvas-2);padding:0;overflow:hidden}
+.demo-tabs{display:flex;border-bottom:1px solid var(--rule)}
+.demo-tab{flex:1;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#9C9A92;background:transparent;border:none;cursor:pointer;border-right:1px solid var(--rule);transition:all .15s}
+.demo-tab:last-child{border-right:none}
+.demo-tab.active{background:var(--copper);color:var(--canvas)}
+.demo-tab:hover:not(.active){background:rgba(184,115,51,.08);color:var(--copper-bright)}
+.demo-body{padding:28px;min-height:320px}
+.demo-input{width:100%;padding:14px 16px;background:var(--canvas);border:1px solid var(--rule);color:#E8E6DF;font-family:'JetBrains Mono',monospace;font-size:13px;outline:none}
+.demo-input:focus{border-color:var(--copper)}
+.demo-output{margin-top:20px;padding:20px;background:var(--canvas);border:1px solid var(--rule);font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;min-height:200px;white-space:pre-wrap;color:#C7C5BD}
+.demo-step{display:flex;gap:14px;margin-bottom:10px;opacity:0;transform:translateY(4px);transition:all .35s}
+.demo-step.show{opacity:1;transform:translateY(0)}
+.demo-step .marker{font-family:'JetBrains Mono',monospace;color:var(--copper);min-width:20px}
+.demo-step .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);margin-right:8px}
+
+/* Use cases grid */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:880px){.grid-3{grid-template-columns:1fr}}
+
+/* Glossar */
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:20px 0;border-bottom:1px solid var(--rule-light)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:16px;line-height:1.55;color:#3A3D44}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+/* Footer */
+footer{padding:64px 0;border-top:1px solid var(--rule);background:var(--canvas)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7C7468;text-transform:uppercase;letter-spacing:.12em}
+
+/* Diagramm Animation */
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+
+/* Big number */
+.bignum{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+
+/* Toggle */
+.toggle-row{display:flex;gap:0;border:1px solid var(--rule-light);width:fit-content;margin-bottom:24px}
+.toggle-row button{padding:10px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:none;color:#3A3D44;cursor:pointer;border-right:1px solid var(--rule-light)}
+.toggle-row button:last-child{border-right:none}
+.toggle-row button.active{background:var(--copper);color:var(--parchment)}
+
+/* ─── Nav (Codex) ─── */
+nav{position:sticky;top:0;z-index:200;height:56px;background:var(--canvas);border-bottom:1px solid #2E3440;display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:#E8E6DF;line-height:1}
+.wm-rule-v{width:1px;height:18px;background:#2E3440;flex-shrink:0}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8A8F99;transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#E8E6DF;border:1px solid #2E3440;padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* ─── Parchment grain ─── */
+section.parchment{position:relative;overflow:hidden}
+section.parchment::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+section.parchment>.wrap{position:relative;z-index:1}
+
+
+/* ─── Footer (Codex) ─── */
+.footer-codex{background:var(--canvas);border-top:1px solid #2E3440;padding:64px 0 40px}
+.footer-grid-c{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:48px}
+.footer-brand-c{font-family:'Source Serif 4',serif;font-size:26px;font-weight:600;letter-spacing:-.025em;color:#E8E6DF;line-height:1;margin-bottom:4px}
+.footer-brand-sub-c{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:20px}
+.footer-desc-c{font-family:'Lora',serif;font-size:14px;line-height:1.65;color:#8A8F99}
+.footer-col-head-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#8A8F99;margin-bottom:20px}
+.footer-links-c{display:flex;flex-direction:column;gap:12px}
+.footer-link-c{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;color:#8A8F99;transition:color .15s}
+.footer-link-c:hover{color:var(--copper)}
+.footer-link-c.dim{opacity:.5;pointer-events:none}
+.footer-bottom-c{border-top:1px solid #2E3440;padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-meta-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8A8F99}
+.footer-meta-c .cu{color:var(--copper)}
+.motion-btn-c{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid #2E3440;color:#8A8F99;padding:6px 14px;cursor:pointer;transition:border-color .15s,color .15s}
+.motion-btn-c:hover{border-color:var(--copper);color:var(--copper)}
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{transition:none!important;animation:none!important}
+@media(max-width:900px){.footer-grid-c{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.footer-grid-c{grid-template-columns:1fr}}
+
+/* ─── Language Toggle ─── */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:#8A8F99;font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--rule);color:#8A8F99;padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back"><span data-de>&#x2190; Alle Tafeln</span><span data-en>&#x2190; All Articles</span></a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./02_wie-ein-agent-denkt.html"  class="nav-link"><span data-de>02 &#x2192; Wie ein Agent denkt</span><span data-en>02 &#x2192; How an Agent Thinks</span></a>
+      <a href="./03_tools-mcps-plugins.html"   class="nav-link"><span data-de>03 &#x2192; Tools &amp; MCPs</span><span data-en>03 &#x2192; Tools &amp; MCPs</span></a>
+      <a href="./04_risiko-und-trust.html"      class="nav-link"><span data-de>04 &#x2192; Risiko &amp; Trust</span><span data-en>04 &#x2192; Risk &amp; Trust</span></a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">&#x250C;&#x2500;&#x2500;&#x2192;</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="true">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ LEHRTAFEL 01 ═══ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 01</span><span data-de>· LEHRTAFEL · GRUNDLAGEN</span><span data-en>· LEARNING CARD · FUNDAMENTALS</span></div>
+    <h1 class="serif" data-de>Was ist AI<br/>und was ist <em style="font-style:italic;color:var(--copper-bright)">Agentic AI</em>?</h1>
+    <h1 class="serif" data-en>What is AI<br/>and what is <em style="font-style:italic;color:var(--copper-bright)">Agentic AI</em>?</h1>
+    <p class="kicker" data-de>Eine visuelle Einf&uuml;hrung in zwei Begriffe, die heute oft verwechselt werden. Mit Vergleich, Live-Demo und Beispielen aus Alltag und Business.</p>
+    <p class="kicker" data-en>A visual introduction to two terms that are often confused today. With comparison, live demo and examples from everyday life and business.</p>
+    <div style="margin-top:48px"><a class="cta" href="#kapitel-1"><span data-de>START LESEN</span><span data-en>START READING</span> <span class="arrow">┌──→</span></a></div>
+    <div class="meta">
+      <span>FILE · 01 / SERIES AI &amp; AGENTIC EXPLAINED</span>
+      <span data-de>LESEZEIT · 8 MINUTEN</span><span data-en>READ TIME · 8 MINUTES</span>
+      <span>VERSION · v0.1</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== KAPITEL 1: WAS IST AI =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 02</span><span data-de>· DER ERSTE BAUSTEIN</span><span data-en>· THE FIRST BUILDING BLOCK</span></div>
+    <h2 class="serif" data-de>AI ist ein sehr belesener<br/>Praktikant mit Ged&auml;chtnisl&uuml;cken.</h2>
+    <h2 class="serif" data-en>AI is a very well-read<br/>intern with memory gaps.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Stell dir vor, du hast jemanden eingestellt, der jede &ouml;ffentliche Bibliothek der Welt durchgelesen hat. Du fragst, er antwortet. Schnell, oft erstaunlich gut. Aber er sitzt am Schreibtisch und wartet auf deine n&auml;chste Frage. Selbstst&auml;ndig handeln tut er nicht.</p>
+    <p class="kicker lora" data-en>Imagine you hired someone who has read every public library in the world. You ask, they answer. Fast, often surprisingly well. But they sit at their desk and wait for your next question. They don't act independently.</p>
+
+    <div class="two" style="margin-top:64px">
+      <div>
+        <h3 class="serif" data-de>Was AI im Kern macht</h3>
+        <h3 class="serif" data-en>What AI does at its core</h3>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6;color:#3A3D44" data-de>AI nimmt einen Input, dreht ihn durch ein riesiges Modell und gibt einen Output zur&uuml;ck. Das ist es. Klassische AI ist <strong>reaktiv</strong>: ohne Frage, keine Antwort. Sie hat keine eigene Agenda, keinen Kalender, kein Werkzeugkasten.</p>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6;color:#3A3D44" data-en>AI takes an input, runs it through a massive model and returns an output. That's it. Classical AI is <strong>reactive</strong>: no question, no answer. It has no own agenda, no calendar, no toolkit.</p>
+        <div class="rule" style="background:var(--rule-light)"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);text-transform:uppercase;letter-spacing:.14em"><span data-de>FORMEL</span><span data-en>FORMULA</span></p>
+        <p class="mono" style="font-size:14px;color:#3A3D44;margin-top:8px">INPUT &nbsp;┌──→&nbsp; <span data-de>MODELL</span><span data-en>MODEL</span> &nbsp;┌──→&nbsp; OUTPUT</p>
+      </div>
+
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 480 320" style="width:100%">
+          <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L8,5 L0,10 z" fill="#B87333"/>
+            </marker>
+          </defs>
+          <!-- Box User -->
+          <rect x="20" y="130" width="100" height="60" fill="none" stroke="#1A1D23" stroke-width="1.5"/>
+          <text x="70" y="158" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#1A1D23">DU</text>
+          <text x="70" y="174" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7C7468">FRAGE</text>
+
+          <!-- Arrow 1 -->
+          <line x1="120" y1="160" x2="180" y2="160" stroke="#B87333" stroke-width="1.5" marker-end="url(#arr1)" class="flow"/>
+
+          <!-- Box AI -->
+          <rect x="180" y="100" width="120" height="120" fill="#F2EBDB" stroke="#B87333" stroke-width="2"/>
+          <text x="240" y="140" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#1A1D23">AI</text>
+          <text x="240" y="160" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7C7468">MODELL</text>
+          <circle cx="240" cy="185" r="3" fill="#B87333" class="pulse"/>
+
+          <!-- Arrow 2 -->
+          <line x1="300" y1="160" x2="360" y2="160" stroke="#B87333" stroke-width="1.5" marker-end="url(#arr1)" class="flow"/>
+
+          <!-- Output -->
+          <rect x="360" y="130" width="100" height="60" fill="none" stroke="#1A1D23" stroke-width="1.5"/>
+          <text x="410" y="158" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#1A1D23">ANTWORT</text>
+          <text x="410" y="174" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7C7468">TEXT/BILD/CODE</text>
+
+          <!-- Label oben -->
+          <text x="240" y="40" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#B87333" letter-spacing="2">REAKTIV · EIN ZUG · KEIN GEDÄCHTNIS</text>
+          <line x1="100" y1="55" x2="380" y2="55" stroke="#B87333" stroke-width="1"/>
+
+          <text x="240" y="280" text-anchor="middle" font-family="Lora" font-style="italic" font-size="13" fill="#3A3D44">"Schreib mir eine E-Mail an Anna."</text>
+          <text x="240" y="298" text-anchor="middle" font-family="Lora" font-style="italic" font-size="13" fill="#3A3D44">→ Modell schreibt Text. Fertig.</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top:64px">
+      <div class="card">
+        <h3 class="serif" data-de>Beispiel · Alltag</h3>
+        <h3 class="serif" data-en>Example · Everyday</h3>
+        <p data-de>Du fragst ChatGPT nach einem Rezept. Du bekommst ein Rezept. Wenn du es kochen willst, musst du selbst einkaufen, schneiden, R&uuml;hren.</p>
+        <p data-en>You ask ChatGPT for a recipe. You get a recipe. If you want to cook it, you have to shop, chop, and stir yourself.</p>
+      </div>
+      <div class="card">
+        <h3 class="serif" data-de>Beispiel · Business</h3>
+        <h3 class="serif" data-en>Example · Business</h3>
+        <p data-de>Du l&auml;sst eine AI eine Produktbeschreibung formulieren. Du copy-pastest das Ergebnis in dein Shopsystem. Die AI sieht den Shop nie.</p>
+        <p data-en>You have AI draft a product description. You copy-paste the result into your shop system. The AI never sees the shop.</p>
+      </div>
+      <div class="card">
+        <h3 class="serif" data-de>Grenze</h3>
+        <h3 class="serif" data-en>The Limit</h3>
+        <p data-de>AI versteht Sprache, generiert Inhalte, erkennt Muster. Sie handelt nicht. Sie hat kein Werkzeug, keine T&uuml;ren, keine Konten.</p>
+        <p data-en>AI understands language, generates content, recognizes patterns. It does not act. It has no tools, no doors, no accounts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== KAPITEL 2: WAS IST AGENTIC AI =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 03</span><span data-de>· DER N&Auml;CHSTE SPRUNG</span><span data-en>· THE NEXT LEAP</span></div>
+    <h2 class="serif" data-de>Agentic AI ist derselbe Praktikant<br/>mit <em style="color:var(--copper-bright);font-style:italic">Schl&uuml;sseln, Tools und Auftrag</em>.</h2>
+    <h2 class="serif" data-en>Agentic AI is the same intern<br/>with <em style="color:var(--copper-bright);font-style:italic">keys, tools, and a mission</em>.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker lora" data-de>Du gibst kein Stichwort mehr, du gibst ein <strong>Ziel</strong>. Der Agent zerlegt es in Schritte, ruft selbstst&auml;ndig Tools auf, pr&uuml;ft Zwischenergebnisse, korrigiert sich, fragt zur&uuml;ck wenn n&ouml;tig und liefert ein fertiges Ergebnis.</p>
+    <p class="kicker lora" data-en>You no longer give a keyword, you give a <strong>goal</strong>. The agent breaks it into steps, calls tools independently, checks intermediate results, self-corrects, asks when needed, and delivers a finished result.</p>
+
+    <div class="two" style="margin-top:64px">
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 480 360" style="width:100%">
+          <defs>
+            <marker id="arr2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L8,5 L0,10 z" fill="#D08A45"/>
+            </marker>
+          </defs>
+
+          <!-- User -->
+          <rect x="20" y="160" width="80" height="50" fill="none" stroke="#E8E6DF" stroke-width="1.5"/>
+          <text x="60" y="184" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#E8E6DF">DU</text>
+          <text x="60" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#9C9A92">ZIEL</text>
+
+          <!-- Arrow zum Agent -->
+          <line x1="100" y1="185" x2="160" y2="185" stroke="#D08A45" stroke-width="1.5" marker-end="url(#arr2)" class="flow"/>
+
+          <!-- Agent zentral -->
+          <rect x="160" y="135" width="160" height="100" fill="#161B22" stroke="#D08A45" stroke-width="2"/>
+          <text x="240" y="170" text-anchor="middle" font-family="Source Serif 4" font-size="16" fill="#E8E6DF">AGENT</text>
+          <text x="240" y="188" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#D08A45">PLAN · DENK · HANDLE</text>
+          <circle cx="195" cy="210" r="3" fill="#D08A45" class="pulse"/>
+          <circle cx="240" cy="210" r="3" fill="#D08A45" class="pulse" style="animation-delay:.4s"/>
+          <circle cx="285" cy="210" r="3" fill="#D08A45" class="pulse" style="animation-delay:.8s"/>
+
+          <!-- Tools rechts -->
+          <line x1="320" y1="160" x2="380" y2="100" stroke="#D08A45" stroke-width="1.5" marker-end="url(#arr2)" class="flow"/>
+          <line x1="320" y1="185" x2="380" y2="185" stroke="#D08A45" stroke-width="1.5" marker-end="url(#arr2)" class="flow"/>
+          <line x1="320" y1="210" x2="380" y2="270" stroke="#D08A45" stroke-width="1.5" marker-end="url(#arr2)" class="flow"/>
+
+          <rect x="380" y="80" width="80" height="40" fill="none" stroke="#E8E6DF" stroke-width="1"/>
+          <text x="420" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#E8E6DF">EMAIL</text>
+
+          <rect x="380" y="165" width="80" height="40" fill="none" stroke="#E8E6DF" stroke-width="1"/>
+          <text x="420" y="190" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#E8E6DF">DATENBANK</text>
+
+          <rect x="380" y="250" width="80" height="40" fill="none" stroke="#E8E6DF" stroke-width="1"/>
+          <text x="420" y="275" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#E8E6DF">KALENDER</text>
+
+          <!-- Loop arrow -->
+          <path d="M 240 235 q -50 50 0 50 q 50 0 0 -50" fill="none" stroke="#D08A45" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="240" y="320" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9C9A92">SELBSTKORREKTUR</text>
+
+          <!-- Label oben -->
+          <text x="240" y="40" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#D08A45" letter-spacing="2">PROAKTIV · MEHRSCHRITTIG · MIT TOOLS</text>
+          <line x1="60" y1="55" x2="420" y2="55" stroke="#D08A45" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="serif" data-de>Was Agentic AI hinzuf&uuml;gt</h3>
+        <h3 class="serif" data-en>What Agentic AI adds</h3>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6" data-de>Drei F&auml;higkeiten machen AI zu Agentic AI:</p>
+        <p style="font-family:'Lora',serif;font-size:17px;line-height:1.6" data-en>Three capabilities turn AI into Agentic AI:</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em">01 · <span data-de>PLANEN</span><span data-en>PLAN</span></p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-de>Der Agent zerlegt ein Ziel in Schritte. Was muss zuerst passieren? Was h&auml;ngt wovon ab?</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-en>The agent breaks a goal into steps. What needs to happen first? What depends on what?</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em">02 · <span data-de>TOOLS NUTZEN</span><span data-en>USE TOOLS</span></p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-de>Er ruft echte Werkzeuge auf: Email senden, Datenbank abfragen, Kalender pr&uuml;fen, Code ausf&uuml;hren, im Web suchen.</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-en>It calls real tools: send email, query database, check calendar, execute code, search the web.</p>
+        <div class="rule"></div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em">03 · <span data-de>LOOP &amp; KORRIGIEREN</span><span data-en>LOOP &amp; CORRECT</span></p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-de>Er pr&uuml;ft sein Zwischenergebnis, merkt Fehler und versucht es erneut. Statt einer Antwort gibt es eine erledigte Aufgabe.</p>
+        <p style="font-size:14px;color:#C7C5BD;margin-top:6px" data-en>It checks its intermediate result, spots errors and tries again. Instead of an answer, you get a completed task.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== KAPITEL 3: DER VERGLEICH =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 04</span><span data-de>· VERGLEICH</span><span data-en>· COMPARISON</span></div>
+    <h2 class="serif" data-de>Acht Dimensionen.<br/>Ein Blick gen&uuml;gt.</h2>
+    <h2 class="serif" data-en>Eight dimensions.<br/>One look is enough.</h2>
+    <div class="rule-copper"></div>
+
+    <div class="toggle-row" id="toggle-view">
+      <button class="active" data-view="all"><span data-de>ALLE</span><span data-en>ALL</span></button>
+      <button data-view="business"><span data-de>BUSINESS-FOKUS</span><span data-en>BUSINESS FOCUS</span></button>
+      <button data-view="tech"><span data-de>TECH-FOKUS</span><span data-en>TECH FOCUS</span></button>
+    </div>
+
+    <table class="compare">
+      <thead>
+        <tr>
+          <th>DIMENSION</th>
+          <th><span data-de>AI · KLASSISCH</span><span data-en>AI · CLASSICAL</span></th>
+          <th>AGENTIC AI</th>
+        </tr>
+      </thead>
+      <tbody id="compare-body">
+        <tr data-cat="business"><td class="col-label"><span data-de>Initiative</span><span data-en>Initiative</span></td><td><span data-de>Wartet auf Eingabe</span><span data-en>Waits for input</span></td><td><span data-de>Handelt selbst&auml;ndig nach Ziel</span><span data-en>Acts independently toward goal</span></td></tr>
+        <tr data-cat="business"><td class="col-label"><span data-de>Aufwand</span><span data-en>Effort</span></td><td><span data-de>Du verkettest Schritte manuell</span><span data-en>You chain steps manually</span></td><td><span data-de>Agent verkettet Schritte selbst</span><span data-en>Agent chains steps itself</span></td></tr>
+        <tr data-cat="business"><td class="col-label">Output</td><td><span data-de>Vorschlag oder Inhalt</span><span data-en>Suggestion or content</span></td><td><span data-de>Erledigte Aufgabe</span><span data-en>Completed task</span></td></tr>
+        <tr data-cat="business"><td class="col-label"><span data-de>Risiko</span><span data-en>Risk</span></td><td><span data-de>Halluziniert Inhalt</span><span data-en>Hallucinates content</span></td><td><span data-de>Halluziniert Inhalt &amp; macht echte Aktionen</span><span data-en>Hallucinates content &amp; takes real actions</span></td></tr>
+        <tr data-cat="business"><td class="col-label"><span data-de>Aufsicht</span><span data-en>Oversight</span></td><td><span data-de>Du pr&uuml;fst jeden Output</span><span data-en>You review every output</span></td><td><span data-de>Stichproben, Guardrails, Approval-Schritte</span><span data-en>Spot checks, guardrails, approval steps</span></td></tr>
+        <tr data-cat="tech"><td class="col-label"><span data-de>Architektur</span><span data-en>Architecture</span></td><td><span data-de>Modell-Call mit Prompt</span><span data-en>Model call with prompt</span></td><td><span data-de>Modell + Tools + Speicher + Loop</span><span data-en>Model + Tools + Memory + Loop</span></td></tr>
+        <tr data-cat="tech"><td class="col-label">State</td><td><span data-de>Zustandslos je Anfrage</span><span data-en>Stateless per request</span></td><td><span data-de>Hat Memory &uuml;ber Schritte und Sessions</span><span data-en>Has memory across steps and sessions</span></td></tr>
+        <tr data-cat="tech"><td class="col-label"><span data-de>Schnittstelle</span><span data-en>Interface</span></td><td>Chat / API</td><td>MCP, Function-Calls, <span data-de>externe APIs</span><span data-en>external APIs</span></td></tr>
+      </tbody>
+    </table>
+
+    <p class="mono" style="font-size:11px;color:#7C7468;margin-top:24px;letter-spacing:.12em" data-de>┌──→ FILTERN: BUSINESS ZEIGT WAS, AGENTIC LEISTET. TECH ZEIGT WIE.</p>
+    <p class="mono" style="font-size:11px;color:#7C7468;margin-top:24px;letter-spacing:.12em" data-en>┌──→ FILTER: BUSINESS SHOWS WHAT AGENTIC DELIVERS. TECH SHOWS HOW.</p>
+  </div>
+</section>
+
+
+<!-- =========================== KAPITEL 4: LIVE DEMO =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 05</span><span data-de>· LIVE-VERGLEICH</span><span data-en>· LIVE COMPARISON</span></div>
+    <h2 class="serif" data-de>Selber dr&uuml;cken.<br/>Sieh den Unterschied.</h2>
+    <h2 class="serif" data-en>Try it yourself.<br/>See the difference.</h2>
+    <div class="rule-copper"></div>
+    <p class="kicker" data-de>Tippe einen Auftrag oder w&auml;hle ein Beispiel. Links siehst du, was klassische AI liefert. Rechts, was ein Agent daraus macht. Die Demo simuliert die Schritte realistisch.</p>
+    <p class="kicker" data-en>Type a task or choose an example. On the left you see what classical AI delivers. On the right, what an agent does with it. The demo simulates the steps realistically.</p>
+
+    <div style="margin-top:48px">
+      <div class="demo-tabs" style="border:1px solid var(--rule);border-bottom:none">
+        <button class="demo-tab active" data-key="reise"><span data-de>REISE PLANEN</span><span data-en>PLAN TRIP</span></button>
+        <button class="demo-tab" data-key="lead"><span data-de>LEAD-OUTREACH</span><span data-en>LEAD OUTREACH</span></button>
+        <button class="demo-tab" data-key="report"><span data-de>WETTBEWERBS-REPORT</span><span data-en>COMPETITOR REPORT</span></button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);border-top:1px solid var(--rule);background:var(--canvas-2)">
+        <!-- AI klassisch -->
+        <div style="padding:24px;border-right:1px solid var(--rule)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <span class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em">CHAT-AI</span>
+            <span class="mono" style="font-size:10px;color:#7C7468" data-de>~2 SEK</span><span class="mono" style="font-size:10px;color:#7C7468" data-en>~2 SEC</span>
+          </div>
+          <input class="demo-input" id="ai-input" placeholder="..." />
+          <div class="demo-output" id="ai-output" data-de>[ Antwort erscheint hier nach &laquo;LAUFEN&raquo; ]</div>
+          <div class="demo-output" id="ai-output-en" data-en style="display:none">[ Response appears here after &laquo;RUN&raquo; ]</div>
+        </div>
+        <!-- Agent -->
+        <div style="padding:24px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <span class="mono" style="font-size:11px;color:var(--copper-bright);letter-spacing:.14em">AGENT</span>
+            <span class="mono" style="font-size:10px;color:#7C7468" data-de>~12 SEK · MEHRSCHRITTIG</span><span class="mono" style="font-size:10px;color:#7C7468" data-en>~12 SEC · MULTI-STEP</span>
+          </div>
+          <input class="demo-input" id="agent-input" placeholder="..." />
+          <div class="demo-output" id="agent-output">[ <span data-de>Schritte erscheinen hier nach &laquo;LAUFEN&raquo;</span><span data-en>Steps appear here after &laquo;RUN&raquo;</span> ]</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:24px;align-items:center">
+        <button class="cta" id="run-demo"><span data-de>DEMO LAUFEN</span><span data-en>RUN DEMO</span> <span class="arrow">┌──→</span></button>
+        <span class="mono" style="font-size:11px;color:#7C7468;letter-spacing:.1em" data-de>SIMULATION · KEINE ECHTEN AKTIONEN</span>
+        <span class="mono" style="font-size:11px;color:#7C7468;letter-spacing:.1em" data-en>SIMULATION · NO REAL ACTIONS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== KAPITEL 5: USE CASES =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 06</span><span data-de>· WAS BRINGT ES MIR</span><span data-en>· WHAT DOES IT GIVE ME</span></div>
+    <h2 class="serif" data-de>Wo Agentic AI heute schon<br/>Zeit zur&uuml;ckgibt.</h2>
+    <h2 class="serif" data-en>Where Agentic AI already<br/>gives back time today.</h2>
+    <div class="rule-copper"></div>
+
+    <h3 class="mono" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-top:48px;margin-bottom:24px">⚊ <span data-de>ALLTAG</span><span data-en>EVERYDAY</span></h3>
+    <div class="grid-3">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">01 · INBOX</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Email triagieren</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Triage email</h3>
+        <p data-de>Agent liest Posteingang, sortiert nach Priorit&auml;t, beantwortet Routine, schl&auml;gt Antworten f&uuml;r den Rest vor.</p>
+        <p data-en>Agent reads inbox, sorts by priority, handles routine replies, suggests responses for the rest.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">02 · <span data-de>REISE</span><span data-en>TRAVEL</span></p>
+        <h3 class="serif" style="margin-top:8px" data-de>Trip komplett planen</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Plan a complete trip</h3>
+        <p data-de>Vom Flug bis zum Restaurant. Vergleicht Optionen, ber&uuml;cksichtigt Kalender und Budget, fragt nur bei Konflikten.</p>
+        <p data-en>From flight to restaurant. Compares options, considers calendar and budget, asks only when there are conflicts.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">03 · <span data-de>LERNEN</span><span data-en>LEARNING</span></p>
+        <h3 class="serif" style="margin-top:8px" data-de>Pers&ouml;nlicher Tutor</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Personal tutor</h3>
+        <p data-de>Erstellt Lernplan, sucht Quellen, fragt dich ab und passt das Tempo an dein Verstehen an.</p>
+        <p data-en>Creates learning plan, finds sources, quizzes you and adapts pace to your understanding.</p>
+      </div>
+    </div>
+
+    <h3 class="mono" style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-top:64px;margin-bottom:24px">⚊ BUSINESS</h3>
+    <div class="grid-3">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">04 · SALES</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Lead-Recherche &amp; Outreach</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Lead Research &amp; Outreach</h3>
+        <p data-de>Findet passende Accounts, recherchiert Trigger-Events, schreibt personalisierte Erstkontakte. F&uuml;hrt CRM nach.</p>
+        <p data-en>Finds matching accounts, researches trigger events, writes personalized first contacts. Updates CRM.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">05 · OPS</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Reporting auf Knopfdruck</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Reporting at the push of a button</h3>
+        <p data-de>Holt Daten aus mehreren Systemen, baut w&ouml;chentliches KPI-Briefing, schickt es an Stakeholder.</p>
+        <p data-en>Pulls data from multiple systems, builds weekly KPI briefing, sends it to stakeholders.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">06 · SUPPORT</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Tier-1 Tickets</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Tier-1 Tickets</h3>
+        <p data-de>Liest Ticket, sucht in der Wissensdatenbank, antwortet, eskaliert nur was wirklich Mensch braucht.</p>
+        <p data-en>Reads ticket, searches knowledge base, responds, escalates only what truly needs a human.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;padding:32px;border:1px solid var(--copper);background:var(--parchment-2);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center">
+      <div class="bignum">3&times;</div>
+      <div>
+        <p class="mono" style="font-size:12px;color:var(--copper);letter-spacing:.14em"><span data-de>FAUSTREGEL</span><span data-en>RULE OF THUMB</span> · 2026</p>
+        <p class="lora" style="font-size:18px;line-height:1.55;color:#3A3D44;margin-top:8px" data-de>Wer einen klar abgrenzbaren Workflow an einen Agent &uuml;bergibt, gewinnt typischerweise das Drei- bis F&uuml;nffache an Durchsatz. Der Engpass verschiebt sich von Ausf&uuml;hrung zu Steuerung und Pr&uuml;fung.</p>
+        <p class="lora" style="font-size:18px;line-height:1.55;color:#3A3D44;margin-top:8px" data-en>Anyone who hands a clearly scoped workflow to an agent typically gains three to five times the throughput. The bottleneck shifts from execution to direction and review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== KAPITEL 6: GLOSSAR =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 07</span><span data-de>· GLOSSAR</span><span data-en>· GLOSSARY</span></div>
+    <h2 class="serif" data-de>F&uuml;nf Begriffe,<br/>die immer wieder fallen.</h2>
+    <h2 class="serif" data-en>Five terms<br/>that keep coming up.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--parchment);padding:48px;border:1px solid var(--rule-light)">
+      <div class="gloss">
+        <span class="term">PROMPT</span>
+        <span class="def" data-de>Die Anweisung, die du der AI gibst. Bei klassischer AI ist der Prompt der ganze Auftrag. Beim Agent ist er nur der Startschuss.</span>
+        <span class="def" data-en>The instruction you give the AI. In classical AI, the prompt is the whole task. With an agent, it's just the starting shot.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">TOOL-USE</span>
+        <span class="def" data-de>Der Agent ruft selbstst&auml;ndig externe Werkzeuge auf. Email, Browser, Datenbank, Code-Ausf&uuml;hrung. Macht aus dem Modell einen Akteur.</span>
+        <span class="def" data-en>The agent independently calls external tools. Email, browser, database, code execution. Turns the model into an actor.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">MCP</span>
+        <span class="def" data-de>Model Context Protocol. Standard, &uuml;ber den Agents Tools und Daten anbinden. So wie USB f&uuml;r Hardware, nur f&uuml;r AI.</span>
+        <span class="def" data-en>Model Context Protocol. The standard agents use to connect tools and data. Like USB for hardware, but for AI.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">LOOP</span>
+        <span class="def" data-de>Der Agent denkt, handelt, beobachtet, denkt wieder. Diese Schleife ist der Kern. Ohne Loop kein echter Agent.</span>
+        <span class="def" data-en>The agent thinks, acts, observes, thinks again. This loop is the core. No loop, no real agent.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">GUARDRAILS</span>
+        <span class="def" data-de>Regeln und Limits, die verhindern dass der Agent &uuml;ber Sinn und Zweck hinaus handelt. Z.B. nichts &uuml;ber 500&euro; ohne R&uuml;ckfrage.</span>
+        <span class="def" data-en>Rules and limits that prevent the agent from acting beyond its scope. E.g. nothing over €500 without asking first.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span><span class="num">● 08</span><span data-de>· N&Auml;CHSTE LEHRTAFEL</span><span data-en>· NEXT ARTICLE</span></div>
+    <h2 class="serif" data-de>Du hast den Unterschied.<br/>Was kommt als n&auml;chstes?</h2>
+    <h2 class="serif" data-en>You know the difference.<br/>What comes next?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">02</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Wie ein Agent denkt</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>How an agent thinks</h3>
+        <p data-de>Plan-Act-Observe-Loop, Memory, Reasoning. Mit interaktivem Schritt-f&uuml;r-Schritt-Trace eines echten Agents.</p>
+        <p data-en>Plan-Act-Observe loop, memory, reasoning. With an interactive step-by-step trace of a real agent.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">03</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Tools, MCPs, Plugins</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Tools, MCPs, Plugins</h3>
+        <p data-de>Was Agents an Werkzeugen haben. Was du f&uuml;r dich verbinden kannst. Inkl. Beispielen aus deinem Workflow.</p>
+        <p data-en>What tools agents have. What you can connect for yourself. Including examples from your workflow.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.12em">04</p>
+        <h3 class="serif" style="margin-top:8px" data-de>Risiko, Kontrolle, Trust</h3>
+        <h3 class="serif" style="margin-top:8px" data-en>Risk, Control, Trust</h3>
+        <p data-de>Wo Agents schiefgehen, wie man sie absichert, wann man Mensch im Loop braucht.</p>
+        <p data-en>Where agents go wrong, how to secure them, when you need a human in the loop.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="./02_wie-ein-agent-denkt.html"><span data-de>LEHRTAFEL 02 LESEN</span><span data-en>READ ARTICLE 02</span> <span class="arrow">┌──→</span></a>
+      <a class="cta" href="./index.html" style="border-color:#3A3D44;color:#3A3D44"><span data-de>SERIEN-&Uuml;BERSICHT</span><span data-en>SERIES OVERVIEW</span> <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer-codex">
+  <div class="wrap">
+    <div class="footer-grid-c">
+      <div>
+        <div class="footer-brand-c">Readix<span style="color:var(--copper)">.</span></div>
+        <div class="footer-brand-sub-c">Learn &middot; learn.readix.net</div>
+        <p class="footer-desc-c">Illustrierte Erklärungen zu KI, Agenten und den Technologien, die unsere Arbeit neu definieren. Kein Hype. Keine Vereinfachung.</p>
+      </div>
+      <div>
+        <div class="footer-col-head-c" data-de>Alle Lehrtafeln</div>
+        <div class="footer-col-head-c" data-en>All Articles</div>
+        <div class="footer-links-c">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="footer-link-c" style="color:var(--copper)">01 &middot; Was ist AI?</a>
+          <a href="./02_wie-ein-agent-denkt.html"        class="footer-link-c">02 &middot; Wie ein Agent denkt</a>
+          <a href="./03_tools-mcps-plugins.html"         class="footer-link-c">03 &middot; Tools, MCPs &amp; Plugins</a>
+          <a href="./04_risiko-und-trust.html"           class="footer-link-c">04 &middot; Risiko und Trust</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c" data-de>Bald verfügbar</div>
+        <div class="footer-col-head-c" data-en>Coming soon</div>
+        <div class="footer-links-c">
+          <span class="footer-link-c dim">05 &middot; Multi-Agent Systeme</span>
+          <span class="footer-link-c dim">06 &middot; KI in der Praxis</span>
+          <span class="footer-link-c dim">07 &middot; Robotik &amp; physische KI</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-head-c">Readix</div>
+        <div class="footer-links-c">
+          <a href="https://readix.net"           class="footer-link-c">readix.net</a>
+          <a href="https://readix.net/platform"  class="footer-link-c">Die Plattform</a>
+          <a href="./index.html"                 class="footer-link-c">&#x2190; Alle Tafeln</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-c">
+      <div class="footer-meta-c"><span class="cu">Readix</span> &middot; Lehrtafel 01 &middot; v.2026.05 &middot; learn.readix.net</div>
+      <button class="motion-btn-c" id="motion-btn" onclick="toggleMotion()">Motion: <span id="motion-state">On</span></button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ========== Language Toggle ==========
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'What is AI and Agentic AI? · Codex Article 01'
+    : 'Was ist AI und Agentic AI? · Codex Lehrtafel 01';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  // update demo inputs on lang switch
+  var activeTab = document.querySelector('.demo-tab.active');
+  if (activeTab) {
+    var key = activeTab.dataset.key;
+    var prompt = demoData[key]['prompt' + (lang === 'en' ? 'EN' : 'DE')];
+    if (aiInput) aiInput.value = prompt;
+    if (agentInput) agentInput.value = prompt;
+  }
+}
+
+// ========== Toggle Vergleichstabelle ==========
+const toggleBtns = document.querySelectorAll('#toggle-view button');
+const compareRows = document.querySelectorAll('#compare-body tr');
+toggleBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    toggleBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.view;
+    compareRows.forEach(r => {
+      r.style.display = (view === 'all' || r.dataset.cat === view) ? '' : 'none';
+    });
+  });
+});
+
+// ========== Demo Data ==========
+const demoData = {
+  reise: {
+    promptDE: 'Plane mir ein Wochenende in Lissabon, buche Flüge unter 200€ und ein Hotel in der Altstadt.',
+    promptEN: 'Plan me a weekend in Lisbon, book flights under €200 and a hotel in the old town.',
+    ai: {
+      de: `Hier ist ein Vorschlag für dein Wochenende in Lissabon:\n\nTAG 1\n- Anreise nachmittags\n- Spaziergang durch Alfama\n- Abendessen mit Fado\n\nTAG 2\n- Belém: Turm und Pasteis\n- Tram 28 fahren\n\nTAG 3\n- Tagestrip Sintra\n- Abreise abends\n\nHinweis: Ich kann keine Flüge oder Hotels buchen. Bitte selber buchen.`,
+      en: `Here is a suggestion for your Lisbon weekend:\n\nDAY 1\n- Arrive in the afternoon\n- Walk through Alfama\n- Dinner with Fado\n\nDAY 2\n- Belém: Tower and Pasteis\n- Ride Tram 28\n\nDAY 3\n- Day trip to Sintra\n- Depart in the evening\n\nNote: I cannot book flights or hotels. Please book yourself.`
+    },
+    agent: {
+      de: [
+        ['PLAN','Ziel zerlegen: 1) Flugsuche 2) Hotelsuche 3) Programm 4) Buchung'],
+        ['TOOL','search_flights(LIS, 24-26 Mai, max=200€) ... 14 Treffer'],
+        ['DENKE','Beste Option: TAP, Fr 18:30, Rück So 21:00, 178€'],
+        ['TOOL','search_hotels(Alfama, 2N, 4*) ... 9 Treffer'],
+        ['DENKE','Casa do Bairro, 9.1 Score, 142€/N → passt'],
+        ['CHECK','Kalender prüfen ... frei'],
+        ['CHECK','Budget prüfen ... 462€ < 600€ Limit'],
+        ['HALT','Approval-Schritt: Buche jetzt? [Ja/Nein] — wartet auf dich'],
+        ['DONE','Nach Bestätigung: Buchungen, Kalendereinträge, Reiseplan']
+      ],
+      en: [
+        ['PLAN','Break down goal: 1) Find flights 2) Find hotel 3) Program 4) Booking'],
+        ['TOOL','search_flights(LIS, May 24-26, max=€200) ... 14 results'],
+        ['THINK','Best option: TAP, Fri 18:30, return Sun 21:00, €178'],
+        ['TOOL','search_hotels(Alfama, 2N, 4*) ... 9 results'],
+        ['THINK','Casa do Bairro, score 9.1, €142/N → fits'],
+        ['CHECK','Check calendar ... free'],
+        ['CHECK','Check budget ... €462 < €600 limit'],
+        ['HALT','Approval step: Book now? [Yes/No] — waiting for you'],
+        ['DONE','After confirmation: bookings, calendar entries, travel plan']
+      ]
+    }
+  },
+  lead: {
+    promptDE: 'Finde die 5 besten Leads für unser Produkt, recherchiere sie und schreibe personalisierte Outreach-Mails.',
+    promptEN: 'Find the 5 best leads for our product, research them and write personalized outreach emails.',
+    ai: {
+      de: `Hier eine Vorlage für personalisierte Outreach-Mails:\n\nBetreff: [Name], kurz zu [Thema]?\n\nHi [Name],\n\nIch habe gesehen, dass [Trigger]. Wir helfen [Firmen wie eure] dabei, [Ergebnis].\n\nLohnt 15 Minuten?\n\nViele Grüße`,
+      en: `Here is a template for personalized outreach emails:\n\nSubject: [Name], quick question about [topic]?\n\nHi [Name],\n\nI noticed that [trigger]. We help [companies like yours] to [achieve result].\n\nWorth 15 minutes?\n\nBest regards`
+    },
+    agent: {
+      de: [
+        ['PLAN','ICP definieren → Quellen scrapen → Scoren → Recherche → Schreiben'],
+        ['TOOL','crm_query(Zielsegment) → 247 Kandidaten'],
+        ['TOOL','linkedin_signal(funding, hiring) → 31 mit Trigger'],
+        ['DENKE','Score nach Fit + Timing → Top 5 auswählen'],
+        ['TOOL','web_research(Top 5) → Notizen je Lead'],
+        ['TOOL','llm_compose(personalisiert je Lead)'],
+        ['CHECK','Tone of Voice + Spam-Check'],
+        ['HALT','Drafts liegen im CRM. Senden? [Approval]'],
+        ['DONE','5 Drafts bereit. Du drückst nur noch SEND.']
+      ],
+      en: [
+        ['PLAN','Define ICP → scrape sources → score → research → write'],
+        ['TOOL','crm_query(target segment) → 247 candidates'],
+        ['TOOL','linkedin_signal(funding, hiring) → 31 with trigger'],
+        ['THINK','Score by fit + timing → select top 5'],
+        ['TOOL','web_research(top 5) → notes per lead'],
+        ['TOOL','llm_compose(personalized per lead)'],
+        ['CHECK','Tone of voice + spam check'],
+        ['HALT','Drafts in CRM. Send? [Approval]'],
+        ['DONE','5 drafts ready. You just hit SEND.']
+      ]
+    }
+  },
+  report: {
+    promptDE: 'Erstelle einen wöchentlichen Wettbewerber-Report aus News, LinkedIn und ihren Websites.',
+    promptEN: 'Create a weekly competitor report from news, LinkedIn and their websites.',
+    ai: {
+      de: `Struktur für einen Wettbewerber-Report:\n\n1. Executive Summary\n2. Produkt-Updates\n3. Pricing-Bewegungen\n4. Hiring-Signale\n5. Marketing/Content\n6. Empfehlungen\n\nDu musst die Daten selbst sammeln und einfügen.`,
+      en: `Structure for a competitor report:\n\n1. Executive Summary\n2. Product Updates\n3. Pricing Movements\n4. Hiring Signals\n5. Marketing/Content\n6. Recommendations\n\nYou need to gather and insert the data yourself.`
+    },
+    agent: {
+      de: [
+        ['PLAN','5 Wettbewerber × 4 Quellen = 20 Streams'],
+        ['TOOL','news_scan(comp_list, 7d) → 86 Artikel'],
+        ['TOOL','linkedin_scrape(careers, posts) → 24 Signale'],
+        ['TOOL','site_diff(home, pricing) → 3 Änderungen entdeckt'],
+        ['DENKE','Cluster nach Thema, dedupe, ranke nach Relevanz'],
+        ['TOOL','llm_summarize(je Sektion, 200 Wörter)'],
+        ['TOOL','build_doc(template=weekly_v3)'],
+        ['CHECK','Quellen-Links prüfen, kein Halluzinieren'],
+        ['DONE','Report im Drive + Slack-Posting bereit. Wartet auf Approval.']
+      ],
+      en: [
+        ['PLAN','5 competitors × 4 sources = 20 streams'],
+        ['TOOL','news_scan(comp_list, 7d) → 86 articles'],
+        ['TOOL','linkedin_scrape(careers, posts) → 24 signals'],
+        ['TOOL','site_diff(home, pricing) → 3 changes found'],
+        ['THINK','Cluster by topic, dedupe, rank by relevance'],
+        ['TOOL','llm_summarize(per section, 200 words)'],
+        ['TOOL','build_doc(template=weekly_v3)'],
+        ['CHECK','Check source links, no hallucinations'],
+        ['DONE','Report in Drive + Slack post ready. Waiting for approval.']
+      ]
+    }
+  }
+};
+
+// ========== Demo Tabs ==========
+const demoTabs = document.querySelectorAll('.demo-tab');
+const aiInput = document.getElementById('ai-input');
+const agentInput = document.getElementById('agent-input');
+
+function getLang() { return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+demoTabs.forEach(t => {
+  t.addEventListener('click', () => {
+    demoTabs.forEach(b => b.classList.remove('active'));
+    t.classList.add('active');
+    const key = t.dataset.key;
+    const lang = getLang();
+    const prompt = demoData[key]['prompt' + (lang === 'en' ? 'EN' : 'DE')];
+    aiInput.value = prompt;
+    agentInput.value = prompt;
+  });
+});
+// Default fill
+(function() {
+  const lang = getLang();
+  aiInput.value = demoData['reise']['prompt' + (lang === 'en' ? 'EN' : 'DE')];
+  agentInput.value = aiInput.value;
+})();
+
+// ========== Run Demo ==========
+const aiOutput = document.getElementById('ai-output');
+const agentOutput = document.getElementById('agent-output');
+
+document.getElementById('run-demo').addEventListener('click', () => {
+  const activeTab = document.querySelector('.demo-tab.active');
+  const key = activeTab ? activeTab.dataset.key : 'reise';
+  const lang = getLang();
+  const data = demoData[key];
+
+  // AI typewriter
+  aiOutput.textContent = '';
+  let i = 0;
+  const txt = data.ai[lang];
+  const ai_iv = setInterval(() => {
+    aiOutput.textContent = txt.slice(0, i++);
+    if (i > txt.length) clearInterval(ai_iv);
+  }, 8);
+
+  // Agent steps
+  agentOutput.innerHTML = '';
+  data.agent[lang].forEach((step, idx) => {
+    const div = document.createElement('div');
+    div.className = 'demo-step';
+    div.innerHTML = `<span class="marker">${String(idx+1).padStart(2,'0')}</span><span class="label">${step[0]}</span><span>${step[1]}</span>`;
+    agentOutput.appendChild(div);
+    setTimeout(() => div.classList.add('show'), 400 + idx * 600);
+  });
+});
+
+// ========== Motion toggle ==========
+function toggleMotion() {
+  var body = document.body;
+  var state = document.getElementById('motion-state');
+  var on = !body.classList.contains('no-motion');
+  body.classList.toggle('no-motion', on);
+  if (state) state.textContent = on ? 'Off' : 'On';
+  try { localStorage.setItem('rl-motion', on ? 'off' : 'on'); } catch(e) {}
+}
+
+// ========== Init prefs ==========
+(function initPrefs() {
+  try {
+    if (localStorage.getItem('rl-motion') === 'off') {
+      document.body.classList.add('no-motion');
+      var el = document.getElementById('motion-state');
+      if (el) el.textContent = 'Off';
+    }
+    var savedLang = localStorage.getItem('rl-lang');
+    if (savedLang === 'en') setLang('en');
+  } catch(e) {}
+})();
+</script>
+
+</body>
+</html>
