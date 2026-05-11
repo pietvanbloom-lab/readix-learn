@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>When one agent isn't enough · Codex Lehrtafel 06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle (Readix Learn Pattern) ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* Layout */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.diagram-wrap{padding:40px;border:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .diagram-wrap{border:1px solid var(--border-on-paper);background:var(--paper-aged)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:880px){.process,.process.cols-3{grid-template-columns:1fr}}
+
+.demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.demo-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.demo-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.demo-tabs{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.demo-tab{padding:20px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;background:transparent;border-top:none;border-bottom:none;border-left:none;font-weight:500}
+.demo-tab:last-child{border-right:none}
+.demo-tab.active{background:var(--copper);color:var(--ink-black)}
+.demo-tab:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.demo-tab .step-num{display:block;font-size:10px;color:var(--gray-600);margin-bottom:5px}
+.demo-tab.active .step-num{color:rgba(10,10,11,.5)}
+.demo-tab .agent-tag{display:block;font-size:10px;color:var(--gray-400);margin-top:5px;letter-spacing:.1em}
+.demo-tab.active .agent-tag{color:rgba(10,10,11,.7)}
+.demo-body{padding:36px;min-height:420px}
+.demo-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:10px}
+.demo-title{font-family:'Source Serif 4',serif;font-size:30px;color:var(--fg-on-ink);margin-bottom:18px;line-height:1.2}
+.demo-text{font-family:'Lora',serif;font-size:19px;line-height:1.65;color:var(--gray-100);margin-bottom:24px;max-width:64ch}
+.demo-code{font-family:'JetBrains Mono',monospace;font-size:15px;line-height:1.75;background:var(--ink-black);border:1px solid var(--border-on-ink);border-left:2px solid var(--copper);padding:22px 24px;color:var(--gray-100);white-space:pre-wrap;overflow-x:auto}
+.demo-meta{display:flex;gap:24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-200);text-transform:uppercase;letter-spacing:.12em;margin-top:26px;padding-top:18px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap;font-weight:500}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:32px}
+.grid-4 > div{padding:28px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper);background:var(--paper-aged)}
+@media(max-width:880px){.grid-3{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+
+@media (prefers-reduced-motion: reduce){
+  .flow{animation:none}
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 06</span>
+      <span data-en>· LEHRTAFEL · AGENT TEAMS</span>
+      <span data-de>· LEHRTAFEL · AGENT-TEAMS</span>
+    </div>
+
+    <h1 class="serif" data-en>When one agent<br/><em>isn't enough</em>.</h1>
+    <h1 class="serif" data-de>Wenn ein Agent<br/><em>nicht reicht</em>.</h1>
+
+    <p class="kicker" data-en>Some tasks exceed what a single agent can deliver. Too many sources, too many kinds of expertise, too high a quality bar. The answer is a team. This card shows when it pays off, which roles you need, how they hand off, and where teams typically break.</p>
+    <p class="kicker" data-de>Manche Aufgaben sprengen, was ein einzelner Agent leisten kann. Zu viele Quellen, zu unterschiedliche Expertise, zu hohe Qualitätsansprüche. Die Antwort heißt Team. Diese Tafel zeigt, wann es sich lohnt, welche Rollen es braucht, wie sie sich übergeben, und wo Teams typischerweise scheitern.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="label"><span data-en>Role archetypes per team</span><span data-de>Rollen-Archetypen im Team</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">4</div>
+        <div class="label"><span data-en>Handoff patterns</span><span data-de>Übergabe-Muster</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">1</div>
+        <div class="label"><span data-en>Orchestrator holds it together</span><span data-de>Orchestrator hält alles zusammen</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1"><span data-en>READ THE METHOD</span><span data-de>METHODE LESEN</span> <span class="arrow">┌──→</span></a>
+      <a class="cta" href="05_dein-erster-agent.html" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-en>BACK TO 05</span><span data-de>ZURÜCK ZU 05</span> <span class="arrow">┌──→</span></a>
+    </div>
+
+    <div class="meta">
+      <span>FILE · 06 / SERIES AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 13 MINUTES</span><span data-de>LESEZEIT · 13 MINUTEN</span></span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K1: WHEN A TEAM =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 07</span>
+      <span data-en>· THE DECISION</span>
+      <span data-de>· DIE ENTSCHEIDUNG</span>
+    </div>
+    <h2 class="serif" data-en>When a team <em>outperforms</em>.</h2>
+    <h2 class="serif" data-de>Wann ein Team <em>mehr leistet</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>More agents does not automatically mean better. A team costs more tokens, more latency, more debugging complexity. It pays off only when a task has three clear properties: it can run in parallel, it needs different kinds of expertise, or it measurably improves under critic review.</p>
+    <p class="kicker" data-de>Mehr Agents heißt nicht automatisch besser. Ein Team kostet mehr Tokens, mehr Latenz, mehr Komplexität im Debugging. Es lohnt sich nur, wenn die Aufgabe drei klare Eigenschaften hat: Sie ist parallelisierbar, sie braucht unterschiedliche Expertisen, oder sie verbessert sich messbar durch Critic-Review.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th><span data-en>DIMENSION</span><span data-de>DIMENSION</span></th>
+          <th style="color:var(--success)"><span data-en>ONE AGENT IS ENOUGH</span><span data-de>EIN AGENT REICHT</span></th>
+          <th style="color:var(--copper)"><span data-en>A TEAM PAYS OFF</span><span data-de>TEAM LOHNT SICH</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-label"><span data-en>Parallelizable</span><span data-de>Parallelisierbar</span></td><td><span data-en>Steps depend on each other</span><span data-de>Schritte hängen alle voneinander ab</span></td><td><span data-en>Multiple subtasks run independently</span><span data-de>Mehrere Teilaufgaben unabhängig voneinander</span></td></tr>
+        <tr><td class="col-label"><span data-en>Expertise</span><span data-de>Expertise</span></td><td><span data-en>One domain, one style</span><span data-de>Eine Domäne, ein Stil</span></td><td><span data-en>Research, writing, fact-check separated</span><span data-de>Recherche, Schreiben, Faktencheck getrennt</span></td></tr>
+        <tr><td class="col-label"><span data-en>Quality bar</span><span data-de>Qualitätsanspruch</span></td><td><span data-en>Human reviews the final output</span><span data-de>Mensch prüft am Ende</span></td><td><span data-en>Critic loop measurably lifts output</span><span data-de>Critic-Loop hebt Output messbar</span></td></tr>
+        <tr><td class="col-label"><span data-en>Context size</span><span data-de>Context-Bedarf</span></td><td><span data-en>Fits one context window</span><span data-de>Passt in einen Kontext</span></td><td><span data-en>Exceeds the budget of one model</span><span data-de>Sprengt das Token-Budget eines Modells</span></td></tr>
+        <tr><td class="col-label"><span data-en>Debugging</span><span data-de>Debugging</span></td><td><span data-en>One trace, one place to look</span><span data-de>Ein Trace, eine Schuld</span></td><td><span data-en>Ready for richer audit logs</span><span data-de>Bereit für komplexere Audit-Logs</span></td></tr>
+        <tr><td class="col-label"><span data-en>Cost</span><span data-de>Kosten</span></td><td><span data-en>1× tokens, 1× latency</span><span data-de>1× Tokens, 1× Latenz</span></td><td><span data-en>3 to 5× tokens, ~2× latency</span><span data-de>3 bis 5× Tokens, ~2× Latenz</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">×3</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · TEAM-BUILDING</span><span data-de>FAUSTREGEL · TEAM-BAU</span></p>
+        <p class="text" data-en>If two of the three questions answer "yes", a team is worth it. With only one "yes", almost never. With none, never. People who build teams out of enthusiasm pay three to five times the tokens with the same quality.</p>
+        <p class="text" data-de>Wenn die Antwort auf zwei der drei Fragen "ja" lautet, lohnt sich ein Team. Bei nur einem "ja" fast nie. Bei keinem niemals. Wer Teams aus Begeisterung baut, zahlt drei- bis fünffach Token bei gleichbleibender Qualität.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K2: THREE ROLES =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 08</span>
+      <span data-en>· THREE ROLES</span>
+      <span data-de>· DREI ROLLEN</span>
+    </div>
+    <h2 class="serif" data-en>Three roles,<br/>one <em>crew</em>.</h2>
+    <h2 class="serif" data-de>Drei Rollen,<br/>eine <em>Mannschaft</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>No matter how large a team grows, three archetypes are enough. Planner decomposes the goal, Worker executes, Critic reviews. Every additional role is a specialization of these three. Anyone who starts with fewer is building a pipeline, not a team.</p>
+    <p class="kicker" data-de>Egal wie groß ein Team wird, drei Archetypen reichen. Planner zerlegt das Ziel, Worker führt aus, Critic prüft. Jede weitere Rolle ist eine Spezialisierung dieser drei. Wer mit weniger startet, baut keinen Schwarm, sondern eine Pipeline.</p>
+
+    <div class="process cols-3" style="margin-top:48px">
+      <div class="step">
+        <span class="num">01 · PLANNER</span>
+        <h4 class="serif" data-en>The strategist.</h4>
+        <h4 class="serif" data-de>Der Stratege.</h4>
+        <p data-en>Reads the goal, breaks it down, distributes subtasks. Holds the largest picture in mind, knows every worker and their tools. Rarely picks up a tool, thinks a lot.</p>
+        <p data-de>Liest das Ziel, zerlegt es in Teilaufgaben, verteilt sie an die Worker. Hat das größte Bild im Kopf, kennt alle Worker und ihre Tools. Greift selten zum Werkzeug, denkt viel.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · WORKER</span>
+        <h4 class="serif" data-en>The specialist.</h4>
+        <h4 class="serif" data-de>Der Spezialist.</h4>
+        <p data-en>Receives a clearly bounded subtask and a narrow tool scope. Returns a result. Does not know the overall goal in detail, and that is fine. Multiple workers typically run in parallel.</p>
+        <p data-de>Bekommt eine klar abgegrenzte Teilaufgabe und einen engen Tool-Scope. Liefert ein Ergebnis. Kennt das Gesamtziel nicht im Detail, das ist gut so. Mehrere Worker laufen typisch parallel.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · CRITIC</span>
+        <h4 class="serif" data-en>The reviewer.</h4>
+        <h4 class="serif" data-de>Der Prüfer.</h4>
+        <p data-en>Sees the workers' results and compares them with the success criteria. Sends back what does not fit. Lifts quality measurably when the perspective differs from the workers'.</p>
+        <p data-de>Sieht die Ergebnisse der Worker und vergleicht sie mit dem Erfolgsmaß. Schickt zurück, was nicht passt. Hebt Qualität messbar, wenn er einen anderen Blick hat als die Worker.</p>
+      </div>
+    </div>
+
+    <div class="two" style="margin-top:64px">
+      <div class="diagram-wrap">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em;margin-bottom:18px"><span data-en>A TEAM · OVERVIEW</span><span data-de>EIN TEAM · IM ÜBERBLICK</span></p>
+        <svg viewBox="0 0 480 320" style="width:100%">
+          <defs>
+            <marker id="arr-team" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L8,5 L0,10 z" fill="#D97757"/>
+            </marker>
+          </defs>
+          <rect x="180" y="40" width="120" height="50" fill="#14151A" stroke="#D97757" stroke-width="2"/>
+          <text x="240" y="62" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#E8E8E8">PLANNER</text>
+          <text x="240" y="78" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#D97757">DECOMPOSES</text>
+
+          <rect x="40" y="160" width="100" height="50" fill="#14151A" stroke="#4A6FA5" stroke-width="1.5"/>
+          <text x="90" y="182" text-anchor="middle" font-family="Source Serif 4" font-size="13" fill="#E8E8E8">WORKER A</text>
+          <text x="90" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#4A6FA5">NEWS</text>
+
+          <rect x="190" y="160" width="100" height="50" fill="#14151A" stroke="#4A6FA5" stroke-width="1.5"/>
+          <text x="240" y="182" text-anchor="middle" font-family="Source Serif 4" font-size="13" fill="#E8E8E8">WORKER B</text>
+          <text x="240" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#4A6FA5">LINKEDIN</text>
+
+          <rect x="340" y="160" width="100" height="50" fill="#14151A" stroke="#4A6FA5" stroke-width="1.5"/>
+          <text x="390" y="182" text-anchor="middle" font-family="Source Serif 4" font-size="13" fill="#E8E8E8">WORKER C</text>
+          <text x="390" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#4A6FA5">SITE-DIFF</text>
+
+          <rect x="180" y="260" width="120" height="50" fill="#14151A" stroke="#788C5D" stroke-width="2"/>
+          <text x="240" y="282" text-anchor="middle" font-family="Source Serif 4" font-size="14" fill="#E8E8E8">CRITIC</text>
+          <text x="240" y="298" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#788C5D">REVIEWS</text>
+
+          <line x1="210" y1="92" x2="115" y2="158" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-team)" class="flow"/>
+          <line x1="240" y1="92" x2="240" y2="158" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-team)" class="flow"/>
+          <line x1="270" y1="92" x2="365" y2="158" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-team)" class="flow"/>
+
+          <line x1="115" y1="212" x2="210" y2="258" stroke="#788C5D" stroke-width="1.5" marker-end="url(#arr-team)" class="flow"/>
+          <line x1="240" y1="212" x2="240" y2="258" stroke="#788C5D" stroke-width="1.5" marker-end="url(#arr-team)" class="flow"/>
+          <line x1="365" y1="212" x2="270" y2="258" stroke="#788C5D" stroke-width="1.5" marker-end="url(#arr-team)" class="flow"/>
+
+          <path d="M 300 285 Q 410 285 410 65 Q 410 40 300 40" fill="none" stroke="#D97757" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+          <text x="455" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#D97757" transform="rotate(90 455 170)">FEEDBACK</text>
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="serif" data-en>What makes the roles work</h3>
+        <h3 class="serif" data-de>Was die Rollen ausmacht</h3>
+        <p class="prose" data-en style="font-size:17px">The Planner is never a Worker, and the other way around. Trying both creates a mono-agent with labels. The Critic must not be the same as the Planner, otherwise it will praise its own ideas. Three roles, three minds, three perspectives. That is where the value of a team over a single agent comes from.</p>
+        <p class="prose" data-de style="font-size:17px">Der Planner ist nie ein Worker und umgekehrt. Wer beides versucht, baut einen Mono-Agent mit Etiketten. Der Critic darf nicht derselbe sein wie der Planner, sonst lobt er seine eigenen Ideen. Drei Rollen, drei Köpfe, drei Perspektiven. So entsteht der Mehrwert, den ein Team über einen Einzelagent hinaus liefert.</p>
+
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>SPECIALIZATIONS</span><span data-de>SPEZIALISIERUNGEN</span></p>
+        <p data-en style="font-size:14px;color:var(--gray-200);margin-top:6px">Researcher (Worker with read tools), Builder (Worker with write tools), Editor (Critic with style focus), Fact-Checker (Critic with source focus). All derived from the three archetypes.</p>
+        <p data-de style="font-size:14px;color:var(--gray-200);margin-top:6px">Researcher (Worker mit Read-Tools), Builder (Worker mit Write-Tools), Editor (Critic mit Stilfokus), Fact-Checker (Critic mit Quellenfokus). Alle leiten sich aus den drei Archetypen ab.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K3: FOUR PATTERNS =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 09</span>
+      <span data-en>· FOUR PATTERNS</span>
+      <span data-de>· VIER MUSTER</span>
+    </div>
+    <h2 class="serif" data-en>How agents <em>hand off</em>.</h2>
+    <h2 class="serif" data-de>Wie Agents <em>einander</em> übergeben.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Between three and ten agents can be wired up in four different ways. Every pattern has a sweet spot and a breaking point. Choosing the wrong one builds in latency, cost, or quality issues.</p>
+    <p class="kicker" data-de>Zwischen drei und zehn Agents lassen sich auf vier verschiedene Arten verschalten. Jedes Muster hat einen Sweet-Spot und einen Bruchpunkt. Wer das Muster falsch wählt, baut sich Latenz, Kosten oder Qualitätsprobleme ein.</p>
+
+    <div class="grid-4">
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">A · <span data-en>SEQUENCE</span><span data-de>SEQUENZ</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>Pipeline · A → B → C</span><span data-de>Pipeline · A → B → C</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">A classic chain. Each agent builds on the previous one. Easy to debug, slow, and brittle if any link breaks.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Klassische Kette. Jeder Agent baut auf dem Vorgänger. Einfach zu debuggen, langsam, fehleranfällig wenn ein Glied bricht.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>SWEET-SPOT · LINEAR WORKFLOWS</span><span data-de>SWEET-SPOT · LINEARE WORKFLOWS</span></p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">B · <span data-en>PARALLEL</span><span data-de>PARALLEL</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>Map-Reduce · A → [B,C,D] → E</span><span data-de>Map-Reduce · A → [B,C,D] → E</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">Multiple workers run simultaneously, an aggregator merges the results. Fast, parallelizable, higher token cost.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Mehrere Worker laufen gleichzeitig, ein Aggregator führt die Ergebnisse zusammen. Schnell, parallelisierbar, höhere Token-Kosten.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>SWEET-SPOT · INDEPENDENT SUBTASKS</span><span data-de>SWEET-SPOT · UNABHÄNGIGE TEILAUFGABEN</span></p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">C · <span data-en>HIERARCHY</span><span data-de>HIERARCHIE</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>Orchestrator · O → {W1, W2, ...}</span><span data-de>Orchestrator · O → {W1, W2, ...}</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">An orchestrator delegates dynamically. Decides at runtime which workers to call. Flexible, harder to audit, highest complexity.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Ein Orchestrator delegiert dynamisch. Entscheidet zur Laufzeit, welche Worker er ruft. Flexibel, schwerer zu prüfen, höchste Komplexität.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>SWEET-SPOT · OPEN PROBLEMS</span><span data-de>SWEET-SPOT · OFFENE PROBLEMSTELLUNGEN</span></p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">D · <span data-en>MARKET</span><span data-de>MARKT</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>Auction · {A, B, C} → best</span><span data-de>Auktion · {A, B, C} → bester</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">Several agents bid on solutions, a selector picks the best. High quality, very expensive, only worth it on critical tasks.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Mehrere Agents bieten Lösungen, ein Selector wählt die beste. Hohe Qualität, sehr teuer, lohnt sich nur bei kritischen Aufgaben.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>SWEET-SPOT · CRITICAL DECISIONS</span><span data-de>SWEET-SPOT · KRITISCHE EINZELENTSCHEIDUNGEN</span></p>
+      </div>
+    </div>
+
+    <p class="prose" data-en style="margin-top:48px">Most production setups combine two patterns: sequence at the top level, parallel inside one phase. Hierarchy comes in only when the problem is too open for a fixed pipeline. Market is the most expensive variant, sensible only when the cost of a wrong answer is far higher than three solution attempts.</p>
+    <p class="prose" data-de style="margin-top:48px">Die meisten produktiven Setups kombinieren zwei Muster: Sequenz im Großen, Parallel innerhalb einer Phase. Hierarchie kommt erst, wenn das Problem zu offen für eine feste Pipeline ist. Markt ist die teuerste Variante, sinnvoll nur, wenn ein Fehler erheblich teurer ist als drei Lösungsversuche.</p>
+  </div>
+</section>
+
+<!-- =========================== K4: LIVE-TEAM =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 10</span>
+      <span data-en>· LIVE TEAM</span>
+      <span data-de>· LIVE-TEAM</span>
+    </div>
+    <h2 class="serif" data-en>Three agents,<br/>one <em>task</em>.</h2>
+    <h2 class="serif" data-de>Drei Agents,<br/>eine <em>Aufgabe</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Example: the same competitor report from card 02, but now with a planner, three parallel researchers, and a critic. Click through the five phases to see how the handoffs actually look.</p>
+    <p class="kicker" data-de>Beispiel: derselbe Wettbewerber-Report wie in Tafel 02, aber jetzt mit einem Planner, drei parallelen Researchern und einem Critic. Klick durch die fünf Phasen und sieh, wie die Übergaben tatsächlich aussehen.</p>
+
+    <div class="demo" style="margin-top:48px">
+      <div class="demo-head">
+        <div class="title">
+          <span data-en>Task: "Weekly competitor report with fact-check."</span>
+          <span data-de>Aufgabe: "Wöchentlicher Wettbewerbs-Report mit Faktencheck."</span>
+        </div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>5 AGENTS · PATTERN B + CRITIC</span><span data-de>5 AGENTS · MUSTER B + CRITIC</span></div>
+      </div>
+      <div class="demo-tabs" id="demo-tabs">
+        <button class="demo-tab active" data-step="0"><span class="step-num">01</span>PLAN<span class="agent-tag">PLANNER</span></button>
+        <button class="demo-tab" data-step="1"><span class="step-num">02</span>FANOUT<span class="agent-tag"><span data-en>3 WORKERS</span><span data-de>3 WORKER</span></span></button>
+        <button class="demo-tab" data-step="2"><span class="step-num">03</span>MERGE<span class="agent-tag">PLANNER</span></button>
+        <button class="demo-tab" data-step="3"><span class="step-num">04</span>CRITIC<span class="agent-tag"><span data-en>REVIEWER</span><span data-de>PRÜFER</span></span></button>
+        <button class="demo-tab" data-step="4"><span class="step-num">05</span>DELIVER<span class="agent-tag">PLANNER</span></button>
+      </div>
+      <div class="demo-body" id="demo-body"></div>
+    </div>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px"><span data-en>SIMULATION · REAL TEAM RUNS LOOK SIMILAR.</span><span data-de>SIMULATION · ECHTE TEAM-RUNS LAUFEN ANALOG.</span></p>
+  </div>
+</section>
+
+<!-- =========================== K5: WHERE TEAMS BREAK =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 11</span>
+      <span data-en>· WHERE IT BREAKS</span>
+      <span data-de>· WO ES BRICHT</span>
+    </div>
+    <h2 class="serif" data-en>Where teams <em>break</em>.</h2>
+    <h2 class="serif" data-de>Wo Teams <em>scheitern</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Four problems show up in teams that single agents do not have. Knowing them lets you build in safeguards. Ignoring them means expensive swarms that talk a lot and ship little.</p>
+    <p class="kicker" data-de>Vier Probleme tauchen in Teams auf, die ein Einzelagent nicht hat. Wer sie kennt, baut Schutzschichten ein. Wer sie ignoriert, baut sich teure Schwärme, die viel reden und wenig liefern.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">A · ECHO-CHAMBER</p>
+        <h3 class="serif" data-en style="margin-top:8px">Goal drift in the swarm</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Goal Drift im Schwarm</h3>
+        <p data-en>Workers reinforce each other, the original brief blurs. Fix: a Critic with a different prompt style than the workers. A fresh perspective forces precision.</p>
+        <p data-de>Worker bestätigen einander gegenseitig, der ursprüngliche Auftrag verschwimmt. Antwort: Critic mit anderem Prompt-Style als die Worker. Frischer Blick zwingt zur Schärfung.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">B · <span data-en>LOOP ESCALATION</span><span data-de>LOOP-ESKALATION</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">Critic-Worker pingpong</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Critic-Worker-Pingpong</h3>
+        <p data-en>Critic returns it, Worker fixes, Critic returns it again. Endless. Fix: hard cap on review rounds, escalate to a human after at most three correction loops.</p>
+        <p data-de>Critic schickt zurück, Worker korrigiert, Critic schickt erneut. Endlos. Antwort: hartes Limit auf Review-Runden, Eskalation an Mensch nach maximal drei Korrekturschleifen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">C · <span data-en>OWNERSHIP GAP</span><span data-de>OWNERSHIP-LÜCKE</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">No one carries it</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Niemand trägt es</h3>
+        <p data-en>Three workers contribute to the report, none owns consistency. Fix: name one agent the owner; the others contribute, the owner signs off.</p>
+        <p data-de>Drei Worker arbeiten am Report, keiner ist verantwortlich für Konsistenz. Antwort: ein Agent wird als Owner benannt, andere liefern zu, der Owner unterschreibt.</p>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top:24px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">D · <span data-en>TOKEN INFLATION</span><span data-de>TOKEN-INFLATION</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">Too much chatter</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Zu viel reden</h3>
+        <p data-en>Each agent forwards its full context to the next. 5K becomes 50K, 50K becomes 500K. Fix: pass only summaries, never raw output.</p>
+        <p data-de>Jeder Agent schickt seinen vollen Kontext an den nächsten. Aus 5K werden 50K, aus 50K werden 500K. Antwort: nur Zusammenfassungen weiterreichen, nicht Roh-Output.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">E · <span data-en>DEBUG FOG</span><span data-de>DEBUG-NEBEL</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">Who did it?</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Wer war es?</h3>
+        <p data-en>When the output is wrong, it is unclear which agent delivered. Fix: every tool call logged with agent ID, every handoff tracked, every output signed.</p>
+        <p data-de>Wenn der Output schief ist, ist unklar welcher Agent geliefert hat. Antwort: jeder Tool-Call wird mit Agent-ID geloggt, jede Übergabe getrackt, jeder Output signiert.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">F · <span data-en>LATENCY JAM</span><span data-de>LATENZ-STAU</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">Sequence over parallel</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Sequenz statt Parallel</h3>
+        <p data-en>Out of convenience, workers run one after another though they could go in parallel. Fix: review every pipeline once, ask what really requires order.</p>
+        <p data-de>Aus Bequemlichkeit hängt man Worker hintereinander, obwohl sie parallel laufen könnten. Antwort: jede Pipeline einmal hinterfragen, was wirklich Reihenfolge braucht.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">3</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · CRITIC LIMIT</span><span data-de>FAUSTREGEL · CRITIC-LIMIT</span></p>
+        <p class="text" data-en>No more than three critic rounds per run, then escalate to you. Building without this cap teaches it the expensive way, because a single loop can produce a five-figure token bill.</p>
+        <p class="text" data-de>Maximal drei Critic-Runden pro Run, danach Eskalation an dich. Wer ohne dieses Limit baut, lernt es einmalig und teuer kennen, weil ein einzelner Loop fünfstellige Token-Rechnungen produzieren kann.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K6: GLOSSARY =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 12</span>
+      <span data-en>· GLOSSARY</span>
+      <span data-de>· GLOSSAR</span>
+    </div>
+    <h2 class="serif" data-en>Six terms<br/>from the team room.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>aus der Mannschaft.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <span class="term">ORCHESTRATOR</span>
+        <span class="def" data-en>The agent that coordinates the team. Reads the goal, distributes subtasks, collects results, decides on retries. Often identical to the planner, sometimes a separate role.</span>
+        <span class="def" data-de>Der Agent, der das Team koordiniert. Liest das Ziel, verteilt Teilaufgaben, sammelt Ergebnisse, entscheidet über Wiederholungen. Oft identisch mit dem Planner, manchmal eine eigene Rolle.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">HANDOFF</span>
+        <span class="def" data-en>The formal handover of an intermediate result from one agent to the next. Structured, with a clear schema. Bad handoffs are the most common source of token inflation.</span>
+        <span class="def" data-de>Die formale Übergabe eines Zwischenergebnisses von einem Agent an den nächsten. Strukturiert, mit klarem Schema. Schlechte Handoffs sind die häufigste Quelle von Token-Inflation.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">WORKER</span>
+        <span class="def" data-en>An agent with a clearly bounded subtask and a narrow tool scope. Does not know the overall picture in detail. Returns a result and is usually terminated afterwards.</span>
+        <span class="def" data-de>Ein Agent mit klar abgegrenzter Teilaufgabe und engem Tool-Scope. Kennt das Gesamtbild nicht im Detail. Liefert ein Ergebnis und wird danach in der Regel beendet.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">CRITIC</span>
+        <span class="def" data-en>An agent that reviews outputs against the success criteria and gives feedback. Should use a different prompt style than the workers, otherwise no real check takes place.</span>
+        <span class="def" data-de>Ein Agent, der Outputs gegen das Erfolgsmaß prüft und Feedback gibt. Sollte einen anderen Prompt-Style haben als die Worker, sonst entsteht keine echte Prüfung.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">TOKEN INFLATION</span>
+        <span class="def" data-en>When agents pass full context to one another instead of summaries, token usage and cost grow disproportionately. A typical breaking point for poorly built teams.</span>
+        <span class="def" data-de>Wenn Agents einander vollen Kontext weiterreichen statt Zusammenfassungen, wachsen Token-Verbrauch und Kosten überproportional. Ein typischer Bruchpunkt schlecht gebauter Teams.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">ECHO CHAMBER</span>
+        <span class="def" data-en>A swarm effect where agents reinforce each other instead of challenging each other. Lets goal drift grow unnoticed. Antidote: a critic with an explicitly contrasting prompt.</span>
+        <span class="def" data-de>Ein Schwarm-Effekt, bei dem Agents einander gegenseitig bestätigen statt zu hinterfragen. Lässt Goal Drift unbemerkt wachsen. Gegenmittel: ein Critic mit explizit gegenläufigem Prompt.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 13</span>
+      <span data-en>· NEXT CARD</span>
+      <span data-de>· N&Auml;CHSTE LEHRTAFEL</span>
+    </div>
+    <h2 class="serif" data-en>You know the team.<br/>What's next?</h2>
+    <h2 class="serif" data-de>Du kennst die Mannschaft.<br/>Was kommt als Nächstes?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">07</p>
+        <h3 class="serif" data-en style="margin-top:8px">Care and iteration</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Pflege und Iteration</h3>
+        <p data-en>How a prototype turns into a real tool. Iteration cycles, eval sets, drift detection, memory upkeep.</p>
+        <p data-de>Wie ein Prototyp ein echtes Werkzeug wird. Iterationszyklen, Eval-Sets, Drift erkennen, Memory pflegen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">08</p>
+        <h3 class="serif" data-en style="margin-top:8px">Use-case library</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Use-Case-Bibliothek</h3>
+        <p data-en>Ten concrete applications across sales, ops, support, finance, and engineering. Setup, tools, success criteria.</p>
+        <p data-de>Zehn konkrete Anwendungen aus Sales, Ops, Support, Finance, Engineering. Mit Setup, Tools und Erfolgsmaß.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">09</p>
+        <h3 class="serif" data-en style="margin-top:8px">Cost and ROI</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Kosten und ROI</h3>
+        <p data-en>What an agent really costs in production, what it saves, how to compute it honestly and report to stakeholders.</p>
+        <p data-de>Was ein Agent in der Praxis kostet, was er einspart, wie du das ehrlich rechnest und an Stakeholder kommunizierst.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 01</span><span data-de>ZURÜCK ZU 01</span></a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 02</span><span data-de>ZURÜCK ZU 02</span></a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 03</span><span data-de>ZURÜCK ZU 03</span></a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 04</span><span data-de>ZURÜCK ZU 04</span></a>
+      <a class="cta" href="05_dein-erster-agent.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 05</span><span data-de>ZURÜCK ZU 05</span></a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-en>REQUEST CARD 07</span><span data-de>LEHRTAFEL 07 ANFORDERN</span> <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 06</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============== Live Demo Stages (i18n) ==============
+const i18n = {
+  en: {
+    stages: [
+      {
+        label: 'PHASE 01 · PLANNER DECOMPOSES',
+        title: 'The planner cuts the brief.',
+        text: 'The planner reads the goal and splits it into three parallel subtasks: scan news, read LinkedIn signals, check website diffs. Each gets its own worker, its own tool scope, its own token budget.',
+        code: `// Planner → Team manifest
+{
+  "goal": "Competitor report, last 7 days, fact-checked",
+  "subtasks": [
+    { "agent": "worker_news",     "scope": ["news_search"],          "budget_tokens": 6000 },
+    { "agent": "worker_linkedin", "scope": ["linkedin_signals"],     "budget_tokens": 4000 },
+    { "agent": "worker_sitediff", "scope": ["site_diff"],            "budget_tokens": 4000 }
+  ],
+  "merge_strategy": "by_competitor",
+  "review": "critic_factcheck"
+}`,
+        meta: ['DURATION · 0.6S','TOKENS · 480']
+      },
+      {
+        label: 'PHASE 02 · THREE WORKERS IN PARALLEL',
+        title: 'Three specialists work simultaneously.',
+        text: 'The three workers run at the same time. Each with a narrow tool scope. The planner waits until all are done. Latency equals the slowest worker, not the sum of three.',
+        code: `// parallel.run
+[
+  worker_news      → 18 articles, 6.2s, 5800 tokens
+  worker_linkedin  → 24 signals,  4.1s, 3900 tokens
+  worker_sitediff  → 3 changes,   7.8s, 3700 tokens
+]
+→ all done after 7.8s (longest path)
+→ planner receives 3 result objects`,
+        meta: ['LATENCY · 7.8S','TOKENS · 13.4K','PARALLELISM · 3']
+      },
+      {
+        label: 'PHASE 03 · PLANNER MERGES',
+        title: 'Group results by competitor.',
+        text: 'The planner groups the outputs by competitor. For each entry it folds news, LinkedIn signals and site diffs into one section. Important trick: it does not forward the workers\' raw output, only structured summaries.',
+        code: `// merge.json (truncated)
+{
+  "competitor_alpha": {
+    "news":    ["...", "..."],
+    "linkedin":["hiring: 3 SE, 1 PM"],
+    "sitediff":"new pricing page"
+  },
+  "competitor_beta": { ... }
+}
+// Important: raw worker logs stay in the trace,
+// not in the forwarded context.`,
+        meta: ['MERGE TIME · 1.2S','REDUCTION · 78%']
+      },
+      {
+        label: 'PHASE 04 · CRITIC REVIEWS',
+        title: 'A reviewer with a different lens.',
+        text: 'The critic receives the merged result and checks it against the success criteria: every claim has a source, the tone is neutral, at least 5 competitors are covered. On a violation it flags lines, otherwise it signs off.',
+        code: `// critic.review
+{
+  "claims_total": 47,
+  "claims_with_source": 47,        ✓
+  "tone_neutral": true,            ✓
+  "competitors_covered": 5/5,      ✓
+  "verdict": "approved",
+  "comments": []
+}
+// On violation:
+//   verdict: "needs_revision"
+//   comments: [ {claim_id, issue, fix_suggestion} ]
+//   → back to planner for one revision round (max 3)`,
+        meta: ['REVIEW TIME · 2.1S','VERDICT · OK']
+      },
+      {
+        label: 'PHASE 05 · PLANNER DELIVERS',
+        title: 'Final, signed, sent to you.',
+        text: 'The planner builds the report from the approved merge, signs it with an audit trail, drops it in the drive, and pings you. Ownership rests with the planner. Workers and critic contributed.',
+        code: `// final.manifest
+{
+  "doc": "drive://reports/2026-w19-comp.pdf",
+  "owner_agent": "planner_v3",
+  "contributors": ["worker_news","worker_linkedin","worker_sitediff"],
+  "reviewer": "critic_factcheck",
+  "audit_log": "logs/team-run-2026-05-12.jsonl",
+  "approval_required": false
+}
+→ slack.post(#competitive-intel)`,
+        meta: ['TOTAL DURATION · 14.3S','TOKENS · 18.9K','COST · 0.61 EUR']
+      }
+    ]
+  },
+  de: {
+    stages: [
+      {
+        label: 'PHASE 01 · PLANNER ZERLEGT',
+        title: 'Der Planner schneidet den Auftrag.',
+        text: 'Der Planner liest das Ziel und teilt es in drei parallele Teilaufgaben: News scannen, LinkedIn-Signale lesen, Website-Diffs prüfen. Jede mit eigenem Worker, eigenem Tool-Scope, eigenem Token-Budget.',
+        code: `// Planner → Team Manifest
+{
+  "goal": "Wettbewerbs-Report letzte 7 Tage, mit Faktencheck",
+  "subtasks": [
+    { "agent": "worker_news",     "scope": ["news_search"],          "budget_tokens": 6000 },
+    { "agent": "worker_linkedin", "scope": ["linkedin_signals"],     "budget_tokens": 4000 },
+    { "agent": "worker_sitediff", "scope": ["site_diff"],            "budget_tokens": 4000 }
+  ],
+  "merge_strategy": "by_competitor",
+  "review": "critic_factcheck"
+}`,
+        meta: ['DAUER · 0.6S','TOKEN · 480']
+      },
+      {
+        label: 'PHASE 02 · DREI WORKER PARALLEL',
+        title: 'Drei Spezialisten arbeiten gleichzeitig.',
+        text: 'Die drei Worker laufen simultan. Jeder mit seinem engen Tool-Scope. Der Planner wartet, bis alle fertig sind. Die Latenz ist die des langsamsten Workers, nicht die Summe der drei.',
+        code: `// parallel.run
+[
+  worker_news      → 18 Artikel, 6.2s, 5800 token
+  worker_linkedin  → 24 Signale, 4.1s, 3900 token
+  worker_sitediff  → 3 Änderungen, 7.8s, 3700 token
+]
+→ alle fertig nach 7.8s (longest path)
+→ Planner empfängt 3 Result-Objects`,
+        meta: ['LATENZ · 7.8S','TOKEN · 13.4K','PARALLELITÄT · 3']
+      },
+      {
+        label: 'PHASE 03 · PLANNER MERGED',
+        title: 'Zusammenführung pro Wettbewerber.',
+        text: 'Der Planner gruppiert die Outputs nach Wettbewerber. Pro Eintrag fasst er News, LinkedIn-Signale und Site-Diff in eine Sektion zusammen. Wichtiger Trick: er reicht nicht den Volltext der Worker weiter, sondern strukturierte Zusammenfassungen.',
+        code: `// merge.json (gekürzt)
+{
+  "competitor_alpha": {
+    "news":     ["...", "..."],
+    "linkedin": ["hiring: 3 SE, 1 PM"],
+    "sitediff": "pricing-page neu"
+  },
+  "competitor_beta": { ... }
+}
+// Wichtig: Roh-Logs der Worker bleiben im Trace,
+// nicht im weitergegebenen Kontext.`,
+        meta: ['MERGE-DAUER · 1.2S','REDUKTION · 78%']
+      },
+      {
+        label: 'PHASE 04 · CRITIC PRÜFT',
+        title: 'Der Prüfer mit anderem Blick.',
+        text: 'Der Critic bekommt das Merge-Ergebnis und prüft gegen das Erfolgsmaß: jede Behauptung mit Quelle, neutrale Tonalität, mindestens 5 Wettbewerber abgedeckt. Bei Verstoß markiert er Stellen, sonst gibt er frei.',
+        code: `// critic.review
+{
+  "claims_total": 47,
+  "claims_with_source": 47,        ✓
+  "tone_neutral": true,            ✓
+  "competitors_covered": 5/5,      ✓
+  "verdict": "approved",
+  "comments": []
+}
+// Bei Verstoß:
+//   verdict: "needs_revision"
+//   comments: [ {claim_id, issue, fix_suggestion} ]
+//   → zurück an Planner für 1 Revisionsrunde (max 3)`,
+        meta: ['REVIEW-DAUER · 2.1S','VERDICT · OK']
+      },
+      {
+        label: 'PHASE 05 · PLANNER LIEFERT',
+        title: 'Final, signiert, an dich.',
+        text: 'Der Planner baut den Report aus dem freigegebenen Merge, signiert ihn mit Audit-Trail, legt ihn ins Drive und pingt dich. Die Verantwortung trägt der Planner. Worker und Critic haben zugeliefert.',
+        code: `// final.manifest
+{
+  "doc": "drive://reports/2026-w19-comp.pdf",
+  "owner_agent": "planner_v3",
+  "contributors": ["worker_news","worker_linkedin","worker_sitediff"],
+  "reviewer": "critic_factcheck",
+  "audit_log": "logs/team-run-2026-05-12.jsonl",
+  "approval_required": false
+}
+→ slack.post(#competitive-intel)`,
+        meta: ['GESAMT-DAUER · 14.3S','TOKEN · 18.9K','KOSTEN · 0.61 EUR']
+      }
+    ]
+  }
+};
+
+const tabs = document.querySelectorAll('#demo-tabs .demo-tab');
+const body = document.getElementById('demo-body');
+function renderStage(idx){
+  tabs.forEach((t,i)=>t.classList.toggle('active', i===idx));
+  const stages = i18n[getLang()].stages;
+  const s = stages[idx];
+  body.innerHTML = `
+    <div class="demo-label">${s.label}</div>
+    <div class="demo-title">${s.title}</div>
+    <div class="demo-text">${s.text}</div>
+    <pre class="demo-code">${s.code}</pre>
+    <div class="demo-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+  `;
+}
+tabs.forEach((t,i)=>t.addEventListener('click', ()=>renderStage(i)));
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+// Defined AFTER demo so renderStage is callable when setLang fires on load.
+function getLang(){ return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+function setLang(lang){
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? "When one agent isn't enough · Codex Article 06"
+    : 'Wenn ein Agent nicht reicht · Codex Lehrtafel 06';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  // Re-render the live demo so its dynamic content follows the language
+  if (typeof renderStage === 'function') {
+    var activeIdx = [...document.querySelectorAll('#demo-tabs .demo-tab')].findIndex(t => t.classList.contains('active'));
+    renderStage(activeIdx >= 0 ? activeIdx : 0);
+  }
+}
+
+// On load: restore saved language, else default to 'en'
+(function(){
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
