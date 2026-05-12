@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>An agent is never done · Codex Lehrtafel 07</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle (Readix Learn Pattern) ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* Layout */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.diagram-wrap{padding:40px;border:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .diagram-wrap{border:1px solid var(--border-on-paper);background:var(--paper-aged)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:880px){.process,.process.cols-3{grid-template-columns:1fr}}
+
+.demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.demo-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.demo-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.demo-tabs{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.demo-tab{padding:20px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;background:transparent;border-top:none;border-bottom:none;border-left:none;font-weight:500}
+.demo-tab:last-child{border-right:none}
+.demo-tab.active{background:var(--copper);color:var(--ink-black)}
+.demo-tab:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.demo-tab .step-num{display:block;font-size:10px;color:var(--gray-600);margin-bottom:5px}
+.demo-tab.active .step-num{color:rgba(10,10,11,.5)}
+.demo-tab .agent-tag{display:block;font-size:10px;color:var(--gray-400);margin-top:5px;letter-spacing:.1em}
+.demo-tab.active .agent-tag{color:rgba(10,10,11,.7)}
+.demo-body{padding:36px;min-height:420px}
+.demo-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:10px}
+.demo-title{font-family:'Source Serif 4',serif;font-size:30px;color:var(--fg-on-ink);margin-bottom:18px;line-height:1.2}
+.demo-text{font-family:'Lora',serif;font-size:19px;line-height:1.65;color:var(--gray-100);margin-bottom:24px;max-width:64ch}
+.demo-code{font-family:'JetBrains Mono',monospace;font-size:15px;line-height:1.75;background:var(--ink-black);border:1px solid var(--border-on-ink);border-left:2px solid var(--copper);padding:22px 24px;color:var(--gray-100);white-space:pre-wrap;overflow-x:auto}
+.demo-meta{display:flex;gap:24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-200);text-transform:uppercase;letter-spacing:.12em;margin-top:26px;padding-top:18px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap;font-weight:500}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:32px}
+.grid-4 > div{padding:28px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper);background:var(--paper-aged)}
+@media(max-width:880px){.grid-3{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+
+@media (prefers-reduced-motion: reduce){
+  .flow{animation:none}
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 07</span>
+      <span data-en>· LEHRTAFEL · CARE &amp; ITERATION</span>
+      <span data-de>· LEHRTAFEL · PFLEGE &amp; ITERATION</span>
+    </div>
+
+    <h1 class="serif" data-en>An agent is<br/><em>never done</em>.</h1>
+    <h1 class="serif" data-de>Ein Agent ist<br/><em>nie fertig</em>.</h1>
+
+    <p class="kicker" data-en>The first run feels like magic. The fifth run reveals the cracks. This card explains how a prototype turns into a real tool: iteration cycles, eval sets, drift detection, and the kind of upkeep that decides whether an agent is around in twelve weeks or quietly retired.</p>
+    <p class="kicker" data-de>Der erste Run fühlt sich nach Magie an. Der fünfte zeigt die Risse. Diese Tafel erklärt, wie aus einem Prototyp ein echtes Werkzeug wird: Iterationszyklen, Eval-Sets, Drift erkennen, und die Art von Pflege, die entscheidet, ob ein Agent in zwölf Wochen noch läuft oder still beerdigt wird.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">5</div>
+        <div class="label"><span data-en>Iterations until maturity</span><span data-de>Iterationen bis zur Reife</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">12</div>
+        <div class="label"><span data-en>Weeks of typical upkeep</span><span data-de>Wochen typische Pflege</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">1</div>
+        <div class="label"><span data-en>Eval set per use case</span><span data-de>Eval-Set pro Use Case</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1"><span data-en>READ THE METHOD</span><span data-de>METHODE LESEN</span> <span class="arrow">┌──→</span></a>
+      <a class="cta" href="06_agent-teams.html" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-en>BACK TO 06</span><span data-de>ZURÜCK ZU 06</span> <span class="arrow">┌──→</span></a>
+    </div>
+
+    <div class="meta">
+      <span>FILE · 07 / SERIES AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 13 MINUTES</span><span data-de>LESEZEIT · 13 MINUTEN</span></span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K1: AFTER THE FIRST RUN =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 14</span>
+      <span data-en>· DAY ONE VS WEEK TWO</span>
+      <span data-de>· TAG EINS VS WOCHE ZWEI</span>
+    </div>
+    <h2 class="serif" data-en>After the first <em>run</em>.</h2>
+    <h2 class="serif" data-de>Nach dem ersten <em>Run</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Day one looks like proof. The agent ships its first output, you celebrate, you tell your team. Week two looks different. Edge cases surface, the data drifts, a tool changes its schema, the prompt that worked perfectly on Monday quietly fails on Friday. This is the moment most prototypes die. Not because they were bad, but because nobody planned for the second week.</p>
+    <p class="kicker" data-de>Tag eins sieht nach Beweis aus. Der Agent liefert seinen ersten Output, du feierst, du erzählst es im Team. Woche zwei sieht anders aus. Edge Cases tauchen auf, die Daten driften, ein Tool ändert sein Schema, der Prompt der montags perfekt lief scheitert freitags still. Das ist der Moment, in dem die meisten Prototypen sterben. Nicht weil sie schlecht waren, sondern weil niemand Woche zwei eingeplant hat.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th><span data-en>DIMENSION</span><span data-de>DIMENSION</span></th>
+          <th style="color:var(--success)"><span data-en>DAY ONE</span><span data-de>TAG EINS</span></th>
+          <th style="color:var(--copper)"><span data-en>WEEK TWO</span><span data-de>WOCHE ZWEI</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-label"><span data-en>Inputs</span><span data-de>Inputs</span></td><td><span data-en>Three clean test cases</span><span data-de>Drei saubere Test-Cases</span></td><td><span data-en>Real users with messy data</span><span data-de>Echte Nutzer, unsaubere Daten</span></td></tr>
+        <tr><td class="col-label"><span data-en>Outputs</span><span data-de>Outputs</span></td><td><span data-en>Predictable, demo-ready</span><span data-de>Vorhersagbar, vorzeigbar</span></td><td><span data-en>Surprising in five of fifty runs</span><span data-de>Überraschend in fünf von fünfzig Runs</span></td></tr>
+        <tr><td class="col-label"><span data-en>Tools</span><span data-de>Tools</span></td><td><span data-en>Stable, freshly integrated</span><span data-de>Stabil, frisch integriert</span></td><td><span data-en>One API changed, one rate-limits you</span><span data-de>Eine API ändert sich, eine drosselt dich</span></td></tr>
+        <tr><td class="col-label"><span data-en>Prompt</span><span data-de>Prompt</span></td><td><span data-en>Hand-tuned for the demo</span><span data-de>Per Hand auf Demo getrimmt</span></td><td><span data-en>Breaks on inputs you never imagined</span><span data-de>Bricht bei Inputs, an die du nie gedacht hast</span></td></tr>
+        <tr><td class="col-label"><span data-en>Confidence</span><span data-de>Vertrauen</span></td><td><span data-en>High, based on three runs</span><span data-de>Hoch, basierend auf drei Runs</span></td><td><span data-en>Honest, based on fifty</span><span data-de>Ehrlich, basierend auf fünfzig</span></td></tr>
+        <tr><td class="col-label"><span data-en>Owner mood</span><span data-de>Owner-Stimmung</span></td><td><span data-en>"This is the future"</span><span data-de>"Das ist die Zukunft"</span></td><td><span data-en>"Why did this work yesterday"</span><span data-de>"Warum lief das gestern noch"</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">×5</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · ITERATIONS</span><span data-de>FAUSTREGEL · ITERATIONEN</span></p>
+        <p class="text" data-en>Plan for at least five rounds of iteration before you call an agent production-ready. The first round proves it works. Rounds two through four make it reliable. Round five is when you stop discovering new failure modes. Anyone who ships at round one ships a demo, not a tool.</p>
+        <p class="text" data-de>Plane mit mindestens fünf Iterationsrunden, bevor du einen Agent produktiv nennst. Runde eins beweist, dass es geht. Runden zwei bis vier machen ihn verlässlich. In Runde fünf hörst du auf, neue Failure-Modes zu entdecken. Wer in Runde eins ausliefert, liefert eine Demo, kein Werkzeug.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K2: THE ITERATION CYCLE =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 15</span>
+      <span data-en>· THE CYCLE</span>
+      <span data-de>· DER ZYKLUS</span>
+    </div>
+    <h2 class="serif" data-en>Four steps,<br/>one <em>loop</em>.</h2>
+    <h2 class="serif" data-de>Vier Schritte,<br/>eine <em>Schleife</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Iteration is not a vibe. It is a loop with four clearly named steps: test against your eval set, diagnose what failed, adjust exactly one variable, then re-test. Skipping a step means guessing. Changing three variables at once means you learn nothing from the round.</p>
+    <p class="kicker" data-de>Iteration ist kein Gefühl. Sie ist eine Schleife mit vier klar benannten Schritten: gegen das Eval-Set testen, diagnostizieren was scheiterte, genau eine Variable anpassen, neu testen. Wer einen Schritt überspringt, rät. Wer drei Variablen gleichzeitig ändert, lernt nichts aus der Runde.</p>
+
+    <div class="process" style="margin-top:48px">
+      <div class="step">
+        <span class="num">01 · TEST</span>
+        <h4 class="serif" data-en>Run the eval set.</h4>
+        <h4 class="serif" data-de>Eval-Set laufen lassen.</h4>
+        <p data-en>Run the agent against the same fixed inputs every time. Record which cases pass, which fail, and which sit in the grey zone. Pass rate is the only honest progress metric.</p>
+        <p data-de>Den Agent gegen dieselben festen Inputs laufen lassen. Notieren welche Cases bestehen, welche scheitern, welche in der Grauzone liegen. Die Bestehen-Quote ist das einzig ehrliche Fortschrittsmaß.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · DIAGNOSE</span>
+        <h4 class="serif" data-en>Read the trace.</h4>
+        <h4 class="serif" data-de>Den Trace lesen.</h4>
+        <p data-en>For every failure, read the actual trace. Was it the prompt, the tool, the data, the model? Most failures fall into one of these four buckets. Naming the bucket is half the fix.</p>
+        <p data-de>Für jeden Fehler den echten Trace lesen. War es der Prompt, das Tool, die Daten, das Modell? Die meisten Fehler fallen in einen dieser vier Eimer. Den Eimer zu benennen ist die halbe Reparatur.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · ADJUST</span>
+        <h4 class="serif" data-en>Change one thing.</h4>
+        <h4 class="serif" data-de>Eins ändern.</h4>
+        <p data-en>Change exactly one variable: the prompt, a tool scope, the model, the input format. Tag the change. Anyone who tunes three knobs at once cannot point to what worked.</p>
+        <p data-de>Genau eine Variable ändern: Prompt, Tool-Scope, Modell, Input-Format. Die Änderung taggen. Wer drei Stellschrauben gleichzeitig dreht, weiß hinterher nicht, was gewirkt hat.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · RE-TEST</span>
+        <h4 class="serif" data-en>Compare to last run.</h4>
+        <h4 class="serif" data-de>Mit Vorlauf vergleichen.</h4>
+        <p data-en>Run the full eval set again, not just the failing case. Watch for regressions: cases that used to pass and now fail. A round counts as won only if pass rate goes up without new losses.</p>
+        <p data-de>Das volle Eval-Set neu laufen lassen, nicht nur den gescheiterten Case. Regressionen beobachten: Cases die vorher bestanden und jetzt scheitern. Eine Runde gilt nur als gewonnen, wenn die Quote steigt ohne neue Verluste.</p>
+      </div>
+    </div>
+
+    <div class="two" style="margin-top:64px">
+      <div class="diagram-wrap">
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em;margin-bottom:18px"><span data-en>THE LOOP · ONE ROUND</span><span data-de>DIE SCHLEIFE · EINE RUNDE</span></p>
+        <svg viewBox="0 0 480 320" style="width:100%">
+          <defs>
+            <marker id="arr-iter" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L8,5 L0,10 z" fill="#D97757"/>
+            </marker>
+          </defs>
+          <rect x="50" y="50" width="140" height="60" fill="#14151A" stroke="#D97757" stroke-width="2"/>
+          <text x="120" y="78" text-anchor="middle" font-family="Source Serif 4" font-size="15" fill="#E8E8E8">TEST</text>
+          <text x="120" y="96" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#D97757">EVAL SET</text>
+
+          <rect x="290" y="50" width="140" height="60" fill="#14151A" stroke="#4A6FA5" stroke-width="2"/>
+          <text x="360" y="78" text-anchor="middle" font-family="Source Serif 4" font-size="15" fill="#E8E8E8">DIAGNOSE</text>
+          <text x="360" y="96" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#4A6FA5">READ TRACE</text>
+
+          <rect x="290" y="210" width="140" height="60" fill="#14151A" stroke="#788C5D" stroke-width="2"/>
+          <text x="360" y="238" text-anchor="middle" font-family="Source Serif 4" font-size="15" fill="#E8E8E8">ADJUST</text>
+          <text x="360" y="256" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#788C5D">ONE VARIABLE</text>
+
+          <rect x="50" y="210" width="140" height="60" fill="#14151A" stroke="#FFC47C" stroke-width="2"/>
+          <text x="120" y="238" text-anchor="middle" font-family="Source Serif 4" font-size="15" fill="#E8E8E8">RE-TEST</text>
+          <text x="120" y="256" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FFC47C">COMPARE</text>
+
+          <line x1="190" y1="80" x2="288" y2="80" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-iter)" class="flow"/>
+          <line x1="360" y1="110" x2="360" y2="208" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-iter)" class="flow"/>
+          <line x1="290" y1="240" x2="192" y2="240" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-iter)" class="flow"/>
+          <line x1="120" y1="208" x2="120" y2="112" stroke="#D97757" stroke-width="1.5" marker-end="url(#arr-iter)" class="flow"/>
+
+          <text x="240" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#8A8F98" letter-spacing="2">ONE ROUND</text>
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="serif" data-en>Why this loop, not a sprint</h3>
+        <h3 class="serif" data-de>Warum diese Schleife, keine Sprintplanung</h3>
+        <p class="prose" data-en style="font-size:17px">An agent does not improve in a straight line. Most changes are silent (no measurable effect), a few are positive, and a few are regressions disguised as wins. The only way to tell them apart is the same eval set, the same trace format, and one variable per round. A two-week sprint with four changes at once teaches you nothing. Four rounds of one change each, run inside a day, teach you everything.</p>
+        <p class="prose" data-de style="font-size:17px">Ein Agent verbessert sich nicht in einer geraden Linie. Die meisten Änderungen sind stumm (kein messbarer Effekt), wenige sind positiv, wenige sind Regressionen, die wie Gewinne aussehen. Sie auseinanderzuhalten geht nur mit demselben Eval-Set, demselben Trace-Format, einer Variable pro Runde. Ein Zwei-Wochen-Sprint mit vier gleichzeitigen Änderungen lehrt dich nichts. Vier Runden zu je einer Änderung, an einem Tag gefahren, lehren dich alles.</p>
+
+        <div class="rule"></div>
+        <p class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>FAILURE BUCKETS</span><span data-de>FEHLER-EIMER</span></p>
+        <p data-en style="font-size:14px;color:var(--gray-200);margin-top:6px">Prompt (clarity, ordering, missing instruction), Tool (wrong scope, schema drift, rate limit), Data (input format, edge case, encoding), Model (wrong tier, context too long, capability gap). Four buckets, every failure fits somewhere.</p>
+        <p data-de style="font-size:14px;color:var(--gray-200);margin-top:6px">Prompt (Klarheit, Reihenfolge, fehlende Anweisung), Tool (falscher Scope, Schema-Drift, Rate-Limit), Daten (Input-Format, Edge Case, Encoding), Modell (falsche Stufe, Context zu lang, Capability-Lücke). Vier Eimer, jeder Fehler passt irgendwo rein.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K3: EVAL SETS =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 16</span>
+      <span data-en>· THE MEASURING STICK</span>
+      <span data-de>· DER MASSSTAB</span>
+    </div>
+    <h2 class="serif" data-en>The eval set <em>decides</em>.</h2>
+    <h2 class="serif" data-de>Das Eval-Set <em>entscheidet</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Every agent needs one. An eval set is a fixed list of inputs with expected outputs or pass criteria. It is the only way to compare round five to round one honestly. Without it, every improvement is anecdotal and every regression invisible.</p>
+    <p class="kicker" data-de>Jeder Agent braucht eines. Ein Eval-Set ist eine feste Liste von Inputs mit erwarteten Outputs oder Bestehen-Kriterien. Es ist der einzige Weg, Runde fünf ehrlich mit Runde eins zu vergleichen. Ohne es ist jede Verbesserung anekdotisch und jede Regression unsichtbar.</p>
+
+    <div class="grid-4">
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">A · <span data-en>GOLDEN PATH</span><span data-de>GOLDEN PATH</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>The happy cases</span><span data-de>Die einfachen Fälle</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">Five to ten typical inputs the agent must always handle. If golden path breaks, ship nothing. This is your floor.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Fünf bis zehn typische Inputs, die der Agent immer schaffen muss. Bricht der Golden Path, liefere nichts aus. Das ist deine Untergrenze.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>TARGET · 100 PERCENT PASS</span><span data-de>ZIEL · 100 PROZENT BESTEHEN</span></p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">B · <span data-en>EDGE CASES</span><span data-de>EDGE CASES</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>The hard ones</span><span data-de>Die harten Fälle</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">Ten to twenty inputs at the boundary: empty fields, unusual formats, contradictory data, ambiguous wording. Catches most surprises.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Zehn bis zwanzig Inputs am Rand: leere Felder, ungewöhnliche Formate, widersprüchliche Daten, mehrdeutige Sprache. Fängt die meisten Überraschungen ab.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>TARGET · 80 PERCENT PASS</span><span data-de>ZIEL · 80 PROZENT BESTEHEN</span></p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">C · <span data-en>ADVERSARIAL</span><span data-de>ADVERSARIAL</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>The trap doors</span><span data-de>Die Fallen</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">Inputs designed to fool the agent: prompt injections, malformed tool returns, contradictory goals. A pass means the agent refuses safely.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Inputs, die den Agent austricksen sollen: Prompt-Injections, kaputte Tool-Returns, widersprüchliche Ziele. Bestehen heißt, der Agent verweigert sauber.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>TARGET · SAFE REFUSAL</span><span data-de>ZIEL · SAUBERE VERWEIGERUNG</span></p>
+      </div>
+      <div>
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em;margin-bottom:12px">D · <span data-en>FIELD CASES</span><span data-de>FELDFÄLLE</span></p>
+        <h4 class="serif" style="font-size:19px;font-weight:500;margin-bottom:10px;color:var(--fg-on-paper);line-height:1.25"><span data-en>The fresh harvest</span><span data-de>Die frische Ernte</span></h4>
+        <p data-en style="font-size:14px;line-height:1.55;color:var(--gray-600)">Real inputs that broke the agent in production. Every postmortem adds one. Over time the set grows with reality, not with imagination.</p>
+        <p data-de style="font-size:14px;line-height:1.55;color:var(--gray-600)">Echte Inputs, die den Agent im Produktivbetrieb gebrochen haben. Jedes Postmortem fügt einen hinzu. Mit der Zeit wächst das Set mit der Realität, nicht der Fantasie.</p>
+        <p class="mono" style="font-size:10px;color:var(--fg-on-paper-mute);letter-spacing:.1em;margin-top:14px"><span data-en>TARGET · GROW WEEKLY</span><span data-de>ZIEL · WÖCHENTLICH WACHSEN</span></p>
+      </div>
+    </div>
+
+    <p class="prose" data-en style="margin-top:48px">A good eval set has thirty to fifty cases. Less than thirty is not enough to spot regressions reliably. More than fifty makes each round slow and discourages running them. Start with ten golden plus ten edge, add one field case per real incident, and review the set quarterly: remove cases that no longer reflect the work, keep the ones that still bite.</p>
+    <p class="prose" data-de style="margin-top:48px">Ein gutes Eval-Set hat dreißig bis fünfzig Cases. Unter dreißig reicht nicht, um Regressionen verlässlich zu sehen. Über fünfzig macht jede Runde langsam und schreckt davon ab, sie zu fahren. Starte mit zehn Golden plus zehn Edge, füge pro echtem Vorfall einen Feldfall hinzu, und prüfe das Set vierteljährlich: Cases raus, die die Arbeit nicht mehr abbilden, Cases drin, die immer noch beißen.</p>
+  </div>
+</section>
+
+<!-- =========================== K4: LIVE-ITERATION =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 17</span>
+      <span data-en>· LIVE ITERATION</span>
+      <span data-de>· LIVE-ITERATION</span>
+    </div>
+    <h2 class="serif" data-en>Five rounds,<br/>one <em>agent</em>.</h2>
+    <h2 class="serif" data-de>Fünf Runden,<br/>ein <em>Agent</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>The competitor-report agent from card 05, twelve weeks later. Click through the five rounds to see how the pass rate moves, what changed each time, and which round actually decided whether this agent stays in production.</p>
+    <p class="kicker" data-de>Der Wettbewerbs-Report-Agent aus Tafel 05, zwölf Wochen später. Klick durch die fünf Runden und sieh, wie die Bestehen-Quote sich bewegt, was sich jeweils änderte, und welche Runde wirklich entschied, ob dieser Agent produktiv bleibt.</p>
+
+    <div class="demo" style="margin-top:48px">
+      <div class="demo-head">
+        <div class="title">
+          <span data-en>Agent: "Weekly competitor report" · eval set: 42 cases</span>
+          <span data-de>Agent: "Wettbewerbs-Report wöchentlich" · Eval-Set: 42 Cases</span>
+        </div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>5 ROUNDS · 12 WEEKS</span><span data-de>5 RUNDEN · 12 WOCHEN</span></div>
+      </div>
+      <div class="demo-tabs" id="demo-tabs">
+        <button class="demo-tab active" data-step="0"><span class="step-num">R1</span>BASELINE<span class="agent-tag"><span data-en>FIRST RUN</span><span data-de>ERSTER RUN</span></span></button>
+        <button class="demo-tab" data-step="1"><span class="step-num">R2</span>PROMPT<span class="agent-tag"><span data-en>CLARITY FIX</span><span data-de>KLARHEITS-FIX</span></span></button>
+        <button class="demo-tab" data-step="2"><span class="step-num">R3</span>TOOL<span class="agent-tag"><span data-en>SCOPE FIX</span><span data-de>SCOPE-FIX</span></span></button>
+        <button class="demo-tab" data-step="3"><span class="step-num">R4</span>REGRESSION<span class="agent-tag"><span data-en>REVERT</span><span data-de>ROLLBACK</span></span></button>
+        <button class="demo-tab" data-step="4"><span class="step-num">R5</span>MATURE<span class="agent-tag"><span data-en>SHIP</span><span data-de>FREIGABE</span></span></button>
+      </div>
+      <div class="demo-body" id="demo-body"></div>
+    </div>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px"><span data-en>SIMULATION · REAL ITERATION LOGS LOOK SIMILAR.</span><span data-de>SIMULATION · ECHTE ITERATIONS-LOGS LAUFEN ANALOG.</span></p>
+  </div>
+</section>
+
+<!-- =========================== K5: SPOTTING DRIFT =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 18</span>
+      <span data-en>· DRIFT</span>
+      <span data-de>· DRIFT</span>
+    </div>
+    <h2 class="serif" data-en>How agents <em>drift</em>.</h2>
+    <h2 class="serif" data-de>Wie Agents <em>driften</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>A mature agent does not stay mature on its own. The world around it moves: data shapes change, tools change, models change, expectations change. Six kinds of drift account for almost every silent failure. Knowing them lets you put a sensor on each.</p>
+    <p class="kicker" data-de>Ein reifer Agent bleibt nicht von selbst reif. Die Welt um ihn herum bewegt sich: Datenformen ändern sich, Tools ändern sich, Modelle ändern sich, Erwartungen ändern sich. Sechs Arten von Drift erklären fast jeden stillen Ausfall. Sie zu kennen heißt, auf jeder einen Sensor zu setzen.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">A · <span data-en>DATA DRIFT</span><span data-de>DATEN-DRIFT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">Inputs change shape</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Inputs ändern ihre Form</h3>
+        <p data-en>Yesterday the field was a string, today it is an array. The agent does not know. Fix: sample real production inputs weekly, diff against the schema you assumed.</p>
+        <p data-de>Gestern war das Feld ein String, heute ein Array. Der Agent merkt es nicht. Antwort: echte Produktiv-Inputs wöchentlich ziehen, gegen das angenommene Schema diffen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">B · <span data-en>TOOL DRIFT</span><span data-de>TOOL-DRIFT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">An API changes underneath</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Eine API ändert sich darunter</h3>
+        <p data-en>The vendor renames a field, deprecates an endpoint, adds a required parameter. The agent fails politely or, worse, silently. Fix: contract tests on every tool, run daily.</p>
+        <p data-de>Der Anbieter benennt ein Feld um, deprecated einen Endpoint, fordert plötzlich einen Parameter. Der Agent scheitert höflich oder, schlimmer, still. Antwort: Contract-Tests auf jedem Tool, täglich.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">C · <span data-en>MODEL DRIFT</span><span data-de>MODELL-DRIFT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">Same prompt, new model</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Gleicher Prompt, neues Modell</h3>
+        <p data-en>The provider pushes an upgrade. Your prompt still parses, but the style shifts. Fix: pin the model version, run the eval set whenever you opt into an upgrade.</p>
+        <p data-de>Der Anbieter rollt ein Upgrade aus. Dein Prompt läuft noch, der Stil verschiebt sich. Antwort: Modell-Version pinnen, Eval-Set fahren bevor du auf ein Upgrade gehst.</p>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top:24px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">D · <span data-en>GOAL DRIFT</span><span data-de>GOAL DRIFT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">The brief moves</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Der Auftrag verschiebt sich</h3>
+        <p data-en>The team wanted a competitor list, then asked for a sentiment, then for a forecast. The prompt was never updated. Fix: version the prompt and link it to the active brief.</p>
+        <p data-de>Das Team wollte eine Wettbewerberliste, dann ein Sentiment, dann eine Prognose. Der Prompt wurde nie angepasst. Antwort: Prompt versionieren und an den aktiven Auftrag knüpfen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">E · <span data-en>CONTEXT DRIFT</span><span data-de>CONTEXT-DRIFT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">The context fills up</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Der Kontext füllt sich</h3>
+        <p data-en>Memory, history, retrieved docs. The agent worked with 4K tokens, now it carries 40K. Quality drops invisibly. Fix: cap memory, summarize history, prune retrieval.</p>
+        <p data-de>Memory, Historie, geholte Docs. Der Agent lief mit 4K Token, jetzt schleppt er 40K. Qualität fällt unsichtbar. Antwort: Memory deckeln, Historie zusammenfassen, Retrieval beschneiden.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">F · <span data-en>USER DRIFT</span><span data-de>NUTZER-DRIFT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">People learn the trick</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Leute lernen den Trick</h3>
+        <p data-en>Users find shortcuts, learn the agent's quirks, start writing prompts to game it. Output looks fine, the use case has changed. Fix: review usage logs monthly, watch for the trick.</p>
+        <p data-de>Nutzer finden Abkürzungen, lernen die Eigenheiten des Agents, schreiben Prompts, die ihn austricksen. Der Output sieht ok aus, der Use Case hat sich verändert. Antwort: Nutzungslogs monatlich prüfen, auf den Trick achten.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">1</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · WEEKLY EVAL</span><span data-de>FAUSTREGEL · WÖCHENTLICHES EVAL</span></p>
+        <p class="text" data-en>Run the eval set once a week against a production agent, even when nothing seems wrong. Drift is silent by definition. A weekly pass-rate chart shows it long before any user complains, and the cost of catching it early is roughly one round of iteration.</p>
+        <p class="text" data-de>Das Eval-Set einmal pro Woche gegen einen produktiven Agent fahren, auch wenn nichts auffällt. Drift ist per Definition still. Ein wöchentlicher Bestehen-Chart zeigt sie, lange bevor ein Nutzer reklamiert, und die Kosten für frühes Erkennen sind ungefähr eine Iterationsrunde.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K6: GLOSSARY =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 19</span>
+      <span data-en>· GLOSSARY</span>
+      <span data-de>· GLOSSAR</span>
+    </div>
+    <h2 class="serif" data-en>Six terms<br/>from the upkeep room.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>aus der Pflegewerkstatt.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <span class="term">EVAL SET</span>
+        <span class="def" data-en>A fixed list of inputs paired with expected outputs or pass criteria. Run unchanged every iteration round. The only honest way to compare two versions of the same agent over time.</span>
+        <span class="def" data-de>Eine feste Liste von Inputs mit erwarteten Outputs oder Bestehen-Kriterien. Wird in jeder Iterationsrunde unverändert gefahren. Der einzige ehrliche Weg, zwei Versionen desselben Agents über Zeit zu vergleichen.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">REGRESSION</span>
+        <span class="def" data-en>A case that used to pass and now fails after a change. The most dangerous kind of failure, because it hides behind an apparent win on the case you were targeting. Caught only by re-running the full eval set.</span>
+        <span class="def" data-de>Ein Case, der vorher bestand und nach einer Änderung scheitert. Die gefährlichste Fehlerart, weil sie sich hinter einem scheinbaren Gewinn auf dem anvisierten Case versteckt. Wird nur gefangen, wenn das volle Eval-Set neu läuft.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">DRIFT</span>
+        <span class="def" data-en>Slow change in the world around the agent: data shapes, tool schemas, model behaviour, user habits. Always silent. Always shows up in pass rate before it shows up in complaints.</span>
+        <span class="def" data-de>Langsame Veränderung der Welt um den Agent herum: Datenformen, Tool-Schemata, Modellverhalten, Nutzergewohnheiten. Immer still. Erscheint immer in der Bestehen-Quote, bevor sie in Reklamationen erscheint.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">GOLDEN PATH</span>
+        <span class="def" data-en>The handful of typical inputs the agent must always handle. The floor of any eval set. If golden path breaks, nothing ships, no matter how clever the edge case wins look.</span>
+        <span class="def" data-de>Die handvoll typischer Inputs, die der Agent immer schaffen muss. Die Untergrenze jedes Eval-Sets. Bricht der Golden Path, geht nichts live, egal wie clever die Edge-Case-Erfolge aussehen.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">POSTMORTEM</span>
+        <span class="def" data-en>A short written record after a real failure in production: what happened, why, which eval case would have caught it. Adds one field case to the eval set every time. The discipline that makes agents better than the team that built them.</span>
+        <span class="def" data-de>Eine kurze schriftliche Notiz nach einem echten Ausfall im Produktivbetrieb: was passiert ist, warum, welcher Eval-Case ihn gefangen hätte. Fügt jedes Mal einen Feldfall ins Eval-Set ein. Die Disziplin, die Agents besser macht als das Team, das sie gebaut hat.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">VERSION TAG</span>
+        <span class="def" data-en>A short identifier on every change: prompt, model, tool scope, eval set. Lets you say "round 14 broke at the prompt tag, revert to 13" without guessing. Without it, iteration is archaeology.</span>
+        <span class="def" data-de>Ein kurzer Marker auf jeder Änderung: Prompt, Modell, Tool-Scope, Eval-Set. Lässt dich sagen "Runde 14 brach am Prompt-Tag, zurück auf 13", ohne zu raten. Ohne ihn ist Iteration Archäologie.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 20</span>
+      <span data-en>· NEXT CARD</span>
+      <span data-de>· N&Auml;CHSTE LEHRTAFEL</span>
+    </div>
+    <h2 class="serif" data-en>You can keep an agent alive.<br/>What's next?</h2>
+    <h2 class="serif" data-de>Du hältst einen Agent am Leben.<br/>Was kommt als Nächstes?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">08</p>
+        <h3 class="serif" data-en style="margin-top:8px">Use-case library</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Use-Case-Bibliothek</h3>
+        <p data-en>Ten concrete applications across sales, ops, support, finance, and engineering. Setup, tools, success criteria.</p>
+        <p data-de>Zehn konkrete Anwendungen aus Sales, Ops, Support, Finance, Engineering. Mit Setup, Tools und Erfolgsmaß.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">09</p>
+        <h3 class="serif" data-en style="margin-top:8px">Cost and ROI</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Kosten und ROI</h3>
+        <p data-en>What an agent really costs in production, what it saves, how to compute it honestly and report to stakeholders.</p>
+        <p data-de>Was ein Agent in der Praxis kostet, was er einspart, wie du das ehrlich rechnest und an Stakeholder kommunizierst.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">10</p>
+        <h3 class="serif" data-en style="margin-top:8px">Where this is going</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Wohin die Reise geht</h3>
+        <p data-en>Trends, bets, what is likely to stick, and what will look quaint in twelve months. A field map for the next year.</p>
+        <p data-de>Trends, Wetten, was bleiben wird und was in zwölf Monaten kurios aussieht. Eine Feldkarte für das nächste Jahr.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 01</span><span data-de>ZURÜCK ZU 01</span></a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 02</span><span data-de>ZURÜCK ZU 02</span></a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 03</span><span data-de>ZURÜCK ZU 03</span></a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 04</span><span data-de>ZURÜCK ZU 04</span></a>
+      <a class="cta" href="05_dein-erster-agent.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 05</span><span data-de>ZURÜCK ZU 05</span></a>
+      <a class="cta" href="06_agent-teams.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 06</span><span data-de>ZURÜCK ZU 06</span></a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-en>REQUEST CARD 08</span><span data-de>LEHRTAFEL 08 ANFORDERN</span> <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 07</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============== Live Demo Stages (i18n) ==============
+const i18n = {
+  en: {
+    stages: [
+      {
+        label: 'ROUND 01 · BASELINE',
+        title: 'First run, real eval set.',
+        text: 'The agent runs against the 42-case eval set for the first time. The golden path holds, but edge cases drop sharply. Two tool calls hit a rate limit. Three prompt-style failures show the agent inventing competitors. No regressions yet, because there is no prior round.',
+        code: `// eval.run · round 01
+{
+  "pass_rate":        "26 / 42  · 62%",
+  "golden_path":      "10 / 10  · 100%",
+  "edge_cases":       "12 / 20  · 60%",
+  "adversarial":      " 4 /  6  · 67%",
+  "field_cases":      " 0 /  6  · — (new set)",
+  "top_failure_bucket": "PROMPT · invented competitors",
+  "version_tag":      "v0.1.0"
+}`,
+        meta: ['DURATION · 4M 12S','TOKENS · 64K','VERDICT · NOT SHIPPABLE']
+      },
+      {
+        label: 'ROUND 02 · PROMPT CLARITY',
+        title: 'One change: refuse if not in source.',
+        text: 'Change exactly one variable: the prompt. Add a refusal rule. If a competitor is not mentioned in any retrieved source, the agent must say so instead of inventing one. Re-run the full eval set. Invented competitors drop to zero, pass rate climbs.',
+        code: `// diff · v0.1.0 → v0.1.1
++ "If a competitor is not present in any retrieved
++  source, return: { competitor: null,
++  reason: 'no_source' }. Never invent."
+
+// eval.run · round 02
+{
+  "pass_rate":        "32 / 42  · 76%   (+14)",
+  "golden_path":      "10 / 10  · 100%",
+  "edge_cases":       "16 / 20  · 80%   (+20)",
+  "invented_competitors": "0  (was 3)",
+  "version_tag":      "v0.1.1"
+}`,
+        meta: ['DURATION · 3M 58S','REGRESSIONS · 0','VERDICT · KEEP']
+      },
+      {
+        label: 'ROUND 03 · TOOL SCOPE',
+        title: 'Two news APIs, one was noisy.',
+        text: 'Diagnose says the edge-case failures all involve one news API that returns paywalled snippets. Narrow the tool scope: remove that source, keep the other two. Re-run. Pass rate climbs again, and the rate-limit issue from round one disappears as a side effect.',
+        code: `// diff · v0.1.1 → v0.1.2
+- tool_scope: [news_api_alpha, news_api_beta, news_api_gamma]
++ tool_scope: [news_api_beta, news_api_gamma]
+
+// eval.run · round 03
+{
+  "pass_rate":        "36 / 42  · 86%   (+10)",
+  "rate_limits_hit":  "0  (was 2)",
+  "edge_cases":       "18 / 20  · 90%",
+  "tokens_per_run":   "11.2K  (was 18.6K)",
+  "version_tag":      "v0.1.2"
+}`,
+        meta: ['DURATION · 3M 24S','TOKEN COST · -40%','VERDICT · KEEP']
+      },
+      {
+        label: 'ROUND 04 · REGRESSION CAUGHT',
+        title: 'A model upgrade quietly broke two cases.',
+        text: 'The provider rolled out a new model version. The eval set, run on schedule, shows two adversarial cases that used to refuse safely are now answering. This is a regression. Pin the model version back to the one used in round three, file a postmortem, add the regression cases to the field set.',
+        code: `// drift detected · weekly eval
+{
+  "pass_rate":        "34 / 42  · 81%   (-5)",
+  "regressions":      "2  (adversarial: prompt_inject_b, prompt_inject_d)",
+  "diagnosis":        "MODEL DRIFT  ·  provider auto-upgrade",
+  "action":           "pin model = 4-pro-2026-04, revert to v0.1.2",
+  "postmortem":       "drive://incidents/2026-w17-model-drift.md",
+  "field_cases_added": 2,
+  "version_tag":      "v0.1.2 (pinned)"
+}`,
+        meta: ['DETECTED · WEEKLY EVAL','RECOVERY · 1 HOUR','VERDICT · ROLLBACK']
+      },
+      {
+        label: 'ROUND 05 · MATURE',
+        title: 'Twelve weeks in, ready to call done-ish.',
+        text: 'After five real rounds, the agent passes 39 of 42 cases including all six field cases harvested from production. Three edge cases still flicker between pass and fail; they are documented as known limits, not bugs. The agent ships to the team with a weekly eval and a named owner. Maintenance, not feature work, is now the mode.',
+        code: `// eval.run · round 05 · v0.2.0
+{
+  "pass_rate":        "39 / 42  · 93%",
+  "golden_path":      "10 / 10  · 100%",
+  "edge_cases":       "19 / 20  · 95%",
+  "adversarial":      " 6 /  6  · 100%",
+  "field_cases":      " 4 /  6  · 67%  (2 known-limit)",
+  "drift_sensors":    "data ✓  tool ✓  model ✓  goal ✓",
+  "owner":            "markus",
+  "weekly_eval":      "scheduled · monday 06:00 CET",
+  "version_tag":      "v0.2.0  ·  shipped"
+}
+→ slack.post(#agent-ops, "07 competitor-report v0.2.0 live")`,
+        meta: ['TOTAL ROUNDS · 5','WEEKS ELAPSED · 12','VERDICT · SHIP']
+      }
+    ]
+  },
+  de: {
+    stages: [
+      {
+        label: 'RUNDE 01 · BASELINE',
+        title: 'Erster Run, echtes Eval-Set.',
+        text: 'Der Agent läuft zum ersten Mal gegen das 42-Case-Eval-Set. Der Golden Path hält, die Edge Cases fallen deutlich ab. Zwei Tool-Calls treffen ein Rate-Limit. Drei Prompt-Fehler zeigen, dass der Agent Wettbewerber erfindet. Keine Regressionen, weil keine Vorlauf-Runde existiert.',
+        code: `// eval.run · runde 01
+{
+  "pass_rate":        "26 / 42  · 62%",
+  "golden_path":      "10 / 10  · 100%",
+  "edge_cases":       "12 / 20  · 60%",
+  "adversarial":      " 4 /  6  · 67%",
+  "field_cases":      " 0 /  6  · — (set neu)",
+  "top_failure_bucket": "PROMPT · erfindet wettbewerber",
+  "version_tag":      "v0.1.0"
+}`,
+        meta: ['DAUER · 4M 12S','TOKEN · 64K','VERDICT · NICHT REIF']
+      },
+      {
+        label: 'RUNDE 02 · PROMPT-KLARHEIT',
+        title: 'Eine Änderung: verweigern wenn keine Quelle.',
+        text: 'Genau eine Variable ändern: den Prompt. Eine Verweigerungsregel einbauen. Wenn ein Wettbewerber in keiner geholten Quelle steht, soll der Agent das sagen statt einen zu erfinden. Volles Eval-Set neu laufen lassen. Erfundene Wettbewerber fallen auf null, die Quote steigt.',
+        code: `// diff · v0.1.0 → v0.1.1
++ "Wenn ein Wettbewerber in keiner geholten
++  Quelle erscheint, gib zurück: { competitor: null,
++  reason: 'no_source' }. Nicht erfinden."
+
+// eval.run · runde 02
+{
+  "pass_rate":        "32 / 42  · 76%   (+14)",
+  "golden_path":      "10 / 10  · 100%",
+  "edge_cases":       "16 / 20  · 80%   (+20)",
+  "erfundene_wettbewerber": "0  (war 3)",
+  "version_tag":      "v0.1.1"
+}`,
+        meta: ['DAUER · 3M 58S','REGRESSIONEN · 0','VERDICT · BEHALTEN']
+      },
+      {
+        label: 'RUNDE 03 · TOOL-SCOPE',
+        title: 'Zwei News-APIs, eine war Rauschen.',
+        text: 'Die Diagnose zeigt: alle Edge-Case-Fehler hängen an einer News-API, die Paywall-Snippets liefert. Tool-Scope verengen: diese Quelle raus, die anderen zwei drin. Neu fahren. Die Quote steigt weiter, und das Rate-Limit-Problem aus Runde eins verschwindet als Nebeneffekt.',
+        code: `// diff · v0.1.1 → v0.1.2
+- tool_scope: [news_api_alpha, news_api_beta, news_api_gamma]
++ tool_scope: [news_api_beta, news_api_gamma]
+
+// eval.run · runde 03
+{
+  "pass_rate":        "36 / 42  · 86%   (+10)",
+  "rate_limits":      "0  (war 2)",
+  "edge_cases":       "18 / 20  · 90%",
+  "tokens_pro_run":   "11.2K  (war 18.6K)",
+  "version_tag":      "v0.1.2"
+}`,
+        meta: ['DAUER · 3M 24S','TOKEN-KOSTEN · -40%','VERDICT · BEHALTEN']
+      },
+      {
+        label: 'RUNDE 04 · REGRESSION GEFANGEN',
+        title: 'Ein Modell-Upgrade brach still zwei Cases.',
+        text: 'Der Anbieter rollte eine neue Modellversion aus. Das wöchentliche Eval-Set zeigt, dass zwei adversariale Cases, die vorher sauber verweigerten, jetzt antworten. Das ist eine Regression. Modell-Version auf die aus Runde drei zurückgepinnt, Postmortem geschrieben, die Regressions-Cases ins Feld-Set aufgenommen.',
+        code: `// drift erkannt · wöchentliches eval
+{
+  "pass_rate":        "34 / 42  · 81%   (-5)",
+  "regressionen":     "2  (adversarial: prompt_inject_b, prompt_inject_d)",
+  "diagnose":         "MODELL-DRIFT  ·  provider auto-upgrade",
+  "aktion":           "pin modell = 4-pro-2026-04, zurück auf v0.1.2",
+  "postmortem":       "drive://incidents/2026-w17-model-drift.md",
+  "feld_cases_neu":   2,
+  "version_tag":      "v0.1.2 (pinned)"
+}`,
+        meta: ['ERKANNT · WÖCHENTLICHES EVAL','RECOVERY · 1 STUNDE','VERDICT · ROLLBACK']
+      },
+      {
+        label: 'RUNDE 05 · REIF',
+        title: 'Zwölf Wochen später, freigegeben.',
+        text: 'Nach fünf echten Runden besteht der Agent 39 von 42 Cases, inklusive aller sechs aus der Praxis geernteten Feldfälle. Drei Edge Cases flackern noch zwischen Bestehen und Scheitern; sie sind als bekannte Grenzen dokumentiert, nicht als Bugs. Der Agent geht ans Team mit wöchentlichem Eval und einem benannten Owner. Pflege, nicht Feature-Arbeit, ist jetzt der Modus.',
+        code: `// eval.run · runde 05 · v0.2.0
+{
+  "pass_rate":        "39 / 42  · 93%",
+  "golden_path":      "10 / 10  · 100%",
+  "edge_cases":       "19 / 20  · 95%",
+  "adversarial":      " 6 /  6  · 100%",
+  "field_cases":      " 4 /  6  · 67%  (2 known-limit)",
+  "drift_sensoren":   "daten ✓  tool ✓  modell ✓  goal ✓",
+  "owner":            "markus",
+  "wöchentliches_eval": "geplant · montag 06:00 CET",
+  "version_tag":      "v0.2.0  ·  live"
+}
+→ slack.post(#agent-ops, "07 wettbewerbs-report v0.2.0 live")`,
+        meta: ['RUNDEN GESAMT · 5','WOCHEN VERSTRICHEN · 12','VERDICT · FREIGABE']
+      }
+    ]
+  }
+};
+
+const tabs = document.querySelectorAll('#demo-tabs .demo-tab');
+const demoBody = document.getElementById('demo-body');
+function getLang(){ return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+function renderStage(idx){
+  tabs.forEach((t,i)=>t.classList.toggle('active', i===idx));
+  const stages = i18n[getLang()].stages;
+  const s = stages[idx];
+  demoBody.innerHTML = `
+    <div class="demo-label">${s.label}</div>
+    <div class="demo-title">${s.title}</div>
+    <div class="demo-text">${s.text}</div>
+    <pre class="demo-code">${s.code}</pre>
+    <div class="demo-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+  `;
+}
+tabs.forEach((t,i)=>t.addEventListener('click', ()=>renderStage(i)));
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang){
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? "An agent is never done · Codex Article 07"
+    : 'Ein Agent ist nie fertig · Codex Lehrtafel 07';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  if (typeof renderStage === 'function') {
+    var activeIdx = [...document.querySelectorAll('#demo-tabs .demo-tab')].findIndex(t => t.classList.contains('active'));
+    renderStage(activeIdx >= 0 ? activeIdx : 0);
+  }
+}
+
+(function(){
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
