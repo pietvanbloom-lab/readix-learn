@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ten use cases, one pattern · Codex Lehrtafel 08</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle (Readix Learn Pattern) ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* Layout */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.diagram-wrap{padding:40px;border:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .diagram-wrap{border:1px solid var(--border-on-paper);background:var(--paper-aged)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+.process.cols-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:880px){.process,.process.cols-3,.process.cols-5{grid-template-columns:1fr}}
+
+.demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.demo-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.demo-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.demo-tabs{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.demo-tab{padding:20px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;background:transparent;border-top:none;border-bottom:none;border-left:none;font-weight:500}
+.demo-tab:last-child{border-right:none}
+.demo-tab.active{background:var(--copper);color:var(--ink-black)}
+.demo-tab:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.demo-tab .step-num{display:block;font-size:10px;color:var(--gray-600);margin-bottom:5px}
+.demo-tab.active .step-num{color:rgba(10,10,11,.5)}
+.demo-tab .agent-tag{display:block;font-size:10px;color:var(--gray-400);margin-top:5px;letter-spacing:.1em}
+.demo-tab.active .agent-tag{color:rgba(10,10,11,.7)}
+.demo-body{padding:36px;min-height:420px}
+.demo-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:10px}
+.demo-title{font-family:'Source Serif 4',serif;font-size:30px;color:var(--fg-on-ink);margin-bottom:18px;line-height:1.2}
+.demo-text{font-family:'Lora',serif;font-size:19px;line-height:1.65;color:var(--gray-100);margin-bottom:24px;max-width:64ch}
+.demo-code{font-family:'JetBrains Mono',monospace;font-size:15px;line-height:1.75;background:var(--ink-black);border:1px solid var(--border-on-ink);border-left:2px solid var(--copper);padding:22px 24px;color:var(--gray-100);white-space:pre-wrap;overflow-x:auto}
+.demo-meta{display:flex;gap:24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-200);text-transform:uppercase;letter-spacing:.12em;margin-top:26px;padding-top:18px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap;font-weight:500}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+.grid-5 > div{padding:24px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .grid-5{border-color:var(--border-on-paper)}
+section.parchment .grid-5 > div{border-color:var(--border-on-paper);background:var(--paper-aged)}
+@media(max-width:880px){.grid-3,.grid-2,.grid-5{grid-template-columns:1fr}}
+
+.uc-list{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:48px}
+.uc-list .uc{padding:28px 30px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);background:var(--ink-deep);display:flex;align-items:flex-start;gap:20px}
+.uc-list .uc .nr{font-family:'Source Serif 4',serif;font-size:36px;line-height:1;color:var(--copper);font-weight:300;flex-shrink:0;min-width:56px}
+.uc-list .uc .body{flex:1}
+.uc-list .uc .tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-bottom:8px;display:block}
+.uc-list .uc h4{font-family:'Source Serif 4',serif;font-size:19px;font-weight:500;line-height:1.25;margin-bottom:8px;letter-spacing:-.01em;color:var(--fg-on-ink)}
+.uc-list .uc p{font-size:14px;line-height:1.55;color:var(--gray-200)}
+@media(max-width:880px){.uc-list{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+
+@media (prefers-reduced-motion: reduce){
+  .flow{animation:none}
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 08</span>
+      <span data-en>· LEHRTAFEL · USE-CASE LIBRARY</span>
+      <span data-de>· LEHRTAFEL · USE-CASE-BIBLIOTHEK</span>
+    </div>
+
+    <h1 class="serif" data-en>Ten use cases,<br/>one <em>pattern</em>.</h1>
+    <h1 class="serif" data-de>Zehn Use Cases,<br/>ein <em>Muster</em>.</h1>
+
+    <p class="kicker" data-en>Most agents live or die in the same five domains: sales, support, finance, engineering, and ops. This card lays out ten concrete examples, the brief behind each one, the tools they reach for, the shape of a good output, and the one pattern that every workable use case shares.</p>
+    <p class="kicker" data-de>Die meisten Agents leben oder sterben in denselben fünf Bereichen: Sales, Support, Finance, Engineering, Ops. Diese Tafel zeigt zehn konkrete Beispiele, den Auftrag dahinter, die Tools an denen sie hängen, die Form eines guten Outputs, und das eine Muster, das jeden tragfähigen Use Case verbindet.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">10</div>
+        <div class="label"><span data-en>Concrete use cases</span><span data-de>Konkrete Use Cases</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">5</div>
+        <div class="label"><span data-en>Domains covered</span><span data-de>Bereiche abgedeckt</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">1</div>
+        <div class="label"><span data-en>Pattern that ties them</span><span data-de>Muster das sie verbindet</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1"><span data-en>READ THE METHOD</span><span data-de>METHODE LESEN</span> <span class="arrow">┌──→</span></a>
+      <a class="cta" href="07_pflege-und-iteration.html" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-en>BACK TO 07</span><span data-de>ZURÜCK ZU 07</span> <span class="arrow">┌──→</span></a>
+    </div>
+
+    <div class="meta">
+      <span>FILE · 08 / SERIES AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 14 MINUTES</span><span data-de>LESEZEIT · 14 MINUTEN</span></span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K1: THE PATTERN =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 21</span>
+      <span data-en>· THE PATTERN</span>
+      <span data-de>· DAS MUSTER</span>
+    </div>
+    <h2 class="serif" data-en>What every good case <em>shares</em>.</h2>
+    <h2 class="serif" data-de>Was jeder gute Fall <em>teilt</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Behind every working agent sits the same shape. A narrow task, a clear trigger, a small set of tools, a measurable output, a named owner. Cases that fail almost always miss one of these five. Cases that ship hit all five before a single line of prompt is written.</p>
+    <p class="kicker" data-de>Hinter jedem funktionierenden Agent steckt dieselbe Form. Eine enge Aufgabe, ein klarer Auslöser, ein kleines Tool-Set, ein messbarer Output, ein benannter Owner. Fälle, die scheitern, vermissen fast immer einen dieser fünf. Fälle, die live gehen, treffen alle fünf, bevor eine Zeile Prompt geschrieben ist.</p>
+
+    <div class="process cols-5" style="margin-top:48px">
+      <div class="step">
+        <span class="num">01 · TASK</span>
+        <h4 class="serif" data-en>Narrow scope.</h4>
+        <h4 class="serif" data-de>Enger Scope.</h4>
+        <p data-en>One job, ten words or fewer. "Draft a weekly competitor report from these three sources." Not "help with sales".</p>
+        <p data-de>Eine Aufgabe, zehn Wörter oder weniger. "Wettbewerbs-Report aus diesen drei Quellen entwerfen." Nicht "im Sales helfen".</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · TRIGGER</span>
+        <h4 class="serif" data-en>Clear start.</h4>
+        <h4 class="serif" data-de>Klarer Start.</h4>
+        <p data-en>An event, a cron, a webhook, a button. The agent never wonders when to run. Triggers without ambiguity prevent half the bugs.</p>
+        <p data-de>Ein Event, ein Cron, ein Webhook, ein Button. Der Agent rätselt nie, wann er läuft. Eindeutige Trigger verhindern die Hälfte der Bugs.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · TOOLS</span>
+        <h4 class="serif" data-en>Small set.</h4>
+        <h4 class="serif" data-de>Kleines Set.</h4>
+        <p data-en>Three to seven tools, no more. Anything wider drifts into vibes. Tools are named, scoped, and tested as a contract.</p>
+        <p data-de>Drei bis sieben Tools, nicht mehr. Alles breiter wird Vibe. Tools sind benannt, gescoped, als Vertrag getestet.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · OUTPUT</span>
+        <h4 class="serif" data-en>Shaped result.</h4>
+        <h4 class="serif" data-de>Geformter Output.</h4>
+        <p data-en>A document, a ticket, a Slack post, a row in a sheet. Defined format, defined location. Free-form chat is not an output.</p>
+        <p data-de>Ein Dokument, ein Ticket, ein Slack-Post, eine Zeile in einer Tabelle. Definiertes Format, definierter Ort. Freier Chat ist kein Output.</p>
+      </div>
+      <div class="step">
+        <span class="num">05 · OWNER</span>
+        <h4 class="serif" data-en>One human.</h4>
+        <h4 class="serif" data-de>Ein Mensch.</h4>
+        <p data-en>Someone watches the eval, reads the postmortems, decides when to retire it. An agent without an owner ages into a liability.</p>
+        <p data-de>Jemand schaut auf das Eval, liest die Postmortems, entscheidet wann ausgemustert wird. Ein Agent ohne Owner altert zur Belastung.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">5</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · THE FIVE-PART BRIEF</span><span data-de>FAUSTREGEL · DER FÜNF-TEILE-BRIEF</span></p>
+        <p class="text" data-en>If you cannot write the task, trigger, tools, output, and owner on one page in under twenty minutes, the use case is not ready. Building an agent before this fits on a page is how teams burn six weeks. Writing it down forces the hard questions early, when the cost of changing your mind is still a sentence.</p>
+        <p class="text" data-de>Wer Aufgabe, Auslöser, Tools, Output und Owner nicht in zwanzig Minuten auf eine Seite bringt, hat keinen reifen Use Case. Vor diesem Einseiter zu bauen, ist der Weg, sechs Wochen zu verbrennen. Niederschreiben erzwingt die harten Fragen früh, solange die Kosten der Meinungsänderung noch ein Satz sind.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K2: THE FIVE DOMAINS =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 22</span>
+      <span data-en>· THE TERRITORY</span>
+      <span data-de>· DAS TERRAIN</span>
+    </div>
+    <h2 class="serif" data-en>Five domains,<br/>where agents <em>live</em>.</h2>
+    <h2 class="serif" data-de>Fünf Bereiche,<br/>in denen Agents <em>leben</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Almost every shipped agent today lands in one of five domains. The work in each domain looks different on the surface but follows the same brief shape underneath. Knowing the domain quickly tells you what tools you will likely need, what the output should look like, and where the failure modes hide.</p>
+    <p class="kicker" data-de>Fast jeder live geschaltete Agent landet heute in einem von fünf Bereichen. Die Arbeit sieht in jedem Bereich an der Oberfläche anders aus, folgt darunter aber derselben Brief-Form. Den Bereich zu kennen sagt schnell, welche Tools nötig sind, wie der Output aussehen sollte, und wo die Fehlerquellen liegen.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th><span data-en>DOMAIN</span><span data-de>BEREICH</span></th>
+          <th><span data-en>TYPICAL TRIGGER</span><span data-de>TYPISCHER AUSLÖSER</span></th>
+          <th><span data-en>TYPICAL OUTPUT</span><span data-de>TYPISCHER OUTPUT</span></th>
+          <th><span data-en>WATCH OUT FOR</span><span data-de>VORSICHT BEI</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-label">SALES</td>
+          <td><span data-en>Weekly cron, new lead in CRM</span><span data-de>Wöchentlicher Cron, neuer Lead im CRM</span></td>
+          <td><span data-en>Briefing doc, ranked list</span><span data-de>Briefing-Doc, sortierte Liste</span></td>
+          <td><span data-en>Hallucinated companies</span><span data-de>Halluzinierte Firmen</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">SUPPORT</td>
+          <td><span data-en>Inbound ticket, outage signal</span><span data-de>Eingehendes Ticket, Outage-Signal</span></td>
+          <td><span data-en>Triaged ticket, draft reply</span><span data-de>Triagiertes Ticket, Antwort-Entwurf</span></td>
+          <td><span data-en>Tone, false confidence</span><span data-de>Ton, falsches Selbstbewusstsein</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">FINANCE</td>
+          <td><span data-en>Invoice posted, month-end</span><span data-de>Rechnung gebucht, Monatsende</span></td>
+          <td><span data-en>Journal entry, reconciliation</span><span data-de>Buchung, Abgleich</span></td>
+          <td><span data-en>Silent miscategorization</span><span data-de>Stille Fehl-Kategorisierung</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">ENGINEERING</td>
+          <td><span data-en>Pull request opened, alert fires</span><span data-de>Pull Request geöffnet, Alert feuert</span></td>
+          <td><span data-en>Review comment, postmortem</span><span data-de>Review-Kommentar, Postmortem</span></td>
+          <td><span data-en>Plausible wrong diagnoses</span><span data-de>Plausibel falsche Diagnosen</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">OPS</td>
+          <td><span data-en>New hire, quarterly close</span><span data-de>Neuer Mitarbeiter, Quartalsende</span></td>
+          <td><span data-en>Checklist, status narrative</span><span data-de>Checkliste, Status-Erzählung</span></td>
+          <td><span data-en>Generic, template-ish output</span><span data-de>Generischer, schablonenhafter Output</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="prose" data-en style="margin-top:48px">The list is not exhaustive. Marketing, design, research, legal all run agents too. But every team building its first three agents tends to stay inside these five, because the data is structured enough, the outputs are well-defined enough, and the failure modes are common enough to learn from neighbours. Adventurous use cases come later, after the team has carried at least one boring one to round five.</p>
+    <p class="prose" data-de style="margin-top:48px">Die Liste ist nicht vollständig. Marketing, Design, Research, Legal fahren ebenfalls Agents. Aber jedes Team, das seine ersten drei Agents baut, bleibt in diesen fünf Bereichen, weil die Daten strukturiert genug sind, die Outputs klar genug, und die Fehlerquellen gemeinsam genug, um von Nachbarn zu lernen. Wagemutige Use Cases kommen später, nachdem das Team mindestens einen langweiligen bis Runde fünf getragen hat.</p>
+  </div>
+</section>
+
+<!-- =========================== K3: THE TEN CASES =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 23</span>
+      <span data-en>· THE LIBRARY</span>
+      <span data-de>· DIE BIBLIOTHEK</span>
+    </div>
+    <h2 class="serif" data-en>Ten cases worth <em>copying</em>.</h2>
+    <h2 class="serif" data-de>Zehn Fälle zum <em>Abschauen</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Each case below is a real shape, not an idea. They have shipped, been measured, broken, fixed, and shipped again. Pick the one that looks closest to your situation, copy the brief, and adjust. Originality is rewarded later. The first agent should look like someone else's working agent, minus the parts you do not need.</p>
+    <p class="kicker" data-de>Jeder Fall hier ist eine echte Form, keine Idee. Alle sind live gewesen, gemessen, gebrochen, repariert, neu ausgeliefert. Such den, der deiner Lage am nächsten kommt, kopier den Brief, pass ihn an. Originalität wird später belohnt. Der erste Agent sollte aussehen wie der funktionierende Agent von jemand anderem, minus die Teile die du nicht brauchst.</p>
+
+    <div class="uc-list">
+      <div class="uc">
+        <span class="nr">01</span>
+        <div class="body">
+          <span class="tag">SALES</span>
+          <h4 data-en>Weekly competitor report</h4>
+          <h4 data-de>Wöchentlicher Wettbewerbs-Report</h4>
+          <p data-en>Scans three news sources every Monday morning, drafts a one-page briefing per named competitor, posts to a Slack channel. Owner: head of GTM.</p>
+          <p data-de>Scannt montags morgens drei Newsquellen, entwirft ein einseitiges Briefing pro Wettbewerber, postet in einen Slack-Channel. Owner: Head of GTM.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">02</span>
+        <div class="body">
+          <span class="tag">SALES</span>
+          <h4 data-en>Lead enrichment and ranking</h4>
+          <h4 data-de>Lead-Anreicherung und Ranking</h4>
+          <p data-en>New CRM contact triggers enrichment from a data provider, scoring against ICP criteria, ranked output appended to the lead record. Owner: SDR lead.</p>
+          <p data-de>Neuer CRM-Kontakt triggert Anreicherung über einen Datenprovider, Bewertung gegen ICP-Kriterien, sortierter Output am Lead-Datensatz. Owner: SDR Lead.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">03</span>
+        <div class="body">
+          <span class="tag">SUPPORT</span>
+          <h4 data-en>Inbound ticket triage</h4>
+          <h4 data-de>Eingehende Ticket-Triage</h4>
+          <p data-en>New ticket arrives, agent categorises (billing, bug, feature, churn-risk), assigns priority, drafts a stub reply. Human approves before send. Owner: support manager.</p>
+          <p data-de>Neues Ticket kommt rein, Agent kategorisiert (Billing, Bug, Feature, Churn-Risk), vergibt Priorität, entwirft einen Antwort-Stub. Mensch gibt vor dem Senden frei. Owner: Support-Manager.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">04</span>
+        <div class="body">
+          <span class="tag">SUPPORT</span>
+          <h4 data-en>Outage response draft</h4>
+          <h4 data-de>Outage-Antwort-Entwurf</h4>
+          <p data-en>Status-page incident triggers a draft customer email and Slack note. Pulls timeline from the incident channel. Always human-sent. Owner: oncall lead.</p>
+          <p data-de>Status-Page-Incident triggert einen Entwurf für Kunden-Mail und Slack-Note. Zieht den Timeline aus dem Incident-Channel. Immer manuell versendet. Owner: Oncall-Lead.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">05</span>
+        <div class="body">
+          <span class="tag">FINANCE</span>
+          <h4 data-en>Invoice-to-ledger posting</h4>
+          <h4 data-de>Rechnung-zu-Hauptbuch-Buchung</h4>
+          <p data-en>Vendor invoice arrives in inbox, agent extracts header and lines, proposes account coding, drafts a journal entry. Two-eye approval before posting. Owner: controller.</p>
+          <p data-de>Lieferantenrechnung trifft im Posteingang ein, Agent extrahiert Kopf und Positionen, schlägt Kontierung vor, entwirft einen Buchungssatz. Vier-Augen-Freigabe vor Buchung. Owner: Controller.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">06</span>
+        <div class="body">
+          <span class="tag">FINANCE</span>
+          <h4 data-en>Vendor contract diff</h4>
+          <h4 data-de>Lieferanten-Vertragsdiff</h4>
+          <p data-en>New version of a master agreement uploaded, agent diffs against the prior signed copy, summarises material changes by clause type. Owner: legal counsel.</p>
+          <p data-de>Neue Version eines Rahmenvertrags hochgeladen, Agent diffed gegen die zuletzt unterzeichnete Version, fasst materielle Änderungen pro Klausel-Typ zusammen. Owner: Legal Counsel.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">07</span>
+        <div class="body">
+          <span class="tag">ENGINEERING</span>
+          <h4 data-en>Pull-request review notes</h4>
+          <h4 data-de>Pull-Request-Review-Notizen</h4>
+          <p data-en>PR opens, agent runs a checklist (tests touched, migration risk, public-API change) and posts a structured first-look comment for the human reviewer. Owner: platform tech lead.</p>
+          <p data-de>PR wird geöffnet, Agent fährt eine Checkliste (Tests berührt, Migrations-Risiko, Public-API-Änderung) und postet einen strukturierten Erstblick-Kommentar für den Reviewer. Owner: Platform Tech Lead.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">08</span>
+        <div class="body">
+          <span class="tag">ENGINEERING</span>
+          <h4 data-en>Incident postmortem writer</h4>
+          <h4 data-de>Incident-Postmortem-Schreiber</h4>
+          <p data-en>After incident close, agent assembles a draft postmortem from the channel, the status page, and the timeline tool. Human edits and signs. Owner: SRE manager.</p>
+          <p data-de>Nach Incident-Abschluss baut der Agent aus Channel, Status-Page und Timeline-Tool einen Postmortem-Entwurf. Mensch redigiert und unterschreibt. Owner: SRE-Manager.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">09</span>
+        <div class="body">
+          <span class="tag">OPS</span>
+          <h4 data-en>New-hire onboarding plan</h4>
+          <h4 data-de>Onboarding-Plan für neue Mitarbeiter</h4>
+          <p data-en>New hire created in HRIS, agent assembles a tailored 30-day checklist from role templates, schedules intro meetings, files the doc. Owner: people ops.</p>
+          <p data-de>Neuer Mitarbeiter im HRIS angelegt, Agent baut aus Rollen-Templates eine zugeschnittene 30-Tage-Checkliste, plant Intro-Meetings, legt das Dokument ab. Owner: People Ops.</p>
+        </div>
+      </div>
+      <div class="uc">
+        <span class="nr">10</span>
+        <div class="body">
+          <span class="tag">OPS</span>
+          <h4 data-en>Quarterly metrics narrative</h4>
+          <h4 data-de>Quartals-Metriken-Erzählung</h4>
+          <p data-en>Quarter closes, agent pulls KPIs from the warehouse, drafts a one-page narrative with three highlights and two risks, sends to the COO for review. Owner: BizOps.</p>
+          <p data-de>Quartal geschlossen, Agent zieht KPIs aus dem Warehouse, entwirft eine einseitige Erzählung mit drei Highlights und zwei Risiken, schickt an den COO zur Review. Owner: BizOps.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K4: LIVE DEMO · USE-CASE EXPLORER =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 24</span>
+      <span data-en>· LIVE USE-CASE EXPLORER</span>
+      <span data-de>· LIVE-USE-CASE-EXPLORER</span>
+    </div>
+    <h2 class="serif" data-en>Five briefs,<br/>one <em>shape</em>.</h2>
+    <h2 class="serif" data-de>Fünf Briefs,<br/>eine <em>Form</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Click through five of the ten cases, one per domain. Each tab shows the brief in the same five-part shape: task, trigger, tools, output, owner. The format is identical on purpose. The pattern is the point.</p>
+    <p class="kicker" data-de>Klick dich durch fünf der zehn Fälle, einer pro Bereich. Jeder Tab zeigt den Brief in derselben fünfteiligen Form: Aufgabe, Auslöser, Tools, Output, Owner. Das Format ist absichtlich identisch. Das Muster ist der Punkt.</p>
+
+    <div class="demo" style="margin-top:48px">
+      <div class="demo-head">
+        <div class="title">
+          <span data-en>Use-case briefs · five shipped agents</span>
+          <span data-de>Use-Case-Briefs · fünf live geschaltete Agents</span>
+        </div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>5 CASES · 1 SHAPE</span><span data-de>5 FÄLLE · 1 FORM</span></div>
+      </div>
+      <div class="demo-tabs" id="demo-tabs">
+        <button class="demo-tab active" data-step="0"><span class="step-num">01</span>SALES<span class="agent-tag"><span data-en>COMPETITOR</span><span data-de>WETTBEWERB</span></span></button>
+        <button class="demo-tab" data-step="1"><span class="step-num">03</span>SUPPORT<span class="agent-tag"><span data-en>TRIAGE</span><span data-de>TRIAGE</span></span></button>
+        <button class="demo-tab" data-step="2"><span class="step-num">05</span>FINANCE<span class="agent-tag"><span data-en>INVOICE</span><span data-de>RECHNUNG</span></span></button>
+        <button class="demo-tab" data-step="3"><span class="step-num">07</span>ENG<span class="agent-tag"><span data-en>PR REVIEW</span><span data-de>PR-REVIEW</span></span></button>
+        <button class="demo-tab" data-step="4"><span class="step-num">10</span>OPS<span class="agent-tag"><span data-en>METRICS</span><span data-de>METRIKEN</span></span></button>
+      </div>
+      <div class="demo-body" id="demo-body"></div>
+    </div>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px"><span data-en>SIMULATION · REAL BRIEFS LOOK SIMILAR.</span><span data-de>SIMULATION · ECHTE BRIEFS LAUFEN ANALOG.</span></p>
+  </div>
+</section>
+
+<!-- =========================== K5: WHEN A USE CASE FAILS =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 25</span>
+      <span data-en>· ANTI-PATTERNS</span>
+      <span data-de>· ANTI-MUSTER</span>
+    </div>
+    <h2 class="serif" data-en>How a use case <em>fails</em>.</h2>
+    <h2 class="serif" data-de>Wie ein Use Case <em>scheitert</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Most failed agents fail before code is written. The brief is too vague, the trigger is wishful, the output is a chat window, the owner is the whole team. Five anti-patterns explain almost every dead pilot we have seen. Recognising one of them in your own brief is cheaper than discovering it in week three.</p>
+    <p class="kicker" data-de>Die meisten gescheiterten Agents scheitern, bevor Code geschrieben ist. Der Brief ist zu vage, der Trigger Wunschdenken, der Output ein Chat-Fenster, der Owner das ganze Team. Fünf Anti-Muster erklären fast jeden toten Piloten, den wir gesehen haben. Eines davon im eigenen Brief zu erkennen, ist billiger als die Entdeckung in Woche drei.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">A · <span data-en>WIDE SCOPE</span><span data-de>BREITER SCOPE</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Help with sales"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Hilf im Sales"</h3>
+        <p data-en>The task spans five jobs, four tools, three users. The agent feels powerful in demos and useless in production. Fix: cut the scope in three. Pick one slice.</p>
+        <p data-de>Die Aufgabe umfasst fünf Jobs, vier Tools, drei Nutzer. Der Agent wirkt mächtig in Demos und nutzlos im Alltag. Antwort: Scope dritteln. Eine Scheibe wählen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">B · <span data-en>WISHFUL TRIGGER</span><span data-de>WUNSCH-TRIGGER</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"When it's relevant"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Wenn es relevant ist"</h3>
+        <p data-en>No clear start condition. The agent runs constantly, or never, or asks the user every time. Fix: name the cron, the webhook, the button.</p>
+        <p data-de>Keine klare Startbedingung. Der Agent läuft dauernd, nie, oder fragt jedes Mal nach. Antwort: Cron, Webhook, Button benennen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">C · <span data-en>CHAT AS OUTPUT</span><span data-de>CHAT ALS OUTPUT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Just ask the agent"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Frag einfach den Agent"</h3>
+        <p data-en>The agent lives in a chat window with no defined artefact. Adoption stalls because no one knows what to do with the answer. Fix: ship a document, a ticket, a row.</p>
+        <p data-de>Der Agent lebt im Chatfenster ohne definiertes Artefakt. Adoption bleibt stecken, weil niemand weiß, was mit der Antwort tun. Antwort: ein Dokument, ein Ticket, eine Zeile ausliefern.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">D · <span data-en>NO OWNER</span><span data-de>KEIN OWNER</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"The team uses it"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Das Team nutzt es"</h3>
+        <p data-en>No single human watches the eval, reviews drift, decides when to retire. The agent silently rots, then breaks loudly. Fix: write one name on the brief. Reassign on departure.</p>
+        <p data-de>Kein einzelner Mensch wacht über das Eval, prüft Drift, entscheidet das Ausmustern. Der Agent verrottet still, dann bricht er laut. Antwort: einen Namen auf den Brief schreiben. Bei Abgang neu zuweisen.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">E · <span data-en>TOOL ZOO</span><span data-de>TOOL-ZOO</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Give it everything"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Gib ihm alles"</h3>
+        <p data-en>Twenty tools, every MCP, every plugin. The agent dithers, picks the wrong one, costs five times the tokens. Fix: cap at seven tools, justify each one in the brief.</p>
+        <p data-de>Zwanzig Tools, jeder MCP, jedes Plugin. Der Agent zaudert, greift falsch zu, kostet fünfmal die Token. Antwort: bei sieben Tools deckeln, jedes im Brief begründen.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">20</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · TWENTY-MINUTE BRIEF</span><span data-de>FAUSTREGEL · ZWANZIG-MINUTEN-BRIEF</span></p>
+        <p class="text" data-en>If twenty minutes with a colleague and a blank page do not produce a brief that fits on one sheet, the use case is not ready. The cure is not more model power, it is a sharper question. The strongest agents start as the cleanest sentences.</p>
+        <p class="text" data-de>Wenn zwanzig Minuten mit einer Kollegin und einem leeren Blatt keinen einseitigen Brief ergeben, ist der Use Case nicht reif. Die Heilung ist nicht mehr Modell-Power, sondern eine schärfere Frage. Die stärksten Agents starten als die saubersten Sätze.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K6: GLOSSARY =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 26</span>
+      <span data-en>· GLOSSARY</span>
+      <span data-de>· GLOSSAR</span>
+    </div>
+    <h2 class="serif" data-en>Six terms<br/>from the library shelf.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>aus dem Bibliotheksregal.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <span class="term">USE CASE</span>
+        <span class="def" data-en>A narrow, named job an agent is built to do, captured on a single page: task, trigger, tools, output, owner. The unit of work that decides whether an agent ships or stalls.</span>
+        <span class="def" data-de>Eine enge, benannte Aufgabe, für die ein Agent gebaut wird, auf einer Seite festgehalten: Aufgabe, Auslöser, Tools, Output, Owner. Die Arbeitseinheit, die entscheidet, ob ein Agent live geht oder steckenbleibt.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">BRIEF</span>
+        <span class="def" data-en>The one-page document that defines a use case before code is written. Often shorter than the chat thread that proposed it. The brief is the agreement, not the prompt.</span>
+        <span class="def" data-de>Das einseitige Dokument, das einen Use Case definiert, bevor Code geschrieben ist. Oft kürzer als der Chat-Verlauf, der ihn vorgeschlagen hat. Der Brief ist die Vereinbarung, nicht der Prompt.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">TRIGGER</span>
+        <span class="def" data-en>The named event that starts the agent: a cron, a webhook, a row added, a button pressed. Ambiguity in the trigger explains roughly half of the bugs in early-stage agents.</span>
+        <span class="def" data-de>Das benannte Ereignis, das den Agent startet: ein Cron, ein Webhook, eine neue Zeile, ein Tastendruck. Mehrdeutigkeit im Trigger erklärt etwa die Hälfte der Bugs früher Agents.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">OUTPUT SHAPE</span>
+        <span class="def" data-en>The agreed format and location of the agent's work product: a Slack post in a specific channel, a row in a specific sheet, a ticket of a specific type. Free chat is not an output shape.</span>
+        <span class="def" data-de>Das vereinbarte Format und der vereinbarte Ort des Arbeitsprodukts: ein Slack-Post in einem konkreten Channel, eine Zeile in einem konkreten Sheet, ein Ticket eines konkreten Typs. Freier Chat ist keine Output-Form.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">OWNER</span>
+        <span class="def" data-en>The single named human responsible for an agent's eval set, drift sensors, postmortems, and retirement decision. "The team" is not an owner. A vacancy means the agent is one quarter from quiet rot.</span>
+        <span class="def" data-de>Der einzelne benannte Mensch, der für Eval-Set, Drift-Sensoren, Postmortems und Ausmusterung verantwortlich ist. "Das Team" ist kein Owner. Eine Vakanz heißt, der Agent ist ein Quartal vor stiller Fäule.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">SHIP CRITERIA</span>
+        <span class="def" data-en>The minimum pass rate, latency, and refusal behaviour an agent must hit before it leaves the prototype phase. Written into the brief on day one, checked at the end of every iteration round.</span>
+        <span class="def" data-de>Die Mindest-Bestehen-Quote, die Mindest-Latenz und das Verweigerungs-Verhalten, die ein Agent erreichen muss, bevor er die Prototyp-Phase verlässt. Tag eins in den Brief geschrieben, am Ende jeder Iterationsrunde geprüft.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 27</span>
+      <span data-en>· NEXT CARD</span>
+      <span data-de>· N&Auml;CHSTE LEHRTAFEL</span>
+    </div>
+    <h2 class="serif" data-en>You have ten cases.<br/>What's next?</h2>
+    <h2 class="serif" data-de>Du hast zehn Fälle.<br/>Was kommt als Nächstes?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">09</p>
+        <h3 class="serif" data-en style="margin-top:8px">Cost and ROI</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Kosten und ROI</h3>
+        <p data-en>What an agent really costs in production, what it saves, how to compute it honestly and report it to stakeholders without flinching.</p>
+        <p data-de>Was ein Agent in der Praxis kostet, was er einspart, wie du das ehrlich rechnest und an Stakeholder kommunizierst, ohne zu zucken.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">10</p>
+        <h3 class="serif" data-en style="margin-top:8px">Where this is going</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Wohin die Reise geht</h3>
+        <p data-en>Trends, bets, what is likely to stick, and what will look quaint in twelve months. A field map for the next year.</p>
+        <p data-de>Trends, Wetten, was bleiben wird und was in zwölf Monaten kurios aussieht. Eine Feldkarte für das nächste Jahr.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">11</p>
+        <h3 class="serif" data-en style="margin-top:8px">Agents in the team workflow</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Agents im Team-Workflow</h3>
+        <p data-en>How teams reshape rituals, roles, and tooling once agents land in the daily flow. The boring half of agentic, where the value lives.</p>
+        <p data-de>Wie Teams Rituale, Rollen und Tooling umstellen, wenn Agents im Alltag landen. Die langweilige Hälfte von Agentic, wo der Wert wohnt.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 01</span><span data-de>ZURÜCK ZU 01</span></a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 02</span><span data-de>ZURÜCK ZU 02</span></a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 03</span><span data-de>ZURÜCK ZU 03</span></a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 04</span><span data-de>ZURÜCK ZU 04</span></a>
+      <a class="cta" href="05_dein-erster-agent.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 05</span><span data-de>ZURÜCK ZU 05</span></a>
+      <a class="cta" href="06_agent-teams.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 06</span><span data-de>ZURÜCK ZU 06</span></a>
+      <a class="cta" href="07_pflege-und-iteration.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 07</span><span data-de>ZURÜCK ZU 07</span></a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-en>REQUEST CARD 09</span><span data-de>LEHRTAFEL 09 ANFORDERN</span> <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 08</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============== Live Demo Stages (i18n) ==============
+const i18n = {
+  en: {
+    stages: [
+      {
+        label: 'CASE 01 · SALES',
+        title: 'Weekly competitor report.',
+        text: 'Every Monday at 06:00 the agent scans three named news sources, drafts a one-page briefing per named competitor, and posts it to a Slack channel where the GTM team starts the week. Source attribution is mandatory. Invented competitors trigger refusal.',
+        code: `// brief · v1.2.0
+{
+  "task":    "draft weekly competitor briefing",
+  "trigger": "cron · monday 06:00 CET",
+  "tools":   ["news_api_beta", "news_api_gamma",
+              "crm.competitors", "slack.post"],
+  "output":  "1-page slack post per named competitor
+              · #sales-intel · attributed sources",
+  "owner":   "head_of_gtm",
+  "ship":    "pass_rate >= 90% · zero invented names"
+}`,
+        meta: ['DOMAIN · SALES','CADENCE · WEEKLY','EVAL · 42 CASES']
+      },
+      {
+        label: 'CASE 03 · SUPPORT',
+        title: 'Inbound ticket triage.',
+        text: 'A new ticket lands, the agent classifies it (billing, bug, feature, churn-risk), assigns a priority, and drafts a stub reply pulled from the help center. A human approves before sending. Adversarial inputs get refused, not answered.',
+        code: `// brief · v1.0.4
+{
+  "task":    "triage inbound tickets, draft stub reply",
+  "trigger": "webhook · ticket.created",
+  "tools":   ["ticket.read", "kb.search",
+              "ticket.tag", "ticket.draft_reply"],
+  "output":  "category, priority, draft reply
+              · attached to ticket · human-send only",
+  "owner":   "support_manager",
+  "ship":    "triage_accuracy >= 92% · no auto-send"
+}`,
+        meta: ['DOMAIN · SUPPORT','CADENCE · PER TICKET','EVAL · 60 CASES']
+      },
+      {
+        label: 'CASE 05 · FINANCE',
+        title: 'Invoice-to-ledger posting.',
+        text: 'A vendor invoice arrives in shared inbox. The agent extracts header and lines, proposes an account-code mapping, and drafts a journal entry. Two-eye approval before posting. Below a confidence threshold, the agent flags and escalates instead of guessing.',
+        code: `// brief · v0.9.1
+{
+  "task":    "extract invoice, propose journal entry",
+  "trigger": "email · inbox/ap@",
+  "tools":   ["pdf.parse", "vendor.lookup",
+              "coa.suggest", "ledger.draft_je"],
+  "output":  "draft journal entry · two-eye queue
+              · escalates if confidence < 0.85",
+  "owner":   "controller",
+  "ship":    "miscat_rate < 1% · escalation_rate ok"
+}`,
+        meta: ['DOMAIN · FINANCE','CADENCE · PER INVOICE','EVAL · 80 CASES']
+      },
+      {
+        label: 'CASE 07 · ENGINEERING',
+        title: 'Pull-request review notes.',
+        text: 'On every opened PR the agent runs a fixed checklist: tests touched, migration risk, public API change, security-sensitive paths. A single structured comment lands on the PR within sixty seconds, before the human reviewer reads it.',
+        code: `// brief · v2.0.0
+{
+  "task":    "post first-look review checklist on PR",
+  "trigger": "github webhook · pull_request.opened",
+  "tools":   ["pr.diff", "tests.coverage",
+              "migrations.scan", "pr.comment"],
+  "output":  "single structured comment · 60s SLA
+              · never approves or blocks merge",
+  "owner":   "platform_tech_lead",
+  "ship":    "post_time_p95 < 60s · zero auto-merge"
+}`,
+        meta: ['DOMAIN · ENGINEERING','CADENCE · PER PR','EVAL · 50 PRS']
+      },
+      {
+        label: 'CASE 10 · OPS',
+        title: 'Quarterly metrics narrative.',
+        text: 'After quarter close the agent pulls KPIs from the warehouse, drafts a one-page narrative with three highlights and two risks, and posts it to a shared doc for the COO to review. Numbers must round-trip to the source query, no rephrasing of definitions.',
+        code: `// brief · v1.1.0
+{
+  "task":    "draft quarterly metrics narrative",
+  "trigger": "cron · day-3 after quarter close",
+  "tools":   ["warehouse.query", "doc.create",
+              "chart.render", "slack.notify"],
+  "output":  "1-page doc · 3 highlights, 2 risks
+              · numbers linked to source query",
+  "owner":   "bizops_lead",
+  "ship":    "number_audit_pass = 100% · COO approves"
+}`,
+        meta: ['DOMAIN · OPS','CADENCE · QUARTERLY','EVAL · 4 PRIOR QUARTERS']
+      }
+    ]
+  },
+  de: {
+    stages: [
+      {
+        label: 'FALL 01 · SALES',
+        title: 'Wöchentlicher Wettbewerbs-Report.',
+        text: 'Jeden Montag um 06:00 scannt der Agent drei benannte News-Quellen, entwirft ein einseitiges Briefing pro benanntem Wettbewerber und postet es in einen Slack-Channel, in dem das GTM-Team die Woche beginnt. Quellenangabe ist Pflicht. Erfundene Wettbewerber führen zu Verweigerung.',
+        code: `// brief · v1.2.0
+{
+  "task":    "wöchentliches wettbewerbs-briefing entwerfen",
+  "trigger": "cron · montag 06:00 CET",
+  "tools":   ["news_api_beta", "news_api_gamma",
+              "crm.competitors", "slack.post"],
+  "output":  "1-seiten slack-post pro wettbewerber
+              · #sales-intel · mit quellen",
+  "owner":   "head_of_gtm",
+  "ship":    "pass_rate >= 90% · null erfundene namen"
+}`,
+        meta: ['BEREICH · SALES','TAKT · WÖCHENTLICH','EVAL · 42 CASES']
+      },
+      {
+        label: 'FALL 03 · SUPPORT',
+        title: 'Eingehende Ticket-Triage.',
+        text: 'Ein neues Ticket kommt rein, der Agent klassifiziert es (Billing, Bug, Feature, Churn-Risk), vergibt eine Priorität und entwirft einen Antwort-Stub aus dem Help-Center. Ein Mensch gibt vor dem Senden frei. Adversariale Inputs werden verweigert, nicht beantwortet.',
+        code: `// brief · v1.0.4
+{
+  "task":    "eingehende tickets triagieren, stub-antwort entwerfen",
+  "trigger": "webhook · ticket.created",
+  "tools":   ["ticket.read", "kb.search",
+              "ticket.tag", "ticket.draft_reply"],
+  "output":  "kategorie, priorität, antwort-entwurf
+              · am ticket · nur manueller versand",
+  "owner":   "support_manager",
+  "ship":    "triage_treffer >= 92% · kein auto-send"
+}`,
+        meta: ['BEREICH · SUPPORT','TAKT · PRO TICKET','EVAL · 60 CASES']
+      },
+      {
+        label: 'FALL 05 · FINANCE',
+        title: 'Rechnung-zu-Hauptbuch-Buchung.',
+        text: 'Eine Lieferantenrechnung trifft im geteilten Posteingang ein. Der Agent extrahiert Kopf und Positionen, schlägt eine Kontierung vor und entwirft einen Buchungssatz. Vier-Augen-Freigabe vor Buchung. Unter einer Confidence-Schwelle eskaliert der Agent statt zu raten.',
+        code: `// brief · v0.9.1
+{
+  "task":    "rechnung extrahieren, buchungssatz vorschlagen",
+  "trigger": "email · posteingang/ap@",
+  "tools":   ["pdf.parse", "vendor.lookup",
+              "coa.suggest", "ledger.draft_je"],
+  "output":  "buchungsentwurf · vier-augen-queue
+              · eskalation bei confidence < 0.85",
+  "owner":   "controller",
+  "ship":    "fehl_kontierung < 1% · eskalations-quote ok"
+}`,
+        meta: ['BEREICH · FINANCE','TAKT · PRO RECHNUNG','EVAL · 80 CASES']
+      },
+      {
+        label: 'FALL 07 · ENGINEERING',
+        title: 'Pull-Request-Review-Notizen.',
+        text: 'Bei jedem geöffneten PR fährt der Agent eine feste Checkliste: berührte Tests, Migrationsrisiko, Public-API-Änderung, sicherheitsrelevante Pfade. Ein strukturierter Kommentar landet binnen sechzig Sekunden am PR, bevor der Mensch ihn liest.',
+        code: `// brief · v2.0.0
+{
+  "task":    "erstblick-checkliste auf pr posten",
+  "trigger": "github webhook · pull_request.opened",
+  "tools":   ["pr.diff", "tests.coverage",
+              "migrations.scan", "pr.comment"],
+  "output":  "ein strukturierter kommentar · 60s SLA
+              · kein auto-approve, kein auto-block",
+  "owner":   "platform_tech_lead",
+  "ship":    "post_zeit_p95 < 60s · null auto-merge"
+}`,
+        meta: ['BEREICH · ENGINEERING','TAKT · PRO PR','EVAL · 50 PRS']
+      },
+      {
+        label: 'FALL 10 · OPS',
+        title: 'Quartals-Metriken-Erzählung.',
+        text: 'Nach Quartalsabschluss zieht der Agent KPIs aus dem Warehouse, entwirft eine einseitige Erzählung mit drei Highlights und zwei Risiken, und legt sie in einem geteilten Dokument für den COO zur Review ab. Zahlen müssen zur Source-Query zurückführen, kein Umformulieren der Definitionen.',
+        code: `// brief · v1.1.0
+{
+  "task":    "quartals-metriken-erzählung entwerfen",
+  "trigger": "cron · tag-3 nach quartalsabschluss",
+  "tools":   ["warehouse.query", "doc.create",
+              "chart.render", "slack.notify"],
+  "output":  "1-seiten doc · 3 highlights, 2 risiken
+              · zahlen mit source-query verknüpft",
+  "owner":   "bizops_lead",
+  "ship":    "zahlen_audit = 100% · COO gibt frei"
+}`,
+        meta: ['BEREICH · OPS','TAKT · QUARTALSWEISE','EVAL · 4 VOR-QUARTALE']
+      }
+    ]
+  }
+};
+
+const tabs = document.querySelectorAll('#demo-tabs .demo-tab');
+const demoBody = document.getElementById('demo-body');
+function getLang(){ return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+function renderStage(idx){
+  tabs.forEach((t,i)=>t.classList.toggle('active', i===idx));
+  const stages = i18n[getLang()].stages;
+  const s = stages[idx];
+  demoBody.innerHTML = `
+    <div class="demo-label">${s.label}</div>
+    <div class="demo-title">${s.title}</div>
+    <div class="demo-text">${s.text}</div>
+    <pre class="demo-code">${s.code}</pre>
+    <div class="demo-meta">${s.meta.map(m=>`<span>${m}</span>`).join('')}</div>
+  `;
+}
+tabs.forEach((t,i)=>t.addEventListener('click', ()=>renderStage(i)));
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang){
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? "Ten use cases, one pattern · Codex Article 08"
+    : 'Zehn Use Cases, ein Muster · Codex Lehrtafel 08';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  if (typeof renderStage === 'function') {
+    var activeIdx = [...document.querySelectorAll('#demo-tabs .demo-tab')].findIndex(t => t.classList.contains('active'));
+    renderStage(activeIdx >= 0 ? activeIdx : 0);
+  }
+}
+
+(function(){
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
