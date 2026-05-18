@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What an agent really costs · Codex Lehrtafel 09</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle (Readix Learn Pattern) ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* Layout */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.diagram-wrap{padding:40px;border:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .diagram-wrap{border:1px solid var(--border-on-paper);background:var(--paper-aged)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+.process.cols-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:880px){.process,.process.cols-3,.process.cols-5{grid-template-columns:1fr}}
+
+.demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.demo-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.demo-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.demo-tabs{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.demo-tab{padding:20px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;background:transparent;border-top:none;border-bottom:none;border-left:none;font-weight:500}
+.demo-tab:last-child{border-right:none}
+.demo-tab.active{background:var(--copper);color:var(--ink-black)}
+.demo-tab:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.demo-tab .step-num{display:block;font-size:10px;color:var(--gray-600);margin-bottom:5px}
+.demo-tab.active .step-num{color:rgba(10,10,11,.5)}
+.demo-tab .agent-tag{display:block;font-size:10px;color:var(--gray-400);margin-top:5px;letter-spacing:.1em}
+.demo-tab.active .agent-tag{color:rgba(10,10,11,.7)}
+.demo-body{padding:36px;min-height:420px}
+.demo-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:10px}
+.demo-title{font-family:'Source Serif 4',serif;font-size:30px;color:var(--fg-on-ink);margin-bottom:18px;line-height:1.2}
+.demo-text{font-family:'Lora',serif;font-size:19px;line-height:1.65;color:var(--gray-100);margin-bottom:24px;max-width:64ch}
+.demo-code{font-family:'JetBrains Mono',monospace;font-size:15px;line-height:1.75;background:var(--ink-black);border:1px solid var(--border-on-ink);border-left:2px solid var(--copper);padding:22px 24px;color:var(--gray-100);white-space:pre-wrap;overflow-x:auto}
+.demo-meta{display:flex;gap:24px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-200);text-transform:uppercase;letter-spacing:.12em;margin-top:26px;padding-top:18px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap;font-weight:500}
+
+/* Live Calculator (variation on the demo pattern) */
+.calc-presets{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--border-on-ink)}
+.calc-preset{padding:18px 14px;border-right:1px solid var(--border-on-ink);text-align:center;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;background:transparent;border-top:none;border-bottom:none;border-left:none;font-weight:500}
+.calc-preset:last-child{border-right:none}
+.calc-preset:hover{color:var(--copper);background:rgba(217,119,87,.06)}
+.calc-preset.active{background:var(--copper);color:var(--ink-black)}
+.calc-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:0;min-height:460px}
+.calc-controls{padding:36px;border-right:1px solid var(--border-on-ink);display:flex;flex-direction:column;gap:30px;justify-content:center}
+.calc-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px 16px}
+.calc-row label{grid-column:1/2;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.calc-row .calc-val{grid-column:2/3;font-family:'Source Serif 4',serif;font-size:22px;color:var(--copper);text-align:right;line-height:1;min-width:90px;font-weight:300}
+.calc-row input[type=range]{grid-column:1/3;width:100%;-webkit-appearance:none;appearance:none;background:transparent;height:24px;cursor:pointer;margin:0}
+.calc-row input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--border-on-ink);border:none}
+.calc-row input[type=range]::-moz-range-track{height:2px;background:var(--border-on-ink);border:none}
+.calc-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:24px;background:var(--copper);border:none;margin-top:-11px;cursor:pointer;border-radius:0}
+.calc-row input[type=range]::-moz-range-thumb{width:14px;height:24px;background:var(--copper);border:none;border-radius:0;cursor:pointer}
+.calc-out{padding:36px;background:var(--ink-black);display:flex;flex-direction:column;gap:14px;justify-content:center}
+.calc-out-row{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px;border-bottom:1px solid var(--border-on-ink);gap:16px}
+.calc-out-row:last-of-type{border-bottom:none}
+.calc-out-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);white-space:nowrap}
+.calc-out-val{font-family:'Source Serif 4',serif;font-size:20px;color:var(--gray-100);line-height:1;text-align:right;font-weight:300}
+.calc-out-row.big{padding-bottom:18px;margin:6px 0;border-bottom:2px solid var(--copper)}
+.calc-out-val.big{font-size:44px;color:var(--copper);font-weight:300}
+.calc-verdict{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:14px 16px;border:1px solid var(--copper);color:var(--copper);text-align:center;margin-top:10px;transition:border-color .2s,color .2s}
+.calc-verdict.warn{border-color:var(--ochre);color:var(--ochre)}
+.calc-verdict.bad{border-color:var(--rust);color:var(--rust)}
+@media(max-width:880px){.calc-grid{grid-template-columns:1fr}.calc-controls{border-right:none;border-bottom:1px solid var(--border-on-ink)}.calc-presets{grid-template-columns:repeat(2,1fr)}.calc-preset{border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}}
+
+/* Info tooltips (explainer layer for slider inputs) */
+.info-wrap{position:relative;display:inline-block;margin-left:8px;vertical-align:middle}
+.info-tip{font-family:'JetBrains Mono',monospace;font-size:10px;width:18px;height:18px;line-height:14px;text-align:center;background:transparent;color:var(--gray-400);border:1px solid var(--border-on-ink);cursor:pointer;padding:0;transition:color .15s,border-color .15s;font-weight:600}
+.info-tip:hover,.info-wrap.open .info-tip{color:var(--copper);border-color:var(--copper)}
+.info-tip:focus{outline:none;color:var(--copper);border-color:var(--copper)}
+.info-pop{display:none !important;position:absolute;top:calc(100% + 10px);left:-8px;width:260px;background:var(--ink-black);color:var(--gray-100);border:1px solid var(--copper);padding:14px 16px;font-family:'Lora',serif;font-size:14px;line-height:1.5;z-index:50;box-shadow:var(--shadow-card);text-transform:none;letter-spacing:0;white-space:normal;text-align:left}
+.info-pop::before{content:'';position:absolute;top:-6px;left:10px;width:10px;height:10px;background:var(--ink-black);border-top:1px solid var(--copper);border-left:1px solid var(--copper);transform:rotate(45deg)}
+.info-wrap.open .info-pop{display:block !important}
+
+/* Formula disclosure */
+.formula-disclosure{margin-top:0;border:1px solid var(--border-on-ink);border-top:none}
+.formula-toggle{width:100%;padding:18px 24px;background:var(--ink-deep);border:none;color:var(--copper);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;transition:background .15s;font-weight:500}
+.formula-toggle:hover{background:var(--gray-900)}
+.formula-toggle .arrow{transition:transform .2s var(--easing)}
+.formula-disclosure.open .formula-toggle .arrow{transform:rotate(90deg)}
+.formula-body{display:none;padding:36px;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+.formula-disclosure.open .formula-body{display:block}
+.formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+.formula-block .formula-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);margin-bottom:14px;display:block}
+.formula-math{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.85;color:var(--gray-100);white-space:pre;overflow-x:auto}
+.formula-current{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.85;color:var(--copper);white-space:pre;overflow-x:auto}
+.verdict-bands{margin-top:14px;border-top:1px solid var(--border-on-ink);padding-top:14px}
+.verdict-band{display:grid;grid-template-columns:110px 70px 1fr;gap:18px;padding:12px 0;border-bottom:1px solid var(--border-on-ink);align-items:baseline}
+.verdict-band:last-child{border-bottom:none}
+.verdict-band .band-name{color:var(--copper);font-weight:600;text-transform:uppercase;letter-spacing:.16em;font-family:'JetBrains Mono',monospace;font-size:12px}
+.verdict-band.band-marginal .band-name{color:var(--ochre)}
+.verdict-band.band-hobby .band-name{color:var(--rust)}
+.verdict-band .band-range{color:var(--gray-400);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em}
+.verdict-band .band-desc{color:var(--gray-100);font-family:'Lora',serif;font-size:15px;line-height:1.5}
+@media(max-width:880px){.formula-grid{grid-template-columns:1fr;gap:32px}.verdict-band{grid-template-columns:1fr;gap:4px}}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+.grid-5 > div{padding:24px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .grid-5{border-color:var(--border-on-paper)}
+section.parchment .grid-5 > div{border-color:var(--border-on-paper);background:var(--paper-aged)}
+@media(max-width:880px){.grid-3,.grid-2,.grid-5{grid-template-columns:1fr}}
+
+.stack{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:48px}
+.stack > div{padding:28px 30px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .stack{border-color:var(--border-on-paper)}
+section.parchment .stack > div{border-color:var(--border-on-paper);background:var(--paper-aged)}
+.stack .layer{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;display:block}
+.stack h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:12px;line-height:1.25;letter-spacing:-.01em}
+.stack p{font-size:14px;line-height:1.55;color:var(--gray-200)}
+section.parchment .stack p{color:var(--gray-600)}
+.stack .share{font-family:'Source Serif 4',serif;font-size:32px;line-height:1;color:var(--copper);font-weight:300;margin-top:14px;display:block}
+@media(max-width:880px){.stack{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+.flow{stroke-dasharray:6 6;animation:dash 18s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+
+@media (prefers-reduced-motion: reduce){
+  .flow{animation:none}
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+      <a href="./08_use-case-bibliothek.html" class="nav-link">
+        <span data-de>08 → Use-Case-Bibliothek</span>
+        <span data-en>08 → Use-Case Library</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 09</span>
+      <span data-en>· LEHRTAFEL · COST AND ROI</span>
+      <span data-de>· LEHRTAFEL · KOSTEN UND ROI</span>
+    </div>
+
+    <h1 class="serif" data-en>What an agent <em>really</em> costs.</h1>
+    <h1 class="serif" data-de>Was ein Agent <em>wirklich</em> kostet.</h1>
+
+    <p class="kicker" data-en>Inference is the smallest line on the bill. Tools, ops, evals, human review, and the slow drift of a forgotten prompt eat most of the budget. This card lays out the full cost stack, the savings that actually land, and a simple formula that survives contact with your CFO.</p>
+    <p class="kicker" data-de>Inferenz ist die kleinste Zeile auf der Rechnung. Tools, Betrieb, Evals, menschliche Review, und das langsame Driften eines vergessenen Prompts fressen das Budget. Diese Tafel zeigt den ganzen Kostenstapel, die Ersparnisse, die tatsächlich landen, und eine simple Formel, die den CFO überlebt.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">$0.08</div>
+        <div class="label"><span data-en>Median inference cost per run</span><span data-de>Median Inferenz pro Lauf</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">4 mo</div>
+        <div class="label"><span data-en>Typical payback period</span><span data-de>Typische Amortisationszeit</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">12&times;</div>
+        <div class="label"><span data-en>Leverage at year one</span><span data-de>Hebel im ersten Jahr</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1"><span data-en>READ THE METHOD</span><span data-de>METHODE LESEN</span> <span class="arrow">┌──→</span></a>
+      <a class="cta" href="08_use-case-bibliothek.html" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-en>BACK TO 08</span><span data-de>ZURÜCK ZU 08</span> <span class="arrow">┌──→</span></a>
+    </div>
+
+    <div class="meta">
+      <span>FILE · 09 / SERIES AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 14 MINUTES</span><span data-de>LESEZEIT · 14 MINUTEN</span></span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K1: THE COST STACK =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 28</span>
+      <span data-en>· THE COST STACK</span>
+      <span data-de>· DER KOSTENSTAPEL</span>
+    </div>
+    <h2 class="serif" data-en>Four layers, one <em>bill</em>.</h2>
+    <h2 class="serif" data-de>Vier Schichten, eine <em>Rechnung</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Most teams budget for inference and forget the other three layers. By the end of quarter two they discover that tokens were the cheap part. The full bill has four layers, and on a well-run agent the top of the stack costs five to ten times the bottom. Knowing the shape early stops the surprise.</p>
+    <p class="kicker" data-de>Die meisten Teams budgetieren Inferenz und vergessen die anderen drei Schichten. Zum Ende von Quartal zwei stellen sie fest, dass Tokens der billige Teil waren. Die volle Rechnung hat vier Schichten, und bei einem solide gefahrenen Agent kostet die obere Schicht das Fünf- bis Zehnfache der unteren. Die Form früh zu kennen verhindert die Überraschung.</p>
+
+    <div class="stack">
+      <div>
+        <span class="layer">L1 · INFERENCE</span>
+        <h4 class="serif" data-en>Tokens in, tokens out.</h4>
+        <h4 class="serif" data-de>Tokens rein, Tokens raus.</h4>
+        <p data-en>The model call itself. Easy to meter, easy to forecast. Cheap on most use cases, expensive only on long-context loops or unsupervised retries.</p>
+        <p data-de>Der Modellaufruf selbst. Leicht messbar, leicht prognostizierbar. Auf den meisten Use Cases billig, teuer nur bei langen Context-Schleifen oder unbeaufsichtigten Retries.</p>
+        <span class="share" data-en>~15%</span>
+        <span class="share" data-de>~15%</span>
+      </div>
+      <div>
+        <span class="layer">L2 · TOOLS</span>
+        <h4 class="serif" data-en>APIs and seats.</h4>
+        <h4 class="serif" data-de>APIs und Seats.</h4>
+        <p data-en>Search APIs, data providers, vector stores, the per-seat fees of every tool the agent reaches into. Often metered per call, rarely flat. Compounds quietly.</p>
+        <p data-de>Search-APIs, Datenprovider, Vector-Stores, die Per-Seat-Gebühren jedes Tools, in das der Agent greift. Oft pro Aufruf gemessen, selten flat. Wächst still mit.</p>
+        <span class="share" data-en>~25%</span>
+        <span class="share" data-de>~25%</span>
+      </div>
+      <div>
+        <span class="layer">L3 · OPS</span>
+        <h4 class="serif" data-en>Plumbing and watching.</h4>
+        <h4 class="serif" data-de>Sanitär und Wache.</h4>
+        <p data-en>Hosting, queues, logs, traces, observability, eval runs, the on-call pager that fires when the agent misbehaves at 03:00. The line that grows fastest.</p>
+        <p data-de>Hosting, Queues, Logs, Traces, Observability, Eval-Läufe, der Pager der losgeht, wenn der Agent um 03:00 spinnt. Die Zeile, die am schnellsten wächst.</p>
+        <span class="share" data-en>~25%</span>
+        <span class="share" data-de>~25%</span>
+      </div>
+      <div>
+        <span class="layer">L4 · HUMANS</span>
+        <h4 class="serif" data-en>Owner and reviewers.</h4>
+        <h4 class="serif" data-de>Owner und Reviewer.</h4>
+        <p data-en>The owner's time on evals, drift, postmortems. The reviewer's time on every flagged output. Pricier per hour than every other layer combined.</p>
+        <p data-de>Die Zeit der Owner für Evals, Drift, Postmortems. Die Zeit der Reviewer für jeden geflaggten Output. Pro Stunde teurer als alle anderen Schichten zusammen.</p>
+        <span class="share" data-en>~35%</span>
+        <span class="share" data-de>~35%</span>
+      </div>
+    </div>
+
+    <p class="prose" data-en style="margin-top:48px">The shares are typical, not universal. A high-volume support agent skews toward L1 and L2. A finance agent under audit skews toward L4. The discipline is to list all four every time, even when one looks vanishing. The vanishing layer is the one that grows quietly into the bill that surprises you in month nine.</p>
+    <p class="prose" data-de style="margin-top:48px">Die Anteile sind typisch, nicht allgemeingültig. Ein Support-Agent mit hohem Volumen kippt zu L1 und L2. Ein Finance-Agent unter Prüfung kippt zu L4. Die Disziplin ist, alle vier jedes Mal zu listen, auch wenn eine vernachlässigbar wirkt. Die vernachlässigbare Schicht ist die, die still bis Monat neun zur Überraschungsrechnung wächst.</p>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">5</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · MULTIPLY THE TOKEN BILL</span><span data-de>FAUSTREGEL · MULTIPLIZIERE DIE TOKEN-RECHNUNG</span></p>
+        <p class="text" data-en>If your forecast only lists inference, multiply it by five and treat that as your floor. The other four-fifths show up as ops, tools, and human review whether you booked them or not. Budgets that ignore the multiplier always lose the second-year argument.</p>
+        <p class="text" data-de>Wenn deine Prognose nur Inferenz listet, multipliziere sie mit fünf und nimm das als Untergrenze. Die anderen vier Fünftel zeigen sich als Ops, Tools, Review, ob du sie verbucht hast oder nicht. Budgets ohne diesen Multiplikator verlieren die Zweitjahres-Diskussion immer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K2: THE SAVINGS STACK =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 29</span>
+      <span data-en>· THE SAVINGS STACK</span>
+      <span data-de>· DER ERSPARNIS-STAPEL</span>
+    </div>
+    <h2 class="serif" data-en>Where the value <em>shows</em> up.</h2>
+    <h2 class="serif" data-de>Wo der Wert <em>auftaucht</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Savings come in three shapes: hours given back, errors avoided, and decisions taken sooner. The first is easy to count and easy to argue with. The second is harder to count and harder to argue with. The third is hardest to count and the one your sponsors actually care about.</p>
+    <p class="kicker" data-de>Ersparnisse kommen in drei Formen: zurückgegebene Stunden, vermiedene Fehler, früher getroffene Entscheidungen. Die erste ist leicht zu zählen und leicht anzugreifen. Die zweite ist schwerer zu zählen und schwerer anzugreifen. Die dritte ist am schwersten zu zählen und die, an der den Sponsoren wirklich liegt.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th><span data-en>SHAPE</span><span data-de>FORM</span></th>
+          <th><span data-en>WHAT IT LOOKS LIKE</span><span data-de>WIE ES AUSSIEHT</span></th>
+          <th><span data-en>HOW YOU PROVE IT</span><span data-de>WIE DU ES BELEGST</span></th>
+          <th><span data-en>WHO BELIEVES IT</span><span data-de>WER DARAN GLAUBT</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-label">HOURS</td>
+          <td><span data-en>Two hours saved per ticket, ten times a day</span><span data-de>Zwei Stunden pro Ticket gespart, zehnmal am Tag</span></td>
+          <td><span data-en>Before-and-after time samples</span><span data-de>Vorher-Nachher-Zeitstichproben</span></td>
+          <td><span data-en>Operations and finance</span><span data-de>Operations und Finance</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">ERRORS</td>
+          <td><span data-en>Mis-coded invoices caught before posting</span><span data-de>Fehlkodierte Rechnungen vor Buchung gefangen</span></td>
+          <td><span data-en>Defect rate, audit findings, rework hours</span><span data-de>Fehlerquote, Audit-Funde, Nacharbeitsstunden</span></td>
+          <td><span data-en>Audit and risk</span><span data-de>Audit und Risk</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">SPEED</td>
+          <td><span data-en>A decision in twelve minutes, not three days</span><span data-de>Eine Entscheidung in zwölf Minuten, nicht drei Tagen</span></td>
+          <td><span data-en>Cycle-time before and after</span><span data-de>Zykluszeit vor und nach</span></td>
+          <td><span data-en>Product and revenue leaders</span><span data-de>Product- und Revenue-Leitung</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">QUALITY</td>
+          <td><span data-en>A complete briefing where there was none</span><span data-de>Ein vollständiges Briefing, wo keines war</span></td>
+          <td><span data-en>Stakeholder rating, downstream usage</span><span data-de>Stakeholder-Bewertung, Folgenutzung</span></td>
+          <td><span data-en>The end user</span><span data-de>Der Endnutzer</span></td>
+        </tr>
+        <tr>
+          <td class="col-label">CAPACITY</td>
+          <td><span data-en>The hire you no longer need this year</span><span data-de>Die Einstellung, die du dieses Jahr nicht brauchst</span></td>
+          <td><span data-en>Headcount plan deltas</span><span data-de>Delta zum Headcount-Plan</span></td>
+          <td><span data-en>The CFO</span><span data-de>Der CFO</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="prose" data-en style="margin-top:48px">The strongest cases combine two shapes. Hours alone gets dismissed as "we will not really fire anyone". Errors alone gets dismissed as "we already pay for the audit". Hours plus errors plus a faster decision is the combination that survives a budget review without flinching.</p>
+    <p class="prose" data-de style="margin-top:48px">Die stärksten Fälle kombinieren zwei Formen. Stunden allein wird abgetan als "wir entlassen ja niemanden". Fehler allein wird abgetan als "den Audit zahlen wir eh". Stunden plus Fehler plus schnellere Entscheidung ist die Kombination, die ein Budget-Review ohne Zucken übersteht.</p>
+  </div>
+</section>
+
+<!-- =========================== K3: THE HONEST FORMULA =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 30</span>
+      <span data-en>· THE FORMULA</span>
+      <span data-de>· DIE FORMEL</span>
+    </div>
+    <h2 class="serif" data-en>One formula, four <em>honest</em> lines.</h2>
+    <h2 class="serif" data-de>Eine Formel, vier <em>ehrliche</em> Zeilen.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>The math is not the hard part. The hard part is being honest about each input. We use four lines: a yearly run rate, a yearly savings rate, a one-time build cost, and a confidence factor. The confidence factor is what most spreadsheets quietly leave out and what most CFOs quietly correct in their head.</p>
+    <p class="kicker" data-de>Die Mathematik ist nicht der schwere Teil. Schwer ist Ehrlichkeit bei den Eingaben. Wir verwenden vier Zeilen: jährliche Laufkosten, jährliche Ersparnis, einmalige Bau-Kosten, einen Konfidenz-Faktor. Den Konfidenz-Faktor lassen die meisten Spreadsheets still weg, und die meisten CFOs korrigieren ihn still im Kopf.</p>
+
+    <div class="process cols-4" style="margin-top:48px">
+      <div class="step">
+        <span class="num">01 · RUN</span>
+        <h4 class="serif" data-en>Run rate.</h4>
+        <h4 class="serif" data-de>Laufrate.</h4>
+        <p data-en>Sum of the four cost layers, annualised. Use the multiplier on inference if no ops data exists yet. Updated quarterly.</p>
+        <p data-de>Summe der vier Kostenschichten, auf das Jahr hochgerechnet. Inferenz mit Multiplikator, wenn noch keine Ops-Daten vorliegen. Quartalsweise aktualisiert.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · SAVE</span>
+        <h4 class="serif" data-en>Savings rate.</h4>
+        <h4 class="serif" data-de>Ersparnis-Rate.</h4>
+        <p data-en>Sum of hours, errors, and speed, annualised. Convert hours at fully loaded cost. Convert errors at last year's actual rework bill.</p>
+        <p data-de>Summe aus Stunden, Fehlern, Speed, auf das Jahr gerechnet. Stunden zu Vollkosten umrechnen. Fehler zur tatsächlichen Nacharbeitsrechnung des Vorjahres.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · BUILD</span>
+        <h4 class="serif" data-en>One-time build.</h4>
+        <h4 class="serif" data-de>Einmalige Baukosten.</h4>
+        <p data-en>The first three months of two people, plus the eval set, plus the integration work. Amortise over twelve months, not thirty-six.</p>
+        <p data-de>Die ersten drei Monate von zwei Personen, plus das Eval-Set, plus die Integrationsarbeit. Über zwölf Monate amortisieren, nicht dreißig.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · CONFID</span>
+        <h4 class="serif" data-en>Confidence factor.</h4>
+        <h4 class="serif" data-de>Konfidenz-Faktor.</h4>
+        <p data-en>A multiplier on savings, from 0.3 to 0.9, depending on how well the eval covers the real input distribution. New agents start at 0.5.</p>
+        <p data-de>Ein Multiplikator auf die Ersparnis, von 0.3 bis 0.9, abhängig davon, wie gut das Eval die echte Input-Verteilung abdeckt. Neue Agents starten bei 0.5.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;background:var(--paper-aged);padding:36px;border:1px solid var(--border-on-paper);box-shadow:var(--shadow-card)">
+      <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.14em;margin-bottom:16px"><span data-en>HONEST ROI · ONE LINE</span><span data-de>EHRLICHER ROI · EINE ZEILE</span></p>
+      <pre class="demo-code" style="background:var(--ink-black);color:var(--gray-100);border-left:2px solid var(--copper-deep);font-size:16px;line-height:1.8">  roi  =  ( savings * confidence )  -  run_rate  -  build_amortised
+       __________________________________________________________
+                                  run_rate  +  build_amortised</pre>
+      <p class="prose" data-en style="margin-top:18px;color:var(--gray-600)">A result above 1.0 means the agent returns more than its costs in the first year. Below zero means it is a hobby. The interesting band is 0.0 to 0.5: real value, but small, and easy to lose to a single bad quarter.</p>
+      <p class="prose" data-de style="margin-top:18px;color:var(--gray-600)">Ein Ergebnis &gt; 1.0 heißt, der Agent gibt im ersten Jahr mehr zurück als er kostet. Unter null ist Hobby. Spannend ist der Bereich 0.0 bis 0.5: echter Wert, aber klein, leicht durch ein schlechtes Quartal verloren.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K4: LIVE DEMO · COST CALCULATOR =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 31</span>
+      <span data-en>· LIVE COST CALCULATOR</span>
+      <span data-de>· LIVE-KOSTENRECHNER</span>
+    </div>
+    <h2 class="serif" data-en>Four sliders, one honest <em>bill</em>.</h2>
+    <h2 class="serif" data-de>Vier Regler, eine ehrliche <em>Rechnung</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Drag the four sliders, watch the math react. Pick a domain preset to start, then nudge volume, confidence, hourly cost, and hours saved per run. The verdict at the bottom shifts from SHIPS to MARGINAL to HOBBY without anyone editing a spreadsheet.</p>
+    <p class="kicker" data-de>Zieh an den vier Reglern, beobachte wie die Mathematik reagiert. Starte mit einem Domain-Preset, justiere dann Volumen, Konfidenz, Stundenkosten und gesparte Stunden pro Lauf. Das Urteil unten kippt von LIVE über GRENZWERTIG bis HOBBY, ohne dass jemand ein Spreadsheet anfasst.</p>
+
+    <div class="demo" style="margin-top:48px">
+      <div class="demo-head">
+        <div class="title">
+          <span data-en>Live cost &amp; ROI calculator</span>
+          <span data-de>Live-Kosten- &amp; ROI-Rechner</span>
+        </div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>FOUR SLIDERS · ONE FORMULA</span><span data-de>VIER REGLER · EINE FORMEL</span></div>
+      </div>
+      <div class="calc-presets" id="calc-presets">
+        <button class="calc-preset" data-preset="sales">SALES</button>
+        <button class="calc-preset active" data-preset="support">SUPPORT</button>
+        <button class="calc-preset" data-preset="finance">FINANCE</button>
+        <button class="calc-preset" data-preset="eng">ENG</button>
+        <button class="calc-preset" data-preset="ops">OPS</button>
+      </div>
+      <div class="calc-grid">
+        <div class="calc-controls">
+          <div class="calc-row">
+            <label for="i-vol">
+              <span data-en>Volume per year</span><span data-de>Volumen pro Jahr</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Total agent runs in one year. A weekly briefing runs 52 times, a per-ticket support agent runs thousands. Drives every cost layer except the fixed overhead."
+                  data-tip-de="Gesamtzahl der Agent-L&auml;ufe pro Jahr. Ein w&ouml;chentliches Briefing l&auml;uft 52-mal, ein Support-Agent pro Ticket tausende Male. Treibt jede Kostenschicht au&szlig;er dem Fix-Overhead."></span>
+              </span>
+            </label>
+            <input type="range" id="i-vol" min="10" max="50000" step="10" value="24000">
+            <span class="calc-val" id="v-vol">24,000</span>
+          </div>
+          <div class="calc-row">
+            <label for="i-conf">
+              <span data-en>Confidence (0.30 to 0.90)</span><span data-de>Konfidenz (0.30 bis 0.90)</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="How well your eval set covers the real input distribution. New agents start at 0.5, mature ones reach 0.85, never above 0.9. Multiplier on raw savings."
+                  data-tip-de="Wie gut dein Eval-Set die echte Input-Verteilung abdeckt. Neue Agents starten bei 0.5, reife erreichen 0.85, nie &uuml;ber 0.9. Multiplikator auf die Roh-Ersparnis."></span>
+              </span>
+            </label>
+            <input type="range" id="i-conf" min="30" max="90" step="1" value="85">
+            <span class="calc-val" id="v-conf">0.85</span>
+          </div>
+          <div class="calc-row">
+            <label for="i-hr">
+              <span data-en>Loaded hourly cost</span><span data-de>Vollkostensatz pro Stunde</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Fully loaded hourly cost of the human work the agent replaces. Salary plus benefits plus overhead, not gross salary alone. Used to price hours saved."
+                  data-tip-de="Vollkostensatz pro Stunde der menschlichen Arbeit, die der Agent ersetzt. Gehalt plus Sozialabgaben plus Overhead, nicht Bruttogehalt allein. Bewertet die gesparten Stunden."></span>
+              </span>
+            </label>
+            <input type="range" id="i-hr" min="40" max="250" step="5" value="80">
+            <span class="calc-val" id="v-hr">$80</span>
+          </div>
+          <div class="calc-row">
+            <label for="i-hrs">
+              <span data-en>Hours saved per run</span><span data-de>Stunden gespart pro Lauf</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Manual hours one agent run removes from one human. Half an hour for a triage agent, four hours for a weekly briefing, sixty hours for a quarterly narrative."
+                  data-tip-de="Manuelle Stunden, die ein Agent-Lauf einem Menschen abnimmt. Eine halbe Stunde f&uuml;r einen Triage-Agent, vier Stunden f&uuml;r ein W&ouml;chentliches Briefing, sechzig f&uuml;r eine Quartals-Erz&auml;hlung."></span>
+              </span>
+            </label>
+            <input type="range" id="i-hrs" min="1" max="1200" step="1" value="2">
+            <span class="calc-val" id="v-hrs">0.2 h</span>
+          </div>
+        </div>
+        <div class="calc-out">
+          <div class="calc-out-row">
+            <span class="calc-out-label">
+              <span data-en>RUN RATE</span><span data-de>LAUFRATE</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Annualised total of the four cost layers: inference, tools, ops, and human review. The number that lands on the operating P&amp;L every quarter once the agent is live."
+                  data-tip-de="Jahresrate der vier Kostenschichten: Inferenz, Tools, Ops, menschliche Review. Die Zahl, die im laufenden Betrieb jedes Quartal auf der GuV landet."></span>
+              </span>
+            </span>
+            <span class="calc-out-val" id="o-run">···</span>
+          </div>
+          <div class="calc-out-row">
+            <span class="calc-out-label">
+              <span data-en>SAVINGS (CONF)</span><span data-de>ERSPARNIS (KONF)</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Annualised raw savings (volume &times; hours &times; hourly cost) multiplied by the confidence factor. The number you can actually defend after honesty about your eval coverage."
+                  data-tip-de="Jahres-Roh-Ersparnis (Volumen &times; Stunden &times; Stundensatz) mal Konfidenz-Faktor. Die Zahl, die du nach ehrlicher Eval-Bewertung wirklich verteidigen kannst."></span>
+              </span>
+            </span>
+            <span class="calc-out-val" id="o-save">···</span>
+          </div>
+          <div class="calc-out-row">
+            <span class="calc-out-label">
+              <span data-en>BUILD AMORT.</span><span data-de>BAU AMORT.</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Fixed first-pass build cost: roughly three months of two people plus integration and the eval set, amortised over twelve months. Pinned at $28k in this model."
+                  data-tip-de="Fixe einmalige Baukosten: rund drei Monate von zwei Personen plus Integration und Eval-Set, &uuml;ber zw&ouml;lf Monate amortisiert. Im Modell fix auf $28k gesetzt."></span>
+              </span>
+            </span>
+            <span class="calc-out-val" id="o-build">···</span>
+          </div>
+          <div class="calc-out-row big">
+            <span class="calc-out-label">
+              <span data-en>ROI YEAR 1</span><span data-de>ROI JAHR 1</span>
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Net return divided by total cost in year one. Above 1.0 means the agent earns more than it costs in twelve months. Below zero means it is a hobby."
+                  data-tip-de="Netto-R&uuml;ckfluss geteilt durch Gesamtkosten im ersten Jahr. &Uuml;ber 1.0 hei&szlig;t, der Agent verdient mehr als er in zw&ouml;lf Monaten kostet. Unter null ist Hobby."></span>
+              </span>
+            </span>
+            <span class="calc-out-val big" id="o-roi">···</span>
+          </div>
+          <div class="calc-out-row">
+            <span class="calc-out-label">
+              PAYBACK
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Months until cumulative net savings cover the build cost. A clean case lands under twelve months. Boring cases land in two quarters."
+                  data-tip-de="Monate, bis die kumulierte Netto-Ersparnis die Baukosten deckt. Ein sauberer Fall landet unter zw&ouml;lf Monaten. Langweilige F&auml;lle in zwei Quartalen."></span>
+              </span>
+            </span>
+            <span class="calc-out-val" id="o-pb">···</span>
+          </div>
+          <div class="calc-out-row">
+            <span class="calc-out-label">
+              LEVERAGE
+              <span class="info-wrap">
+                <button class="info-tip" type="button" aria-expanded="false" aria-label="Info">?</button>
+                <span class="info-pop"
+                  data-tip-en="Annual savings divided by annual run rate. A leverage above 30 is suspicious. Below 1 means you are running a hobby. The honest sweet spot sits between 3 and 10."
+                  data-tip-de="Jahres-Ersparnis geteilt durch Jahres-Laufrate. Ein Hebel &uuml;ber 30 ist verd&auml;chtig. Unter 1 l&auml;uft ein Hobby. Der ehrliche Bereich liegt zwischen 3 und 10."></span>
+              </span>
+            </span>
+            <span class="calc-out-val" id="o-lev">···</span>
+          </div>
+          <div class="calc-verdict" id="o-verd">···</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula-disclosure" id="formula-disc">
+      <button class="formula-toggle" type="button" aria-expanded="false" id="formula-btn">
+        <span><span data-en>SHOW THE MATH</span><span data-de>RECHENWEG ZEIGEN</span></span>
+        <span class="arrow">┌──→</span>
+      </button>
+      <div class="formula-body">
+        <div class="formula-grid">
+          <div class="formula-block">
+            <span class="formula-label"><span data-en>THE FORMULA</span><span data-de>DIE FORMEL</span></span>
+<pre class="formula-math">       ( savings &times; conf ) &minus; run_rate &minus; build
+roi =  ___________________________________
+                 run_rate + build</pre>
+            <p class="prose" style="margin-top:14px;font-size:14px"><span data-en>Four cost layers feed run_rate. Savings are gross hours back, multiplied by the loaded hourly cost, then by your confidence. Build is amortised over twelve months.</span><span data-de>Vier Kostenschichten f&uuml;ttern run_rate. Ersparnis ist gesparte Brutto-Stunden mal Vollkostensatz, danach mal Konfidenz. Bau wird &uuml;ber zw&ouml;lf Monate amortisiert.</span></p>
+          </div>
+          <div class="formula-block">
+            <span class="formula-label"><span data-en>CURRENT NUMBERS (LIVE)</span><span data-de>AKTUELLE ZAHLEN (LIVE)</span></span>
+            <pre class="formula-current" id="formula-live">···</pre>
+            <p class="prose" style="margin-top:14px;font-size:14px"><span data-en>Numbers track the sliders. Move any slider and this block updates with the new math, before and after rounding.</span><span data-de>Zahlen folgen den Reglern. Zieh an einem Slider und dieser Block aktualisiert sich mit der neuen Rechnung, vor und nach Rundung.</span></p>
+          </div>
+        </div>
+        <div style="margin-top:32px">
+          <span class="formula-label"><span data-en>VERDICT BANDS</span><span data-de>URTEILS-B&Auml;NDER</span></span>
+          <div class="verdict-bands">
+            <div class="verdict-band">
+              <span class="band-name">SHIPS</span>
+              <span class="band-range">ROI &ge; 1.0</span>
+              <span class="band-desc"><span data-en>Earns more than it costs in year one. Defensible to a CFO without flinching.</span><span data-de>Verdient im ersten Jahr mehr als es kostet. Vor einem CFO verteidigbar, ohne zu zucken.</span></span>
+            </div>
+            <div class="verdict-band">
+              <span class="band-name">STRONG</span>
+              <span class="band-range">ROI &ge; 0.3</span>
+              <span class="band-desc"><span data-en>Clearly positive but not a runaway. Green light with monitoring.</span><span data-de>Klar positiv, aber kein Selbstl&auml;ufer. Gr&uuml;nes Licht mit Monitoring.</span></span>
+            </div>
+            <div class="verdict-band band-marginal">
+              <span class="band-name">MARGINAL</span>
+              <span class="band-range">ROI &ge; 0.0</span>
+              <span class="band-desc"><span data-en>Barely above zero. One bad quarter wipes the case. Watch every input.</span><span data-de>Knapp &uuml;ber null. Ein schlechtes Quartal radiert den Fall aus. Jeden Input genau beobachten.</span></span>
+            </div>
+            <div class="verdict-band band-hobby">
+              <span class="band-name">HOBBY</span>
+              <span class="band-range">ROI &lt; 0.0</span>
+              <span class="band-desc"><span data-en>Costs more than it returns. Not a business case, a side project.</span><span data-de>Kostet mehr als zur&uuml;ckkommt. Kein Business Case, ein Nebenprojekt.</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px"><span data-en>SIMULATION · MODEL USES TYPICAL COST CURVES, NOT YOUR ACTUALS.</span><span data-de>SIMULATION · MODELL NUTZT TYPISCHE KOSTENKURVEN, NICHT DEINE IST-ZAHLEN.</span></p>
+  </div>
+</section>
+
+<!-- =========================== K5: WHY ROI LIES =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 32</span>
+      <span data-en>· WHY ROI LIES</span>
+      <span data-de>· WARUM ROI LÜGT</span>
+    </div>
+    <h2 class="serif" data-en>Five ways the number <em>flatters</em>.</h2>
+    <h2 class="serif" data-de>Fünf Arten, wie die Zahl <em>schmeichelt</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>The honest formula still bends. Five common moves inflate ROI without anyone meaning harm. Knowing them by name lets you spot them in someone else's deck, and, with luck, in your own draft before it goes upstairs to the steering committee.</p>
+    <p class="kicker" data-de>Die ehrliche Formel verbiegt sich trotzdem. Fünf häufige Manöver pumpen ROI auf, ohne dass jemand böse Absicht hat. Sie beim Namen zu kennen, hilft, sie im Deck von anderen zu erkennen, und mit Glück im eigenen Entwurf, bevor er ans Steering Committee geht.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">A · <span data-en>PHANTOM HOURS</span><span data-de>PHANTOM-STUNDEN</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"We saved 800 hours"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"800 Stunden gespart"</h3>
+        <p data-en>Hours nobody planned to work and nobody will be freed from. Fix: only count hours where you can name the person and the next task they will do.</p>
+        <p data-de>Stunden, die niemand geplant hat und von denen niemand befreit wird. Antwort: nur Stunden zählen, bei denen du die Person und ihre nächste Aufgabe benennen kannst.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">B · <span data-en>NO-CONFIDENCE</span><span data-de>NULL-KONFIDENZ</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Assume 100% accuracy"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"100% Treffer angenommen"</h3>
+        <p data-en>Savings booked as if the agent never made a mistake. Fix: multiply by your real eval pass rate, never above 0.9 on a new agent.</p>
+        <p data-de>Ersparnis gebucht, als hätte der Agent nie geirrt. Antwort: mit der echten Eval-Trefferquote multiplizieren, bei neuen Agents nie über 0.9.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">C · <span data-en>HIDDEN BUILD</span><span data-de>VERSTECKTER BAU</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Build was a side project"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Bau war Nebenprojekt"</h3>
+        <p data-en>Build cost left out because "we did it on the side". Fix: count the months at fully loaded cost, even for moonlighting. Time is real.</p>
+        <p data-de>Baukosten ausgelassen, weil "nebenbei gebaut". Antwort: die Monate zu Vollkosten zählen, auch wenn sie nebenher liefen. Zeit ist real.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">D · <span data-en>WINDOW SHIFT</span><span data-de>FENSTER-VERSCHIEBUNG</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Three-year horizon"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Drei-Jahres-Horizont"</h3>
+        <p data-en>Stretching the window until the math works. Fix: stick to a twelve-month payback. Three-year claims rarely survive the second model upgrade.</p>
+        <p data-de>Das Fenster strecken, bis die Mathematik passt. Antwort: zwölf Monate Payback halten. Drei-Jahres-Versprechen überleben das zweite Model-Upgrade selten.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">E · <span data-en>FREE OPS</span><span data-de>OPS UMSONST</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Ops is somebody else"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Ops ist jemand anderes"</h3>
+        <p data-en>The on-call, the eval refresh, the postmortem booked to a different team's budget. Fix: book all four cost layers in the same column.</p>
+        <p data-de>On-Call, Eval-Refresh, Postmortem auf das Budget eines anderen Teams gebucht. Antwort: alle vier Schichten in dieselbe Spalte.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">2</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · HALVE BEFORE YOU PRESENT</span><span data-de>FAUSTREGEL · HALBIEREN VOR DEM PITCH</span></p>
+        <p class="text" data-en>Halve your first ROI estimate before showing it to a sponsor. If it still looks worth doing, you have a real case. If it does not, you saved everyone six weeks. The number that survives a divide-by-two is the number that survives a CFO.</p>
+        <p class="text" data-de>Halbiere die erste ROI-Schätzung, bevor du sie einem Sponsor zeigst. Sieht es danach noch lohnend aus, hast du einen echten Fall. Sieht es nicht mehr lohnend aus, hast du allen sechs Wochen erspart. Die Zahl, die ein Halbieren übersteht, überlebt einen CFO.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K6: GLOSSARY =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 33</span>
+      <span data-en>· GLOSSARY</span>
+      <span data-de>· GLOSSAR</span>
+    </div>
+    <h2 class="serif" data-en>Six terms<br/>from the ledger.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>aus dem Kontenbuch.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <span class="term">RUN RATE</span>
+        <span class="def" data-en>Annualised total of the four cost layers: inference, tools, ops, humans. The number that lands on the operating P&amp;L every quarter once the agent is live.</span>
+        <span class="def" data-de>Jahresrate der vier Kostenschichten: Inferenz, Tools, Ops, Menschen. Die Zahl, die im laufenden Betrieb jedes Quartal auf der GuV landet.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">SAVINGS RATE</span>
+        <span class="def" data-en>Annualised value of hours given back, errors avoided, and decisions taken sooner. Converted to currency at fully loaded cost, before any confidence multiplier.</span>
+        <span class="def" data-de>Jahreswert der zurückgegebenen Stunden, vermiedenen Fehler, früher getroffenen Entscheidungen. In Währung umgerechnet zu Vollkosten, vor jedem Konfidenz-Multiplikator.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">CONFIDENCE</span>
+        <span class="def" data-en>A multiplier between 0.3 and 0.9 applied to the savings rate, reflecting how well your eval set covers the real input distribution. New agents start at 0.5, mature ones reach 0.85.</span>
+        <span class="def" data-de>Ein Multiplikator zwischen 0.3 und 0.9 auf die Ersparnis-Rate, der zeigt, wie gut das Eval die echte Input-Verteilung abdeckt. Neue Agents starten bei 0.5, reife erreichen 0.85.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">PAYBACK</span>
+        <span class="def" data-en>The number of months until cumulative confident savings equal cumulative run rate plus build cost. A clean case lands inside one year, the boring ones inside two quarters.</span>
+        <span class="def" data-de>Die Anzahl Monate, bis die kumulierte konfidenz-bereinigte Ersparnis Laufrate plus Baukosten erreicht. Ein sauberer Fall landet im ersten Jahr, langweilige in zwei Quartalen.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">LEVERAGE</span>
+        <span class="def" data-en>Annual savings divided by annual run rate. A leverage of 12 means each spent dollar returns twelve. Above 30 is suspicious. Below 1 means you are running a hobby.</span>
+        <span class="def" data-de>Jährliche Ersparnis geteilt durch jährliche Laufrate. Ein Hebel von 12 heißt, jeder ausgegebene Euro kommt zwölffach zurück. Über 30 ist verdächtig. Unter 1 läuft ein Hobby.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">DRIFT TAX</span>
+        <span class="def" data-en>The slow erosion of savings as inputs shift and the agent silently underperforms. Not a line on the bill, but a real cost. Reset by every refreshed eval and every postmortem.</span>
+        <span class="def" data-de>Die stille Erosion der Ersparnis, wenn Inputs sich verschieben und der Agent leise schlechter wird. Keine Zeile auf der Rechnung, aber ein echter Kostenfaktor. Wird durch jedes erneuerte Eval und jedes Postmortem zurückgesetzt.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 34</span>
+      <span data-en>· NEXT CARD</span>
+      <span data-de>· N&Auml;CHSTE LEHRTAFEL</span>
+    </div>
+    <h2 class="serif" data-en>You can defend the number.<br/>What's next?</h2>
+    <h2 class="serif" data-de>Du kannst die Zahl verteidigen.<br/>Was kommt als Nächstes?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">10</p>
+        <h3 class="serif" data-en style="margin-top:8px">Where this is going</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Wohin die Reise geht</h3>
+        <p data-en>Trends, bets, what is likely to stick, and what will look quaint in twelve months. A field map for the next year.</p>
+        <p data-de>Trends, Wetten, was bleiben wird und was in zwölf Monaten kurios aussieht. Eine Feldkarte für das nächste Jahr.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">11</p>
+        <h3 class="serif" data-en style="margin-top:8px">Agents in the team workflow</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Agents im Team-Workflow</h3>
+        <p data-en>How teams reshape rituals, roles, and tooling once agents land in the daily flow. The boring half of agentic, where the value lives.</p>
+        <p data-de>Wie Teams Rituale, Rollen und Tooling umstellen, wenn Agents im Alltag landen. Die langweilige Hälfte von Agentic, wo der Wert wohnt.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">12</p>
+        <h3 class="serif" data-en style="margin-top:8px">Data hygiene and context</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Datenhygiene und Context</h3>
+        <p data-en>What agents need to stop guessing: clean inputs, named scopes, a retrieval layer that earns its keep. The supply chain behind every good answer.</p>
+        <p data-de>Was Agents brauchen, um nicht mehr zu raten: saubere Inputs, benannte Scopes, eine Retrieval-Schicht, die ihren Lohn verdient. Die Lieferkette hinter jeder guten Antwort.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 01</span><span data-de>ZURÜCK ZU 01</span></a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 02</span><span data-de>ZURÜCK ZU 02</span></a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 03</span><span data-de>ZURÜCK ZU 03</span></a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 04</span><span data-de>ZURÜCK ZU 04</span></a>
+      <a class="cta" href="05_dein-erster-agent.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 05</span><span data-de>ZURÜCK ZU 05</span></a>
+      <a class="cta" href="06_agent-teams.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 06</span><span data-de>ZURÜCK ZU 06</span></a>
+      <a class="cta" href="07_pflege-und-iteration.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 07</span><span data-de>ZURÜCK ZU 07</span></a>
+      <a class="cta" href="08_use-case-bibliothek.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 08</span><span data-de>ZURÜCK ZU 08</span></a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-en>REQUEST CARD 10</span><span data-de>LEHRTAFEL 10 ANFORDERN</span> <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 09</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============== Live Cost & ROI Calculator ==============
+const calcI18n = {
+  en: {
+    units:   { yr: '/ yr', mo: 'mo' },
+    locale:  'en-US',
+    verdict: { ships: 'SHIPS · DEFENSIBLE', strong: 'STRONG · GREEN LIGHT', marginal: 'MARGINAL · WATCH IT', hobby: 'HOBBY · NOT WORTH IT' }
+  },
+  de: {
+    units:   { yr: '/ Jahr', mo: 'Mo.' },
+    locale:  'de-DE',
+    verdict: { ships: 'LIVE · VERTEIDIGBAR', strong: 'STARK · GR&Uuml;NES LICHT', marginal: 'GRENZWERTIG · BEOBACHTEN', hobby: 'HOBBY · NICHT TRAGF&Auml;HIG' }
+  }
+};
+
+// Preset values map to slider scales: vol (raw), conf (*100), hr (raw), hrs (*10)
+const presets = {
+  sales:   { vol:    50, conf: 80, hr: 120, hrs:  40 },
+  support: { vol: 24000, conf: 85, hr:  80, hrs:   2 },
+  finance: { vol:  6000, conf: 70, hr: 110, hrs:   5 },
+  eng:     { vol:  4000, conf: 75, hr: 130, hrs:   4 },
+  ops:     { vol:     4, conf: 65, hr: 100, hrs: 600 }
+};
+
+const BUILD = 28000;
+
+function fmtMoney(n, locale){
+  if (!isFinite(n)) return '∞';
+  var sign = n < 0 ? '-' : '';
+  var abs  = Math.abs(n);
+  if (abs >= 1e6) return sign + '$' + (abs/1e6).toFixed(2) + 'M';
+  if (abs >= 1e3) return sign + '$' + Math.round(abs/1e3).toLocaleString(locale) + 'k';
+  return sign + '$' + Math.round(abs).toLocaleString(locale);
+}
+
+function renderCalc(){
+  var lang = getLang();
+  var t    = calcI18n[lang];
+  var vol  = +document.getElementById('i-vol').value;
+  var conf = +document.getElementById('i-conf').value / 100;
+  var hr   = +document.getElementById('i-hr').value;
+  var hrs  = +document.getElementById('i-hrs').value / 10;
+
+  // Live readouts on the sliders
+  document.getElementById('v-vol').textContent  = vol.toLocaleString(t.locale);
+  document.getElementById('v-conf').textContent = conf.toFixed(2);
+  document.getElementById('v-hr').textContent   = '$' + hr;
+  document.getElementById('v-hrs').textContent  = hrs.toFixed(1) + ' h';
+
+  // Cost stack (four honest layers)
+  var inference = vol * 0.08;
+  var tools     = 1500 + vol * 0.12;
+  var ops       = 4500 + vol * 0.05;
+  var humans    = 8000 + Math.min(45000, vol * hrs * hr * 0.05);
+  var run_rate  = inference + tools + ops + humans;
+
+  // Savings
+  var savings_gross = vol * hrs * hr;
+  var savings_conf  = savings_gross * conf;
+
+  // ROI · honest formula
+  var denom      = run_rate + BUILD;
+  var roi        = (savings_conf - run_rate - BUILD) / denom;
+  var net_yearly = savings_conf - run_rate;
+  var payback    = net_yearly > 0 ? Math.max(1, Math.ceil(BUILD / (net_yearly / 12))) : Infinity;
+  var leverage   = run_rate > 0 ? savings_conf / run_rate : 0;
+
+  // Render outputs
+  document.getElementById('o-run').textContent   = fmtMoney(run_rate, t.locale) + ' ' + t.units.yr;
+  document.getElementById('o-save').textContent  = fmtMoney(savings_conf, t.locale) + ' ' + t.units.yr;
+  document.getElementById('o-build').textContent = fmtMoney(BUILD, t.locale) + ' ' + t.units.yr;
+  document.getElementById('o-roi').textContent   = (roi >= 0 ? '+' : '') + roi.toFixed(2);
+  document.getElementById('o-pb').textContent    = isFinite(payback) ? payback + ' ' + t.units.mo : '∞';
+  document.getElementById('o-lev').textContent   = leverage.toFixed(1) + '×';
+
+  // Verdict band
+  var v   = document.getElementById('o-verd');
+  v.classList.remove('warn','bad');
+  var key, cls = '';
+  if (roi >= 1.0)      key = 'ships';
+  else if (roi >= 0.3) key = 'strong';
+  else if (roi >= 0)   { key = 'marginal'; cls = 'warn'; }
+  else                 { key = 'hobby';    cls = 'bad';  }
+  if (cls) v.classList.add(cls);
+  v.innerHTML = t.verdict[key];
+
+  // Live formula block (current numbers plugged in)
+  var live = document.getElementById('formula-live');
+  if (live) {
+    var savStr  = fmtMoney(savings_gross, t.locale);
+    var runStr  = fmtMoney(run_rate, t.locale);
+    var bldStr  = fmtMoney(BUILD, t.locale);
+    var denStr  = fmtMoney(run_rate + BUILD, t.locale);
+    var roiStr  = (roi >= 0 ? '+' : '') + roi.toFixed(2);
+    live.textContent =
+      '       ( ' + savStr + ' × ' + conf.toFixed(2) + ' ) − ' + runStr + ' − ' + bldStr + '\n' +
+      'roi =  ___________________________________\n' +
+      '                 ' + denStr + '\n\n' +
+      '    =  ' + roiStr;
+  }
+}
+
+function getLang(){ return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+function applyPreset(name){
+  var p = presets[name];
+  if (!p) return;
+  document.getElementById('i-vol').value  = p.vol;
+  document.getElementById('i-conf').value = p.conf;
+  document.getElementById('i-hr').value   = p.hr;
+  document.getElementById('i-hrs').value  = p.hrs;
+  document.querySelectorAll('.calc-preset').forEach(function(b){
+    b.classList.toggle('active', b.dataset.preset === name);
+  });
+  renderCalc();
+}
+
+document.querySelectorAll('.calc-preset').forEach(function(b){
+  b.addEventListener('click', function(){ applyPreset(b.dataset.preset); });
+});
+['i-vol','i-conf','i-hr','i-hrs'].forEach(function(id){
+  document.getElementById(id).addEventListener('input', function(){
+    document.querySelectorAll('.calc-preset').forEach(function(b){ b.classList.remove('active'); });
+    renderCalc();
+  });
+});
+
+// ============== Info Tooltips ==============
+function closeAllTips(){
+  document.querySelectorAll('.info-wrap.open').forEach(function(w){
+    w.classList.remove('open');
+    var b = w.querySelector('.info-tip');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  });
+}
+document.querySelectorAll('.info-tip').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var wrap = btn.parentElement;
+    var pop  = wrap.querySelector('.info-pop');
+    var wasOpen = wrap.classList.contains('open');
+    closeAllTips();
+    if (!wasOpen){
+      var lang = (document.body.classList.contains('lang-en')) ? 'en' : 'de';
+      pop.textContent = pop.dataset[lang === 'en' ? 'tipEn' : 'tipDe'] || pop.dataset.tipEn || '';
+      wrap.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+// Close-on-outside in capture phase (runs even if downstream handlers stopPropagation)
+document.addEventListener('click', function(e){
+  if (!e.target.closest('.info-wrap')) closeAllTips();
+}, true);
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeAllTips();
+});
+
+// ============== Formula Disclosure Toggle ==============
+(function(){
+  var btn  = document.getElementById('formula-btn');
+  var disc = document.getElementById('formula-disc');
+  if (!btn || !disc) return;
+  btn.addEventListener('click', function(){
+    var open = disc.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang){
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? "What an agent really costs · Codex Article 09"
+    : 'Was ein Agent wirklich kostet · Codex Lehrtafel 09';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  closeAllTips();
+  if (typeof renderCalc === 'function') renderCalc();
+}
+
+(function(){
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
