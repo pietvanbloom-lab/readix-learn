@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Where this is going · Codex Lehrtafel 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle (Readix Learn Pattern) ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:1100px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* Layout */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+section.parchment .compare th,section.parchment .compare td{border-bottom:1px solid var(--border-on-paper)}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+section.parchment .compare td.col-label{color:var(--fg-on-paper-mute)}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+.process.cols-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:880px){.process,.process.cols-3,.process.cols-5{grid-template-columns:1fr}}
+
+.stack{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:48px}
+.stack > div{padding:28px 30px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);background:var(--ink-deep)}
+section.parchment .stack{border-color:var(--border-on-paper)}
+section.parchment .stack > div{border-color:var(--border-on-paper);background:var(--paper-aged)}
+.stack .layer{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;display:block}
+.stack h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:12px;line-height:1.25;letter-spacing:-.01em}
+.stack p{font-size:14px;line-height:1.55;color:var(--gray-200)}
+section.parchment .stack p{color:var(--gray-600)}
+@media(max-width:880px){.stack{grid-template-columns:1fr}}
+
+/* ================ Scroll-Timeline Demo Pattern (variation from prior tafeln) ================ */
+.timeline{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden}
+.timeline-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.timeline-head .title{font-family:'Source Serif 4',serif;font-size:18px;color:var(--fg-on-ink)}
+.timeline-filters{display:flex;gap:0;border-bottom:1px solid var(--border-on-ink);flex-wrap:wrap}
+.tf-chip{padding:14px 18px;border:none;border-right:1px solid var(--border-on-ink);background:transparent;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;font-weight:500}
+.tf-chip:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.tf-chip.active{background:var(--copper);color:var(--ink-black)}
+
+.timeline-grid{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:520px}
+.timeline-rail{padding:30px 0;border-right:1px solid var(--border-on-ink);position:relative;background:var(--ink-black)}
+.timeline-rail::before{content:'';position:absolute;left:48px;top:30px;bottom:30px;width:1px;background:var(--border-on-ink)}
+.tl-marker{display:grid;grid-template-columns:48px 1fr;align-items:flex-start;padding:14px 24px 14px 0;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;color:inherit;font:inherit;transition:background .15s;position:relative}
+.tl-marker:hover{background:rgba(217,119,87,.06)}
+.tl-marker .tl-dot{width:14px;height:14px;border-radius:50%;background:var(--ink-deep);border:1px solid var(--gray-600);margin-left:41px;margin-top:6px;transition:all .15s;position:relative;z-index:2}
+.tl-marker.active .tl-dot{background:var(--copper);border-color:var(--copper);box-shadow:0 0 0 4px rgba(217,119,87,.15)}
+.tl-marker.faded{opacity:.35}
+.tl-marker.faded:hover{opacity:.6}
+.tl-marker .tl-stamp{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-400);margin-bottom:4px;font-weight:500}
+.tl-marker.active .tl-stamp{color:var(--copper)}
+.tl-marker .tl-tag{display:block;font-family:'Source Serif 4',serif;font-size:16px;color:var(--fg-on-ink);line-height:1.25;font-weight:500}
+.tl-marker.active .tl-tag{color:var(--copper)}
+
+.timeline-card{padding:42px 44px;display:flex;flex-direction:column;gap:18px;background:var(--ink-deep)}
+.tl-card-eyebrow{display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);font-weight:500;flex-wrap:wrap;align-items:center}
+.tl-card-eyebrow .tl-bucket{padding:4px 10px;border:1px solid var(--copper)}
+.tl-card-title{font-family:'Source Serif 4',serif;font-size:32px;color:var(--fg-on-ink);line-height:1.15;letter-spacing:-.01em;font-weight:400}
+.tl-card-title em{color:var(--copper);font-style:italic}
+.tl-card-text{font-family:'Lora',serif;font-size:18px;line-height:1.65;color:var(--gray-100);max-width:64ch}
+.tl-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;border-top:1px solid var(--border-on-ink);padding-top:18px;margin-top:6px}
+.tl-card-grid .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-400);font-weight:500}
+.tl-card-grid .v{font-family:'Inter',sans-serif;font-size:14px;color:var(--gray-100);line-height:1.55}
+.tl-card-foot{display:flex;gap:18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;margin-top:6px;padding-top:14px;border-top:1px solid var(--border-on-ink);flex-wrap:wrap}
+.tl-card-foot .horizon-shipped{color:var(--patina)}
+.tl-card-foot .horizon-soon{color:var(--copper)}
+.tl-card-foot .horizon-bet{color:var(--ochre)}
+.tl-card-foot .horizon-far{color:var(--gray-400)}
+
+@media(max-width:880px){
+  .timeline-grid{grid-template-columns:1fr}
+  .timeline-rail{border-right:none;border-bottom:1px solid var(--border-on-ink);padding:18px 0;max-height:280px;overflow-y:auto}
+  .timeline-rail::before{left:38px}
+  .tl-marker{padding:10px 20px 10px 0}
+  .tl-marker .tl-dot{margin-left:31px}
+  .timeline-card{padding:28px}
+  .tl-card-title{font-size:26px}
+  .tl-card-grid{grid-template-columns:1fr}
+}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:880px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+.bet{padding:36px;border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:14px}
+.bet .bet-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-deep);font-weight:600}
+.bet h4{font-family:'Source Serif 4',serif;font-size:22px;line-height:1.25;letter-spacing:-.01em;font-weight:500;color:var(--fg-on-paper)}
+.bet h4 em{color:var(--copper-deep);font-style:italic}
+.bet p{font-family:'Lora',serif;font-size:16px;line-height:1.6;color:var(--gray-600)}
+.bet .bet-meta{display:flex;gap:16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg-on-paper-mute);padding-top:14px;border-top:1px solid var(--border-on-paper);margin-top:auto;flex-wrap:wrap}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+      <a href="./08_use-case-bibliothek.html" class="nav-link">
+        <span data-de>08 → Use-Case-Bibliothek</span>
+        <span data-en>08 → Use-Case Library</span>
+      </a>
+      <a href="./09_kosten-und-roi.html" class="nav-link">
+        <span data-de>09 → Kosten &amp; ROI</span>
+        <span data-en>09 → Cost &amp; ROI</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================== HERO =========================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 10</span>
+      <span data-en>· LEHRTAFEL · WHERE THIS IS GOING</span>
+      <span data-de>· LEHRTAFEL · WOHIN DIE REISE GEHT</span>
+    </div>
+
+    <h1 class="serif" data-en>Where this is <em>going</em>.</h1>
+    <h1 class="serif" data-de>Wohin die Reise <em>geht</em>.</h1>
+
+    <p class="kicker" data-en>Forecasting agents is a sport for the over-confident. We do something safer: name the shifts already in motion, the bets that look durable, and the fashions that will look quaint by next summer. A field map for the next twelve months, drawn in pencil, not ink.</p>
+    <p class="kicker" data-de>Agents zu prognostizieren ist ein Sport für Übermutige. Wir machen etwas Sichereres: die Verschiebungen benennen, die schon laufen, die Wetten, die haltbar wirken, und die Moden, die im nächsten Sommer kurios aussehen. Eine Feldkarte für die kommenden zwölf Monate, mit Bleistift gezeichnet, nicht mit Tinte.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">12</div>
+        <div class="label"><span data-en>Months we forecast at all</span><span data-de>Monate, die wir überhaupt prognostizieren</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">5</div>
+        <div class="label"><span data-en>Shifts already in motion</span><span data-de>Verschiebungen schon im Gang</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="label"><span data-en>Bets we are willing to make</span><span data-de>Wetten, die wir eingehen</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1"><span data-en>READ THE METHOD</span><span data-de>METHODE LESEN</span> <span class="arrow">┌──→</span></a>
+      <a class="cta" href="09_kosten-und-roi.html" style="border-color:var(--gray-600);color:var(--gray-400)"><span data-en>BACK TO 09</span><span data-de>ZURÜCK ZU 09</span> <span class="arrow">┌──→</span></a>
+    </div>
+
+    <div class="meta">
+      <span>FILE · 10 / SERIES AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 13 MINUTES</span><span data-de>LESEZEIT · 13 MINUTEN</span></span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K1: WHAT STAYS =========================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 35</span>
+      <span data-en>· WHAT STAYS</span>
+      <span data-de>· WAS BLEIBT</span>
+    </div>
+    <h2 class="serif" data-en>Four things that <em>last</em>.</h2>
+    <h2 class="serif" data-de>Vier Dinge, die <em>bleiben</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Most predictions decay within a quarter. A few patterns are stubborn enough to outlast model launches, vendor pivots, and the next narrative cycle. We bet on these because they are boring, observable, and have already survived three years of churn. If a forecast contradicts one of them, the forecast is wrong, not the pattern.</p>
+    <p class="kicker" data-de>Die meisten Prognosen zerfallen innerhalb eines Quartals. Ein paar Muster sind stur genug, um Modell-Launches, Vendor-Pivots und den nächsten Narrativ-Zyklus zu überleben. Wir wetten auf sie, weil sie langweilig sind, beobachtbar, und drei Jahre Lärm bereits überstanden haben. Widerspricht eine Prognose einem dieser Muster, irrt die Prognose, nicht das Muster.</p>
+
+    <div class="stack">
+      <div>
+        <span class="layer">D1 · OWNERS</span>
+        <h4 class="serif" data-en>People still own the system.</h4>
+        <h4 class="serif" data-de>Menschen besitzen das System.</h4>
+        <p data-en>The named owner with eval responsibility outlasts every model upgrade. No tooling has replaced the role, and nothing on the roadmap does either. Boring, durable, indispensable.</p>
+        <p data-de>Die benannte Person mit Eval-Verantwortung überlebt jedes Model-Upgrade. Kein Werkzeug ersetzt die Rolle, nichts auf der Roadmap auch. Langweilig, haltbar, unersetzlich.</p>
+      </div>
+      <div>
+        <span class="layer">D2 · EVALS</span>
+        <h4 class="serif" data-en>Evals beat clever prompts.</h4>
+        <h4 class="serif" data-de>Evals schlagen kluge Prompts.</h4>
+        <p data-en>The team with the better test set wins, every time. Prompt tricks are copied within a week, eval discipline is not. The library of failures is the moat.</p>
+        <p data-de>Das Team mit dem besseren Testset gewinnt, jedes Mal. Prompt-Tricks sind in einer Woche kopiert, Eval-Disziplin nicht. Die Sammlung der Failures ist der Burggraben.</p>
+      </div>
+      <div>
+        <span class="layer">D3 · CONTEXT</span>
+        <h4 class="serif" data-en>Context is the bottleneck.</h4>
+        <h4 class="serif" data-de>Context ist der Engpass.</h4>
+        <p data-en>Bigger models do not fix bad inputs. The teams that win year two have spent year one on retrieval, scopes, and the unglamorous plumbing behind a good answer.</p>
+        <p data-de>Größere Modelle reparieren keine schlechten Inputs. Die Teams, die Jahr zwei gewinnen, haben Jahr eins in Retrieval, Scopes und das unglamouröse Rohrnetz hinter einer guten Antwort gesteckt.</p>
+      </div>
+      <div>
+        <span class="layer">D4 · TRUST</span>
+        <h4 class="serif" data-en>Trust is built, not claimed.</h4>
+        <h4 class="serif" data-de>Vertrauen baut man, nicht behauptet.</h4>
+        <p data-en>The four trust stages from card 04 still hold. No marketing copy compresses them. The agent earns the next stage by being right under the eyes of a reviewer.</p>
+        <p data-de>Die vier Vertrauensstufen aus Tafel 04 gelten weiter. Keine Marketing-Zeile staucht sie zusammen. Der Agent verdient die nächste Stufe, indem er unter dem Blick eines Reviewers richtig liegt.</p>
+      </div>
+    </div>
+
+    <p class="prose" data-en style="margin-top:48px">These four are the load-bearing beams of every agentic system that has paid its keep. They do not generate headlines. They do not move stock prices. They do not appear on conference posters. They simply outlive every fashion that does. Bet against them only if you are willing to lose your second year.</p>
+    <p class="prose" data-de style="margin-top:48px">Diese vier sind die tragenden Balken jedes agentischen Systems, das sich rechnet. Sie machen keine Schlagzeilen. Sie bewegen keine Aktien. Sie tauchen auf keinem Konferenz-Poster auf. Sie überleben einfach jede Mode, die das tut. Wette gegen sie nur, wenn du bereit bist, dein zweites Jahr zu verlieren.</p>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">3</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · INVEST IN THE BORING HALF</span><span data-de>FAUSTREGEL · INVESTIERE IN DIE LANGWEILIGE HÄLFTE</span></p>
+        <p class="text" data-en>Three of every five budget hours belong to the boring half: owners, evals, context, trust. The exciting half (new model, new framework, new vendor) gets the remaining two. Teams that flip this ratio shop the conference circuit, not the production roadmap.</p>
+        <p class="text" data-de>Drei von fünf Budget-Stunden gehören in die langweilige Hälfte: Owners, Evals, Context, Trust. Die spannende Hälfte (neues Modell, neues Framework, neuer Anbieter) bekommt die übrigen zwei. Teams, die das Verhältnis umdrehen, kaufen auf Konferenzen ein, nicht auf der Produktions-Roadmap.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K2: WHAT SHIFTS =========================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 36</span>
+      <span data-en>· WHAT SHIFTS</span>
+      <span data-de>· WAS SICH VERSCHIEBT</span>
+    </div>
+    <h2 class="serif" data-en>Five shifts already in <em>motion</em>.</h2>
+    <h2 class="serif" data-de>Fünf Verschiebungen schon im <em>Gang</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Underneath the durable layer, things move. The five shifts below are observable today, not speculation. Each one is far enough along that ignoring it costs a quarter; each one is early enough that a measured response still pays off. The table separates the visible signal from the polite fiction.</p>
+    <p class="kicker" data-de>Unter der haltbaren Schicht bewegt sich etwas. Die fünf Verschiebungen unten sind heute beobachtbar, keine Spekulation. Jede ist weit genug, dass Ignorieren ein Quartal kostet; jede ist früh genug, dass eine maßvolle Reaktion sich noch rechnet. Die Tabelle trennt das sichtbare Signal vom höflichen Narrativ.</p>
+
+    <table class="compare" style="margin-top:48px">
+      <thead>
+        <tr>
+          <th><span data-en>SHIFT</span><span data-de>VERSCHIEBUNG</span></th>
+          <th><span data-en>WHAT YOU SEE NOW</span><span data-de>WAS DU JETZT SIEHST</span></th>
+          <th><span data-en>WHAT IT REPLACES</span><span data-de>WAS ES ABLÖST</span></th>
+          <th><span data-en>HORIZON</span><span data-de>HORIZONT</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-label">MODELS</td>
+          <td><span data-en>Small models on every laptop, mid-size models in every workflow</span><span data-de>Kleine Modelle auf jedem Laptop, mittelgroße in jedem Workflow</span></td>
+          <td><span data-en>Single frontier model behind every call</span><span data-de>Ein einziges Frontier-Modell hinter jedem Call</span></td>
+          <td>2026 Q3</td>
+        </tr>
+        <tr>
+          <td class="col-label">RUNTIME</td>
+          <td><span data-en>Agents that run on your desktop, your inbox, your IDE</span><span data-de>Agents, die auf deinem Desktop, in deinem Postfach, in deiner IDE laufen</span></td>
+          <td><span data-en>Web-only chat windows with no system access</span><span data-de>Reine Web-Chats ohne Systemzugriff</span></td>
+          <td>2026 Q4</td>
+        </tr>
+        <tr>
+          <td class="col-label">EVALS</td>
+          <td><span data-en>Eval suites as shared infrastructure, not bespoke scripts</span><span data-de>Eval-Suites als geteilte Infrastruktur, nicht maßgeschneiderte Skripte</span></td>
+          <td><span data-en>One-off pass/fail spreadsheets owned by one engineer</span><span data-de>Einmalige Pass/Fail-Tabellen im Besitz eines Engineers</span></td>
+          <td>2027 Q1</td>
+        </tr>
+        <tr>
+          <td class="col-label">CONTEXT</td>
+          <td><span data-en>Retrieval and memory layers that the agent owns, not the prompt</span><span data-de>Retrieval- und Memory-Schichten im Besitz des Agents, nicht des Prompts</span></td>
+          <td><span data-en>"Just paste it in" prompt engineering</span><span data-de>"Einfach reinkopieren"-Prompt-Engineering</span></td>
+          <td>2027 Q2</td>
+        </tr>
+        <tr>
+          <td class="col-label">MARKETS</td>
+          <td><span data-en>Agent marketplaces that compete on review quality, not feature count</span><span data-de>Agent-Marktplätze, die auf Review-Qualität konkurrieren, nicht auf Featurezahl</span></td>
+          <td><span data-en>Long lists of unaudited prompts and tools</span><span data-de>Lange Listen ungeprüfter Prompts und Tools</span></td>
+          <td>2027 Q4</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="prose" data-en style="margin-top:48px">Read the horizon column carefully. The closest shift, small models everywhere, is already shipping; you can buy it in the next sprint. The furthest, audited marketplaces, is on a two-year arc. Each row deserves a different response: ride it, plan for it, watch it. The mistake is responding to all five with the same urgency.</p>
+    <p class="prose" data-de style="margin-top:48px">Lies die Horizont-Spalte sorgfältig. Die nächste Verschiebung, kleine Modelle überall, läuft bereits aus; du kaufst sie im nächsten Sprint. Die fernste, geprüfte Marktplätze, liegt auf einem Zwei-Jahres-Bogen. Jede Zeile braucht eine andere Reaktion: mitreiten, einplanen, beobachten. Der Fehler ist, allen fünf mit derselben Dringlichkeit zu begegnen.</p>
+  </div>
+</section>
+
+<!-- =========================== K3: THREE BETS =========================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 37</span>
+      <span data-en>· THREE BETS</span>
+      <span data-de>· DREI WETTEN</span>
+    </div>
+    <h2 class="serif" data-en>Three bets we are willing to <em>place</em>.</h2>
+    <h2 class="serif" data-de>Drei Wetten, die wir <em>setzen</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>A bet is a forecast you commit budget to. Without a budget line behind it, a forecast is gossip. We list the three we are willing to fund, the cost, and the signal that will tell us we are wrong. Each one starts inside the cards we have already shipped; each one points forward, not sideways.</p>
+    <p class="kicker" data-de>Eine Wette ist eine Prognose, hinter die du Budget legst. Ohne Budget-Zeile ist eine Prognose Gerede. Wir listen die drei, die wir bereit sind zu finanzieren, die Kosten und das Signal, das uns sagt, dass wir falsch liegen. Jede beginnt in den Tafeln, die wir bereits ausgeliefert haben; jede zeigt nach vorn, nicht zur Seite.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="bet">
+        <span class="bet-tag">BET A · OWNERS</span>
+        <h4 class="serif" data-en>One owner per agent <em>wins</em>.</h4>
+        <h4 class="serif" data-de>Ein Owner pro Agent <em>gewinnt</em>.</h4>
+        <p data-en>The team that names one accountable owner per agent and pays for the time outperforms the team that distributes ownership across a guild. We have seen this five quarters in a row.</p>
+        <p data-de>Das Team, das pro Agent einen verantwortlichen Owner benennt und die Zeit bezahlt, schlägt das Team, das die Verantwortung über eine Gilde verteilt. Wir sehen das seit fünf Quartalen.</p>
+        <div class="bet-meta">
+          <span><span data-en>STAKE · 1 OWNER &times; 20% TIME</span><span data-de>EINSATZ · 1 OWNER &times; 20% ZEIT</span></span>
+          <span><span data-en>WRONG IF · NO TIME BUDGETED</span><span data-de>FALSCH WENN · ZEIT FEHLT</span></span>
+        </div>
+      </div>
+      <div class="bet">
+        <span class="bet-tag">BET B · EVALS</span>
+        <h4 class="serif" data-en>Eval libraries become the moat.</h4>
+        <h4 class="serif" data-de>Eval-Bibliotheken werden zum Burggraben.</h4>
+        <p data-en>The catalogue of past failures plus the gold answers for the right ones outlasts every prompt and every model. Teams that treat the library as an asset compound; teams that delete it after each quarter restart from zero.</p>
+        <p data-de>Der Katalog vergangener Failures plus die Gold-Antworten für die richtigen Fälle überlebt jeden Prompt und jedes Modell. Teams, die die Bibliothek als Asset behandeln, verzinsen sich; Teams, die sie nach jedem Quartal löschen, fangen bei null an.</p>
+        <div class="bet-meta">
+          <span><span data-en>STAKE · 30 GOLD ANSWERS / QTR</span><span data-de>EINSATZ · 30 GOLD-ANTWORTEN / QU</span></span>
+          <span><span data-en>WRONG IF · EVAL TURNOVER &gt; 50%</span><span data-de>FALSCH WENN · EVAL-WECHSEL &gt; 50%</span></span>
+        </div>
+      </div>
+      <div class="bet">
+        <span class="bet-tag">BET C · DESKTOP</span>
+        <h4 class="serif" data-en>The work happens where the work is.</h4>
+        <h4 class="serif" data-de>Arbeit geschieht, wo die Arbeit ist.</h4>
+        <p data-en>Agents that live in the inbox, the IDE, and the desktop will overtake agents that live behind a web chat. The shift is already half done. We will not run a serious workflow inside a browser tab in twelve months.</p>
+        <p data-de>Agents, die im Postfach, in der IDE und auf dem Desktop wohnen, hängen Web-Chat-Agents ab. Die Verschiebung ist halb durch. In zwölf Monaten werden wir ernste Workflows nicht mehr in einem Browser-Tab fahren.</p>
+        <div class="bet-meta">
+          <span><span data-en>STAKE · TWO DESKTOP AGENTS</span><span data-de>EINSATZ · ZWEI DESKTOP-AGENTS</span></span>
+          <span><span data-en>WRONG IF · USERS STILL ALT-TAB</span><span data-de>FALSCH WENN · NUTZER ALT-TABBEN</span></span>
+        </div>
+      </div>
+    </div>
+
+    <p class="prose" data-en style="margin-top:48px">A bet without a "wrong if" is a slogan. Every line above carries a signal we will use to call ourselves out. If the signal fires for two consecutive quarters we kill the bet, write the postmortem, and move the budget. That discipline is the only thing that separates a forecast from a hope.</p>
+    <p class="prose" data-de style="margin-top:48px">Eine Wette ohne "falsch wenn" ist ein Slogan. Jede Zeile oben trägt ein Signal, an dem wir uns selbst stellen. Schlägt das Signal zwei Quartale hintereinander an, beenden wir die Wette, schreiben das Postmortem, verschieben das Budget. Diese Disziplin trennt eine Prognose von einer Hoffnung.</p>
+  </div>
+</section>
+
+<!-- =========================== K4: LIVE DEMO · SCROLL TIMELINE =========================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 38</span>
+      <span data-en>· LIVE FIELD MAP</span>
+      <span data-de>· LIVE-FELDKARTE</span>
+    </div>
+    <h2 class="serif" data-en>Eight signals, one <em>rail</em>.</h2>
+    <h2 class="serif" data-de>Acht Signale, eine <em>Schiene</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Click any marker on the rail. The card on the right opens with what the signal is, what evidence we have today, what it replaces, and how far along it is. Filter by bucket if one column matters more to you than the others. The rail uses pencil colours: shipped is patina green, soon is copper, the year-out bets are ochre, the far horizon stays gray.</p>
+    <p class="kicker" data-de>Klick auf einen Marker auf der Schiene. Die Karte rechts öffnet mit: was das Signal ist, welche Evidenz heute vorliegt, was es ablöst, wie weit es ist. Filtere nach Bucket, wenn dich eine Spalte mehr interessiert. Die Schiene nutzt Bleistift-Farben: Ausgeliefert ist Patina-Grün, Bald ist Kupfer, Jahres-Wetten sind Ocker, der ferne Horizont bleibt grau.</p>
+
+    <div class="timeline" style="margin-top:48px">
+      <div class="timeline-head">
+        <div class="title">
+          <span data-en>Field map · the next twelve months</span>
+          <span data-de>Feldkarte · die nächsten zwölf Monate</span>
+        </div>
+        <div class="mono" style="font-size:11px;color:var(--copper);letter-spacing:.14em"><span data-en>EIGHT SIGNALS · ONE RAIL</span><span data-de>ACHT SIGNALE · EINE SCHIENE</span></div>
+      </div>
+      <div class="timeline-filters" id="tl-filters">
+        <button class="tf-chip active" data-bucket="all" type="button">ALL</button>
+        <button class="tf-chip" data-bucket="models" type="button">MODELS</button>
+        <button class="tf-chip" data-bucket="runtime" type="button">RUNTIME</button>
+        <button class="tf-chip" data-bucket="evals" type="button">EVALS</button>
+        <button class="tf-chip" data-bucket="context" type="button">CONTEXT</button>
+        <button class="tf-chip" data-bucket="markets" type="button">MARKETS</button>
+      </div>
+      <div class="timeline-grid">
+        <div class="timeline-rail" id="tl-rail" role="listbox" aria-label="Timeline markers"></div>
+        <div class="timeline-card" id="tl-card"></div>
+      </div>
+    </div>
+
+    <p class="mono" style="font-size:11px;color:var(--gray-400);letter-spacing:.12em;margin-top:14px"><span data-en>FIELD MAP · DRAWN IN PENCIL, READ THE HORIZON COLUMN BEFORE THE HEADLINE.</span><span data-de>FELDKARTE · MIT BLEISTIFT GEZEICHNET, ZUERST DIE HORIZONT-SPALTE LESEN.</span></p>
+  </div>
+</section>
+
+<!-- =========================== K5: WHAT FADES =========================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 39</span>
+      <span data-en>· WHAT FADES</span>
+      <span data-de>· WAS VERBLASST</span>
+    </div>
+    <h2 class="serif" data-en>Five fashions that <em>fade</em>.</h2>
+    <h2 class="serif" data-de>Fünf Moden, die <em>verblassen</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>For balance, the things we expect to look quaint by next summer. We do not predict their death, only their fading. Each one had a real point at its peak; each one is finishing the trip from headline to footnote. If you are still investing in one of them, ask the budget question.</p>
+    <p class="kicker" data-de>Zum Ausgleich die Dinge, die im nächsten Sommer kurios aussehen werden. Wir prognostizieren ihren Tod nicht, nur ihr Verblassen. Jede hatte am Höhepunkt einen echten Punkt; jede beendet die Reise von der Schlagzeile zur Fußnote. Wer noch in eine davon investiert, sollte die Budget-Frage stellen.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">A · <span data-en>SUPER PROMPTS</span><span data-de>SUPER-PROMPTS</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"The one prompt that does everything"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Der eine Prompt für alles"</h3>
+        <p data-en>Long, ornate prompts treated as artisanal craft. They were a useful crutch. They are now a maintenance liability that no eval set can rescue.</p>
+        <p data-de>Lange, kunstvolle Prompts als handwerkliche Kunst behandelt. Eine nützliche Krücke früher. Heute eine Wartungslast, die kein Eval rettet.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">B · <span data-en>FRAMEWORK WORSHIP</span><span data-de>FRAMEWORK-KULT</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"We chose framework X"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Wir haben Framework X gewählt"</h3>
+        <p data-en>Decks that lead with the orchestration library. The library is the boring infrastructure question; lead with the agent and its evals.</p>
+        <p data-de>Decks, die mit der Orchestrierungs-Library aufmachen. Die Library ist die langweilige Infrastruktur-Frage; führe mit dem Agent und seinen Evals.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">C · <span data-en>BENCHMARK CHASING</span><span data-de>BENCHMARK-JAGD</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Number one on leaderboard Y"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Nummer eins auf Leaderboard Y"</h3>
+        <p data-en>Public benchmarks decoupled from any user's real inputs. A useful sanity check, never the buying decision. Replaced by the team's own eval set.</p>
+        <p data-de>Öffentliche Benchmarks, losgelöst von den echten Inputs eines Nutzers. Ein nützlicher Sanity-Check, nie die Kaufentscheidung. Abgelöst durch das eigene Eval-Set.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">D · <span data-en>DEMO MAGIC</span><span data-de>DEMO-MAGIE</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Watch it write itself"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Sieh zu, wie es sich selbst schreibt"</h3>
+        <p data-en>The cinematic demo with a happy path and no error handling. Buyers learned to discount it; sellers will catch up by the next budget cycle.</p>
+        <p data-de>Die kinoreife Demo mit Happy-Path und ohne Fehlerbehandlung. Käufer rabattieren sie inzwischen; Verkäufer ziehen im nächsten Budget-Zyklus nach.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">E · <span data-en>FRONTIER ONLY</span><span data-de>NUR FRONTIER</span></p>
+        <h3 class="serif" data-en style="margin-top:8px">"Always the biggest model"</h3>
+        <h3 class="serif" data-de style="margin-top:8px">"Immer das größte Modell"</h3>
+        <p data-en>Routing every call through the most expensive frontier model. The hybrid stack (small for routine, large for hard) wins on cost and quality both.</p>
+        <p data-de>Jeden Call durch das teuerste Frontier-Modell jagen. Der Hybrid-Stack (klein für Routine, groß für Hart) gewinnt bei Kosten und Qualität zugleich.</p>
+      </div>
+    </div>
+
+    <div class="pull" style="margin-top:64px">
+      <div class="num">12</div>
+      <div>
+        <p class="label"><span data-en>RULE OF THUMB · CHECK THE TWELVE-MONTH OLD POSTER</span><span data-de>FAUSTREGEL · PRÜFE DAS POSTER VON VOR ZWÖLF MONATEN</span></p>
+        <p class="text" data-en>Pull a conference deck from twelve months ago. Cross out everything that has aged poorly. Whatever remains is closer to durable than to fashion. Repeat next year. The exercise costs an hour, saves a quarter of misallocated budget.</p>
+        <p class="text" data-de>Hol ein Konferenz-Deck von vor zwölf Monaten. Streiche alles, was schlecht gealtert ist. Was übrig bleibt, ist näher an haltbar als an Mode. Im nächsten Jahr wiederholen. Übung kostet eine Stunde, spart ein Quartal fehlallokiertes Budget.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== K6: GLOSSARY =========================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 40</span>
+      <span data-en>· GLOSSARY</span>
+      <span data-de>· GLOSSAR</span>
+    </div>
+    <h2 class="serif" data-en>Six terms<br/>from the field map.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe<br/>aus der Feldkarte.</h2>
+    <div class="rule-copper"></div>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <span class="term">FIELD MAP</span>
+        <span class="def" data-en>A forecast drawn in pencil, with explicit horizons per signal. Always twelve months out, never longer. Replaces the three-year roadmap, which decays before quarter two.</span>
+        <span class="def" data-de>Eine mit Bleistift gezeichnete Prognose, mit expliziten Horizonten je Signal. Immer auf zwölf Monate, nie länger. Ersetzt die Drei-Jahres-Roadmap, die vor Quartal zwei zerfällt.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">DURABLE BET</span>
+        <span class="def" data-en>A bet placed on a pattern that has already outlasted three model launches. Owners, evals, context, and trust are the four we treat as durable today.</span>
+        <span class="def" data-de>Eine Wette auf ein Muster, das schon drei Model-Launches überlebt hat. Owners, Evals, Context und Trust sind die vier, die wir heute als haltbar behandeln.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">SHIFT</span>
+        <span class="def" data-en>An observable change in motion, not a prediction. Each shift has a "what you see now" today, otherwise it is gossip. We track five at any time.</span>
+        <span class="def" data-de>Eine beobachtbare Veränderung im Gang, keine Vorhersage. Jede Verschiebung hat ein "was du jetzt siehst" heute, sonst ist sie Gerede. Wir tracken fünf zur gleichen Zeit.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">HORIZON</span>
+        <span class="def" data-en>The quarter at which a signal becomes table stakes, not the quarter it was first sighted. Used to decide whether to ride, plan, or only watch.</span>
+        <span class="def" data-de>Das Quartal, in dem ein Signal zur Pflicht wird, nicht das Quartal seiner ersten Sichtung. Hilft zu entscheiden, ob mitreiten, einplanen oder nur beobachten.</span>
+      </div>
+      <div class="gloss">
+        <span class="term">WRONG-IF</span>
+        <span class="def" data-en>The signal that tells us a bet has failed. A bet without a wrong-if is a slogan. We commit budget only to bets that name their kill condition up front.</span>
+        <span class="def" data-de>Das Signal, das uns sagt, dass eine Wette gescheitert ist. Eine Wette ohne Wrong-If ist ein Slogan. Wir geben Budget nur für Wetten, die ihre Abbruch-Bedingung vorab nennen.</span>
+      </div>
+      <div class="gloss" style="border-bottom:none">
+        <span class="term">FADE</span>
+        <span class="def" data-en>The slow journey of a fashion from headline to footnote. We name fades early because the budget question gets harder the closer you are to the trough.</span>
+        <span class="def" data-de>Die langsame Reise einer Mode von der Schlagzeile zur Fußnote. Wir benennen Fades früh, weil die Budget-Frage näher am Tal schwerer wird.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== AUSBLICK =========================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span><span class="num">● 41</span>
+      <span data-en>· NEXT CARD</span>
+      <span data-de>· NÄCHSTE LEHRTAFEL</span>
+    </div>
+    <h2 class="serif" data-en>You can read the field map.<br/>What's next?</h2>
+    <h2 class="serif" data-de>Du kannst die Feldkarte lesen.<br/>Was kommt als Nächstes?</h2>
+    <div class="rule-copper"></div>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">11</p>
+        <h3 class="serif" data-en style="margin-top:8px">Agents in the team workflow</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Agents im Team-Workflow</h3>
+        <p data-en>How teams reshape rituals, roles, and tooling once agents land in the daily flow. The boring half of agentic, where the value lives.</p>
+        <p data-de>Wie Teams Rituale, Rollen und Tooling umstellen, wenn Agents im Alltag landen. Die langweilige Hälfte von Agentic, wo der Wert wohnt.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">12</p>
+        <h3 class="serif" data-en style="margin-top:8px">Data hygiene and context</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Datenhygiene und Context</h3>
+        <p data-en>What agents need to stop guessing: clean inputs, named scopes, a retrieval layer that earns its keep. The supply chain behind every good answer.</p>
+        <p data-de>Was Agents brauchen, um nicht mehr zu raten: saubere Inputs, benannte Scopes, eine Retrieval-Schicht, die ihren Lohn verdient. Die Lieferkette hinter jeder guten Antwort.</p>
+      </div>
+      <div class="card">
+        <p class="mono" style="font-size:11px;color:var(--copper-deep);letter-spacing:.12em">13</p>
+        <h3 class="serif" data-en style="margin-top:8px">Governance and audit</h3>
+        <h3 class="serif" data-de style="margin-top:8px">Governance und Audit</h3>
+        <p data-en>What the auditor will ask in twelve months, and the artefacts you need to keep so the answer is short. The paperwork half of trust.</p>
+        <p data-de>Was der Prüfer in zwölf Monaten fragen wird, und welche Artefakte du brauchst, damit die Antwort kurz bleibt. Die Aktenseite des Vertrauens.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:flex;gap:16px;flex-wrap:wrap">
+      <a class="cta" href="01_was-ist-ai-und-agentic-ai.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 01</span><span data-de>ZURÜCK ZU 01</span></a>
+      <a class="cta" href="02_wie-ein-agent-denkt.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 02</span><span data-de>ZURÜCK ZU 02</span></a>
+      <a class="cta" href="03_tools-mcps-plugins.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 03</span><span data-de>ZURÜCK ZU 03</span></a>
+      <a class="cta" href="04_risiko-und-trust.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 04</span><span data-de>ZURÜCK ZU 04</span></a>
+      <a class="cta" href="05_dein-erster-agent.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 05</span><span data-de>ZURÜCK ZU 05</span></a>
+      <a class="cta" href="06_agent-teams.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 06</span><span data-de>ZURÜCK ZU 06</span></a>
+      <a class="cta" href="07_pflege-und-iteration.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 07</span><span data-de>ZURÜCK ZU 07</span></a>
+      <a class="cta" href="08_use-case-bibliothek.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 08</span><span data-de>ZURÜCK ZU 08</span></a>
+      <a class="cta" href="09_kosten-und-roi.html"><span class="arrow">┌──→</span> <span data-en>BACK TO 09</span><span data-de>ZURÜCK ZU 09</span></a>
+      <a class="cta" href="#" style="border-color:var(--copper-deep);color:var(--copper-deep)"><span data-en>REQUEST CARD 11</span><span data-de>LEHRTAFEL 11 ANFORDERN</span> <span class="arrow">┌──→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 10</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============== Scroll Timeline (signals on the rail) ==============
+const tlI18n = {
+  en: {
+    horizon: { shipped: 'SHIPPED', soon: 'SOON · 1 to 2 QTRS', bet: 'BET · 12 MO', far: 'FAR · 18+ MO' },
+    bucketLabels: { models: 'MODELS', runtime: 'RUNTIME', evals: 'EVALS', context: 'CONTEXT', markets: 'MARKETS' },
+    keys: {
+      now: 'WHAT YOU SEE NOW',
+      old: 'WHAT IT REPLACES',
+      whom: 'WHO IS AFFECTED',
+      do:  'WHAT TO DO'
+    },
+    signals: [
+      {
+        stamp: '2026 Q2 · NOW',
+        tag: 'Small models, everywhere',
+        bucket: 'models',
+        horizon: 'shipped',
+        title: 'Small models on every <em>laptop</em>.',
+        text: 'Mid-size and small models now run on commodity hardware with usable latency. The hybrid stack (small for routine, large for hard) is no longer a research idea, it is shipping in production. Cost per call falls fast, but only if you route honestly.',
+        now: 'On-device demos at every major vendor; open small models in production at three of our clients.',
+        old: 'Single frontier model routing every call, regardless of difficulty.',
+        whom: 'Engineering, finance, anyone who reads a token bill.',
+        do:  'Audit your routing. Send the easy 60% to a small model, keep frontier for the hard 10%.'
+      },
+      {
+        stamp: '2026 Q3',
+        tag: 'Desktop and IDE agents',
+        bucket: 'runtime',
+        horizon: 'soon',
+        title: 'The work moves to the <em>desktop</em>.',
+        text: 'Agents leave the browser tab and land where the work lives: the inbox, the IDE, the spreadsheet. The shift halves context-switching cost and exposes the agent to real artefacts instead of pasted copies. Half-done today; default in two quarters.',
+        now: 'Three major vendors ship desktop agents this quarter; IDE agents already standard at engineering teams under one hundred.',
+        old: 'Web-only chat windows with no access to local files or running apps.',
+        whom: 'Knowledge workers, engineers, anyone with more than five open tabs.',
+        do:  'Pilot one desktop agent with one team. Measure alt-tabs per hour before and after.'
+      },
+      {
+        stamp: '2026 Q4',
+        tag: 'Long context becomes default',
+        bucket: 'models',
+        horizon: 'soon',
+        title: 'Long context, no <em>fanfare</em>.',
+        text: 'Million-token context windows stop being a press release and start being a default. The interesting shift is not the size, it is the routine use: pulling whole repositories, full quarter packets, complete eval libraries into one call without manual chunking.',
+        now: 'Three vendors at one-million-plus context; usable, if expensive, in production today.',
+        old: 'Aggressive manual chunking and retrieval just to fit the prompt.',
+        whom: 'Anyone who builds retrieval; anyone who pastes a lot.',
+        do:  'Revisit your chunking. Drop the chunks that only existed to fit a 32k window.'
+      },
+      {
+        stamp: '2027 Q1',
+        tag: 'Shared eval suites',
+        bucket: 'evals',
+        horizon: 'bet',
+        title: 'Eval suites become <em>infrastructure</em>.',
+        text: 'Eval sets move from one-engineer spreadsheets to shared, versioned, governed assets. Teams that treat the library as an asset compound; teams that delete it after each quarter restart at zero. The library, not the prompt, becomes the moat.',
+        now: 'Two open eval frameworks crossed the maintainable threshold; vendors quietly hire eval ops leads.',
+        old: 'One-off pass/fail sheets owned by the engineer who built the agent.',
+        whom: 'Engineering, audit, anyone who has to defend a number.',
+        do:  'Adopt a shared eval framework this quarter. Version the gold answers like code.'
+      },
+      {
+        stamp: '2027 Q2',
+        tag: 'Retrieval owned by the agent',
+        bucket: 'context',
+        horizon: 'bet',
+        title: 'The agent owns its <em>context</em>.',
+        text: 'Memory and retrieval move from prompt tricks to agent-side infrastructure. The agent decides what to fetch, when to forget, and what to keep. Prompts shrink, postmortems become easier, drift becomes traceable rather than a vibe.',
+        now: 'Three frameworks ship agent-side memory primitives; early production rollouts at vendors with serious eval discipline.',
+        old: 'Paste-it-in prompt engineering and brittle one-off retrieval scripts.',
+        whom: 'Anyone building beyond a single-turn agent.',
+        do:  'Move retrieval out of the prompt and into a named component. Log every fetch.'
+      },
+      {
+        stamp: '2027 Q3',
+        tag: 'Compliance frameworks settle',
+        bucket: 'context',
+        horizon: 'bet',
+        title: 'Audit settles, not <em>tightens</em>.',
+        text: 'The regulatory ground that has been shifting for two years cools. The settled frameworks are not the tightest ones, they are the most legible ones. Teams that built their trust ladder early translate cleanly; teams that did not redo their paperwork twice.',
+        now: 'Two major jurisdictions converge on labelling and disclosure; auditor checklists now name agent owners explicitly.',
+        old: 'Every quarter a new framework, every quarter a redrafted policy.',
+        whom: 'Legal, audit, owners of any agent that touches a customer.',
+        do:  'Map your existing trust ladder to the settling framework. Note the gaps now, not after the audit.'
+      },
+      {
+        stamp: '2027 Q4',
+        tag: 'Audited agent marketplaces',
+        bucket: 'markets',
+        horizon: 'far',
+        title: 'Marketplaces compete on <em>reviews</em>.',
+        text: 'The first wave of agent marketplaces sold on feature count. The second wave consolidates and competes on review quality: who tested it, what failed, who is on the hook. A short list of trusted agents replaces the long list of unaudited prompts.',
+        now: 'Two marketplaces post structured eval results next to each agent; the rest still rely on screenshots.',
+        old: 'Endless catalogues of unaudited prompts and bundled tools.',
+        whom: 'Buyers, procurement, anyone who picks an off-the-shelf agent.',
+        do:  'Treat the review meta-data as the primary buy signal. Skip the demo video.'
+      },
+      {
+        stamp: '2028 Q1',
+        tag: 'The boring middle',
+        bucket: 'runtime',
+        horizon: 'far',
+        title: 'Agentic stops being a <em>headline</em>.',
+        text: 'A year and a half out, agentic work is no longer remarkable. The technology disappears into the work the way email did. The interesting question is no longer "should we use an agent" but "which named owner runs which agent against which eval set". The boring middle is where the value finishes arriving.',
+        now: 'Early signal: three of our clients no longer use the word "agent" in their planning docs; they use the agent name and the owner name.',
+        old: 'Agentic as a category line in every roadmap.',
+        whom: 'Everyone. Quietly.',
+        do:  'Stop pitching agentic. Start naming agents and owners. The pitch is over.'
+      }
+    ]
+  },
+  de: {
+    horizon: { shipped: 'AUSGELIEFERT', soon: 'BALD · 1 BIS 2 QU', bet: 'WETTE · 12 MO', far: 'FERN · 18+ MO' },
+    bucketLabels: { models: 'MODELLE', runtime: 'RUNTIME', evals: 'EVALS', context: 'CONTEXT', markets: 'MÄRKTE' },
+    keys: {
+      now: 'WAS DU JETZT SIEHST',
+      old: 'WAS ES ABLÖST',
+      whom: 'WER BETROFFEN IST',
+      do:  'WAS ZU TUN IST'
+    },
+    signals: [
+      {
+        stamp: '2026 Q2 · JETZT',
+        tag: 'Kleine Modelle, überall',
+        bucket: 'models',
+        horizon: 'shipped',
+        title: 'Kleine Modelle auf jedem <em>Laptop</em>.',
+        text: 'Mittlere und kleine Modelle laufen heute auf Standard-Hardware mit brauchbarer Latenz. Der Hybrid-Stack (klein für Routine, groß für Hart) ist keine Forschungsidee mehr, er liefert produktiv. Cost-per-Call fällt rasch, aber nur, wenn ehrlich geroutet wird.',
+        now: 'On-Device-Demos bei jedem großen Anbieter; offene kleine Modelle bei drei unserer Kunden in Produktion.',
+        old: 'Ein einziges Frontier-Modell, das jeden Call übernimmt, egal wie schwer.',
+        whom: 'Engineering, Finance, alle, die eine Token-Rechnung lesen.',
+        do:  'Routing prüfen. Die einfachen 60% an ein kleines Modell, Frontier nur für die harten 10%.'
+      },
+      {
+        stamp: '2026 Q3',
+        tag: 'Desktop- und IDE-Agents',
+        bucket: 'runtime',
+        horizon: 'soon',
+        title: 'Die Arbeit zieht auf den <em>Desktop</em>.',
+        text: 'Agents verlassen den Browser-Tab und landen, wo die Arbeit wohnt: Postfach, IDE, Tabelle. Die Verschiebung halbiert Kontext-Wechsel-Kosten und stellt den Agent vor echte Artefakte statt eingefügter Kopien. Heute halb durch; in zwei Quartalen Standard.',
+        now: 'Drei große Anbieter veröffentlichen in diesem Quartal Desktop-Agents; IDE-Agents sind in Engineering-Teams unter hundert Köpfen schon Standard.',
+        old: 'Reine Web-Chats ohne Zugriff auf lokale Dateien oder laufende Apps.',
+        whom: 'Knowledge Worker, Engineers, alle mit mehr als fünf offenen Tabs.',
+        do:  'Einen Desktop-Agent mit einem Team pilotieren. Alt-Tabs pro Stunde vorher und nachher messen.'
+      },
+      {
+        stamp: '2026 Q4',
+        tag: 'Long Context wird Standard',
+        bucket: 'models',
+        horizon: 'soon',
+        title: 'Long Context, ohne <em>Trommelwirbel</em>.',
+        text: 'Millionen-Token-Kontextfenster hören auf, Pressemeldung zu sein, und werden Standard. Die spannende Verschiebung ist nicht die Größe, sondern der Routine-Einsatz: ganze Repos, komplette Quartalspakete, vollständige Eval-Bibliotheken in einem Call ohne manuelles Stückeln.',
+        now: 'Drei Anbieter bei einer Million Token oder mehr; brauchbar, wenn auch teuer, heute in Produktion.',
+        old: 'Aggressives manuelles Chunking und Retrieval, nur um in den Prompt zu passen.',
+        whom: 'Alle, die Retrieval bauen; alle, die viel reinkopieren.',
+        do:  'Chunking neu prüfen. Die Stücke wegwerfen, die nur existierten, um in 32k zu passen.'
+      },
+      {
+        stamp: '2027 Q1',
+        tag: 'Geteilte Eval-Suites',
+        bucket: 'evals',
+        horizon: 'bet',
+        title: 'Eval-Suites werden <em>Infrastruktur</em>.',
+        text: 'Eval-Sets wandern von Ein-Engineer-Tabellen zu geteilten, versionierten, geprüften Assets. Teams, die die Bibliothek als Asset behandeln, verzinsen sich; Teams, die sie nach jedem Quartal löschen, fangen bei null an. Die Bibliothek, nicht der Prompt, wird zum Burggraben.',
+        now: 'Zwei offene Eval-Frameworks haben die Wartbarkeits-Schwelle überschritten; Anbieter stellen leise Eval-Ops-Leads ein.',
+        old: 'Einmalige Pass/Fail-Tabellen im Besitz eines einzigen Engineers.',
+        whom: 'Engineering, Audit, alle, die eine Zahl verteidigen müssen.',
+        do:  'In diesem Quartal ein geteiltes Eval-Framework einführen. Gold-Antworten wie Code versionieren.'
+      },
+      {
+        stamp: '2027 Q2',
+        tag: 'Retrieval beim Agent',
+        bucket: 'context',
+        horizon: 'bet',
+        title: 'Der Agent besitzt seinen <em>Context</em>.',
+        text: 'Memory und Retrieval wandern von Prompt-Tricks zur Agent-seitigen Infrastruktur. Der Agent entscheidet, was geholt, wann vergessen, was behalten wird. Prompts schrumpfen, Postmortems werden leichter, Drift wird nachvollziehbar statt Gefühl.',
+        now: 'Drei Frameworks liefern Agent-seitige Memory-Primitive; frühe Produktions-Rollouts bei Anbietern mit ernsthafter Eval-Disziplin.',
+        old: 'Reinkopieren als Prompt-Engineering und brüchige Einmal-Retrieval-Skripte.',
+        whom: 'Alle, die über einen Single-Turn-Agent hinaus bauen.',
+        do:  'Retrieval aus dem Prompt herausziehen und in eine benannte Komponente legen. Jeden Fetch loggen.'
+      },
+      {
+        stamp: '2027 Q3',
+        tag: 'Compliance-Rahmen festigt sich',
+        bucket: 'context',
+        horizon: 'bet',
+        title: 'Audit setzt sich, statt sich zu <em>verschärfen</em>.',
+        text: 'Der seit zwei Jahren bewegliche regulatorische Boden kühlt ab. Die ankommenden Rahmen sind nicht die strengsten, sondern die lesbarsten. Teams, die ihre Vertrauensleiter früh gebaut haben, übersetzen sauber; Teams, die das nicht taten, schreiben ihre Akten zweimal um.',
+        now: 'Zwei große Jurisdiktionen nähern sich Kennzeichnung und Offenlegung; Audit-Checklisten benennen Agent-Owner inzwischen explizit.',
+        old: 'Jedes Quartal ein neuer Rahmen, jedes Quartal eine neu gefasste Richtlinie.',
+        whom: 'Legal, Audit, Owner jedes Agents mit Kundenkontakt.',
+        do:  'Die eigene Vertrauensleiter auf den sich setzenden Rahmen mappen. Lücken jetzt notieren, nicht erst nach dem Audit.'
+      },
+      {
+        stamp: '2027 Q4',
+        tag: 'Geprüfte Agent-Marktplätze',
+        bucket: 'markets',
+        horizon: 'far',
+        title: 'Marktplätze konkurrieren um <em>Reviews</em>.',
+        text: 'Die erste Welle der Agent-Marktplätze verkaufte über Featurezahlen. Die zweite Welle konsolidiert und konkurriert über Review-Qualität: wer getestet hat, was schiefging, wer dafür geradesteht. Eine kurze Liste vertrauenswürdiger Agents löst die lange Liste ungeprüfter Prompts ab.',
+        now: 'Zwei Marktplätze zeigen strukturierte Eval-Ergebnisse direkt neben jedem Agent; die übrigen leben weiter von Screenshots.',
+        old: 'Endlose Kataloge ungeprüfter Prompts und gebündelter Tools.',
+        whom: 'Käufer, Procurement, alle, die einen Agent von der Stange holen.',
+        do:  'Review-Metadaten als primäres Kaufsignal behandeln. Das Demo-Video überspringen.'
+      },
+      {
+        stamp: '2028 Q1',
+        tag: 'Die langweilige Mitte',
+        bucket: 'runtime',
+        horizon: 'far',
+        title: 'Agentic ist keine <em>Schlagzeile</em> mehr.',
+        text: 'Anderthalb Jahre weiter ist agentische Arbeit nicht mehr bemerkenswert. Die Technik verschwindet in der Arbeit, wie es E-Mail einst tat. Die spannende Frage ist nicht mehr "sollen wir einen Agent nutzen", sondern "welcher benannte Owner fährt welchen Agent gegen welches Eval-Set". Die langweilige Mitte ist, wo der Wert ankommt.',
+        now: 'Frühes Signal: drei unserer Kunden nutzen das Wort "Agent" nicht mehr in ihren Planungsdokumenten; sie nutzen Agent-Name und Owner-Name.',
+        old: 'Agentic als Kategorie-Zeile in jeder Roadmap.',
+        whom: 'Alle. Leise.',
+        do:  'Aufhören, Agentic zu pitchen. Anfangen, Agents und Owner zu benennen. Der Pitch ist vorbei.'
+      }
+    ]
+  }
+};
+
+const tlState = {
+  bucket: 'all',
+  activeIdx: 0
+};
+
+function getLang(){ return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+function renderRail(){
+  var lang = getLang();
+  var signals = tlI18n[lang].signals;
+  var rail = document.getElementById('tl-rail');
+  if (!rail) return;
+  rail.innerHTML = '';
+  signals.forEach(function(sig, i){
+    var faded = (tlState.bucket !== 'all' && sig.bucket !== tlState.bucket);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tl-marker' + (i === tlState.activeIdx ? ' active' : '') + (faded ? ' faded' : '');
+    btn.setAttribute('data-idx', i);
+    btn.setAttribute('role', 'option');
+    btn.setAttribute('aria-selected', i === tlState.activeIdx ? 'true' : 'false');
+    btn.innerHTML =
+      '<span class="tl-dot" aria-hidden="true"></span>' +
+      '<span>' +
+        '<span class="tl-stamp">' + sig.stamp + '</span>' +
+        '<span class="tl-tag">' + sig.tag + '</span>' +
+      '</span>';
+    btn.addEventListener('click', function(){
+      tlState.activeIdx = i;
+      renderRail();
+      renderTimelineCard();
+    });
+    rail.appendChild(btn);
+  });
+}
+
+function renderTimelineCard(){
+  var lang = getLang();
+  var pack = tlI18n[lang];
+  var sig  = pack.signals[tlState.activeIdx];
+  var card = document.getElementById('tl-card');
+  if (!card || !sig) return;
+  var horizonClass = 'horizon-' + sig.horizon;
+  var bucketLabel  = pack.bucketLabels[sig.bucket] || sig.bucket.toUpperCase();
+  card.innerHTML =
+    '<div class="tl-card-eyebrow">' +
+      '<span>' + sig.stamp + '</span>' +
+      '<span class="tl-bucket">' + bucketLabel + '</span>' +
+    '</div>' +
+    '<div class="tl-card-title">' + sig.title + '</div>' +
+    '<div class="tl-card-text">' + sig.text + '</div>' +
+    '<div class="tl-card-grid">' +
+      '<div><span class="k">' + pack.keys.now  + '</span></div>' +
+      '<div><span class="v">' + sig.now + '</span></div>' +
+      '<div><span class="k">' + pack.keys.old  + '</span></div>' +
+      '<div><span class="v">' + sig.old + '</span></div>' +
+      '<div><span class="k">' + pack.keys.whom + '</span></div>' +
+      '<div><span class="v">' + sig.whom + '</span></div>' +
+      '<div><span class="k">' + pack.keys.do   + '</span></div>' +
+      '<div><span class="v">' + sig.do + '</span></div>' +
+    '</div>' +
+    '<div class="tl-card-foot">' +
+      '<span class="' + horizonClass + '">● ' + pack.horizon[sig.horizon] + '</span>' +
+      '<span>BUCKET · ' + bucketLabel + '</span>' +
+    '</div>';
+}
+
+// Filter chips
+document.querySelectorAll('#tl-filters .tf-chip').forEach(function(chip){
+  chip.addEventListener('click', function(){
+    document.querySelectorAll('#tl-filters .tf-chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    tlState.bucket = chip.dataset.bucket;
+    // Jump activeIdx to first matching signal if current is faded
+    var signals = tlI18n[getLang()].signals;
+    if (tlState.bucket !== 'all' && signals[tlState.activeIdx].bucket !== tlState.bucket){
+      var firstMatch = signals.findIndex(function(s){ return s.bucket === tlState.bucket; });
+      if (firstMatch >= 0) tlState.activeIdx = firstMatch;
+    }
+    renderRail();
+    renderTimelineCard();
+  });
+});
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang){
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? "Where this is going · Codex Article 10"
+    : 'Wohin die Reise geht · Codex Lehrtafel 10';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  renderRail();
+  renderTimelineCard();
+}
+
+(function(){
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
