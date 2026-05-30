@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agents in the team · Codex Article 11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:1100px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* ================ Layout ================ */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400);width:160px;font-weight:500}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+.process.cols-4{grid-template-columns:repeat(4,1fr)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+@media(max-width:880px){.process.cols-4{grid-template-columns:1fr 1fr}}
+@media(max-width:880px){.process.cols-3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.process.cols-4,.process.cols-3{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:88px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:880px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+/* ================ Before/After Toggle Demo ================ */
+.ba-demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden;margin-top:48px}
+.ba-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:16px}
+.ba-head-title{font-family:'Source Serif 4',serif;font-size:16px;color:var(--fg-on-ink-mute)}
+.ba-toggle{display:flex;gap:0;border:1px solid var(--border-on-ink)}
+.ba-toggle-btn{padding:10px 24px;border:none;border-right:1px solid var(--border-on-ink);background:transparent;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;font-weight:500}
+.ba-toggle-btn:last-child{border-right:none}
+.ba-toggle-btn.active{background:var(--copper);color:var(--ink-black)}
+
+.ba-chips{display:flex;gap:0;border-bottom:1px solid var(--border-on-ink);flex-wrap:wrap}
+.ba-chip{padding:14px 20px;border:none;border-right:1px solid var(--border-on-ink);background:transparent;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400);transition:all .2s;font-weight:500}
+.ba-chip:last-child{border-right:none}
+.ba-chip:hover:not(.active){color:var(--copper);background:rgba(217,119,87,.06)}
+.ba-chip.active{background:rgba(217,119,87,.12);color:var(--copper)}
+
+.ba-body{padding:0}
+.ba-step{display:grid;grid-template-columns:120px 1fr 90px;gap:0;border-bottom:1px solid var(--border-on-ink);align-items:stretch}
+.ba-step:last-child{border-bottom:none}
+.ba-role{padding:20px 18px;border-right:1px solid var(--border-on-ink);display:flex;align-items:flex-start;justify-content:center}
+.ba-role span{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;padding:4px 8px;border:1px solid currentColor;white-space:nowrap;line-height:1.4}
+.ba-task{padding:20px 24px}
+.ba-task .task-text{font-family:'Lora',serif;font-size:16px;line-height:1.55;color:var(--gray-100)}
+.ba-time{padding:20px 20px;border-left:1px solid var(--border-on-ink);display:flex;align-items:flex-start;justify-content:flex-end}
+.ba-time span{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400);text-align:right;white-space:nowrap}
+
+.role-manual{color:var(--gray-400)}
+.role-human{color:var(--copper)}
+.role-agent{color:var(--data-cyan)}
+.role-review{color:var(--patina)}
+
+.ba-legend{display:flex;gap:24px;padding:14px 24px;border-top:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap}
+.ba-legend-item{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.ba-legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+@media(max-width:880px){
+  .ba-step{grid-template-columns:90px 1fr}
+  .ba-time{display:none}
+  .ba-head{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:560px){
+  .ba-step{grid-template-columns:1fr}
+  .ba-role{border-right:none;border-bottom:1px solid var(--border-on-ink);justify-content:flex-start}
+}
+
+/* ================ Bucket grid (K1) ================ */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:48px}
+.bucket{padding:40px 32px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper)}
+.bucket .bucket-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:16px;display:block}
+.bucket .bucket-tag.tag-human{color:var(--copper-deep)}
+.bucket .bucket-tag.tag-agent{color:var(--ink-blue)}
+.bucket .bucket-tag.tag-shared{color:var(--patina)}
+.bucket h4{font-family:'Source Serif 4',serif;font-size:22px;font-weight:500;margin-bottom:12px;line-height:1.2;letter-spacing:-.01em;color:var(--fg-on-paper)}
+.bucket p{font-family:'Lora',serif;font-size:15px;line-height:1.6;color:var(--fg-on-paper-mute)}
+.bucket ul{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.bucket ul li{font-family:'Inter',sans-serif;font-size:14px;color:var(--gray-600);padding-left:14px;position:relative;line-height:1.5}
+.bucket ul li::before{content:'·';position:absolute;left:0;color:var(--copper-deep)}
+@media(max-width:880px){.buckets{grid-template-columns:1fr}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+      <a href="./08_use-case-bibliothek.html" class="nav-link">
+        <span data-de>08 → Use-Case-Bibliothek</span>
+        <span data-en>08 → Use-Case Library</span>
+      </a>
+      <a href="./09_kosten-und-roi.html" class="nav-link">
+        <span data-de>09 → Kosten &amp; ROI</span>
+        <span data-en>09 → Cost &amp; ROI</span>
+      </a>
+      <a href="./10_wohin-die-reise-geht.html" class="nav-link">
+        <span data-de>10 → Wohin die Reise geht</span>
+        <span data-en>10 → Where This Is Going</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 11</span>
+      <span data-en>· LEHRTAFEL · AGENTS IN THE TEAM</span>
+      <span data-de>· LEHRTAFEL · AGENTS IM TEAM</span>
+    </div>
+
+    <h1 class="serif" data-en>Agents in the <em>team</em>.</h1>
+    <h1 class="serif" data-de>Agents im <em>Team</em>.</h1>
+
+    <p class="kicker" data-en>Adding an agent to a team does not replace anyone. It changes the shape of every task. Intent stays human. Execution moves. Review becomes a shared discipline. This article maps the transition from a team that works manually to one that works with agents every day.</p>
+    <p class="kicker" data-de>Einen Agent ins Team zu holen ersetzt niemanden. Es verändert die Form jeder Aufgabe. Intention bleibt menschlich. Ausführung wandert. Review wird zu einer gemeinsamen Disziplin. Diese Tafel zeigt den Weg von einem manuell arbeitenden Team zu einem, das täglich mit Agents arbeitet.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="label"><span data-en>Task types in every hybrid team</span><span data-de>Aufgabentypen in jedem hybriden Team</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">4</div>
+        <div class="label"><span data-en>Workflows mapped before and after</span><span data-de>Workflows vor und nach dem Umstieg</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">6 wks</div>
+        <div class="label"><span data-en>Typical window to a stable hybrid workflow</span><span data-de>Typisches Fenster bis zum stabilen Hybrid-Betrieb</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1">
+        <span data-en>READ THE METHOD</span>
+        <span data-de>METHODE LESEN</span>
+        <span class="arrow">┌──→</span>
+      </a>
+    </div>
+
+    <div class="hero .meta" style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px">
+      <span>FILE · 11 / SERIE AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 13 MINUTES</span><span data-de>LESEZEIT · 13 MINUTEN</span></span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K1 · PARCHMENT ==================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 01</span>
+      <span data-en>· WHAT ACTUALLY SHIFTS</span>
+      <span data-de>· WAS SICH WIRKLICH ÄNDERT</span>
+    </div>
+
+    <h2 class="serif" data-en>Three buckets, not <em>headcount</em>.</h2>
+    <h2 class="serif" data-de>Drei Eimer, nicht <em>Köpfe</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>The conversation about agents and teams usually starts in the wrong place: jobs. The more useful frame is task shape. Every piece of work in a team falls into one of three buckets once agents are present. The buckets do not replace each other; they redistribute the work.</p>
+    <p class="kicker" data-de>Die Diskussion über Agents und Teams beginnt meistens am falschen Ort: bei Stellen. Der nützlichere Rahmen ist Aufgabenform. Jede Arbeit im Team fällt in einen von drei Eimern, sobald Agents dabei sind. Die Eimer ersetzen sich nicht gegenseitig; sie verteilen die Arbeit neu.</p>
+
+    <div class="buckets">
+      <div class="bucket">
+        <span class="bucket-tag tag-human" data-en>INTENT · STAYS HUMAN</span>
+        <span class="bucket-tag tag-human" data-de>INTENTION · BLEIBT MENSCHLICH</span>
+        <h4 data-en>Define the goal.</h4>
+        <h4 data-de>Das Ziel definieren.</h4>
+        <p data-en>Someone must decide what outcome is worth pursuing. Agents are very good at following direction and very bad at setting it. The brief, the criteria, the definition of done: these stay with a person.</p>
+        <p data-de>Jemand muss entscheiden, welches Ergebnis es wert ist, verfolgt zu werden. Agents sind sehr gut darin, Anweisungen zu folgen, und sehr schlecht darin, sie zu setzen. Das Briefing, die Kriterien, die Definition von Fertig: das bleibt beim Menschen.</p>
+        <ul>
+          <li data-en>Write the intent document</li>
+          <li data-en>Set the success criteria</li>
+          <li data-en>Choose the scope</li>
+          <li data-de>Intent-Dokument schreiben</li>
+          <li data-de>Erfolgskriterien festlegen</li>
+          <li data-de>Umfang bestimmen</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-agent" data-en>EXECUTION · MOVES TO AGENT</span>
+        <span class="bucket-tag tag-agent" data-de>AUSFÜHRUNG · GEHT AN DEN AGENT</span>
+        <h4 data-en>Do the defined work.</h4>
+        <h4 data-de>Die definierte Arbeit erledigen.</h4>
+        <p data-en>Repeatable, well-defined tasks with clear inputs and outputs. Drafting from a brief. Pulling and joining data. Searching across sources. Classifying tickets. These are the steps where agents produce more output at lower cost than any human.</p>
+        <p data-de>Wiederholbare, klar definierte Aufgaben mit klaren Ein- und Ausgaben. Entwürfe aus einem Briefing erstellen. Daten abrufen und verknüpfen. Über Quellen hinweg suchen. Tickets klassifizieren. Das sind die Schritte, bei denen Agents mehr Output zu geringeren Kosten liefern als jeder Mensch.</p>
+        <ul>
+          <li data-en>Draft, format, and structure content</li>
+          <li data-en>Query, clean, and join data</li>
+          <li data-en>Classify, route, and log</li>
+          <li data-de>Inhalte entwerfen, formatieren, strukturieren</li>
+          <li data-de>Daten abfragen, bereinigen, zusammenführen</li>
+          <li data-de>Klassifizieren, routen, protokollieren</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-shared" data-en>REVIEW · SHARED DISCIPLINE</span>
+        <span class="bucket-tag tag-shared" data-de>REVIEW · GEMEINSAME DISZIPLIN</span>
+        <h4 data-en>Verify before it matters.</h4>
+        <h4 data-de>Prüfen, bevor es zählt.</h4>
+        <p data-en>A human check before an agent output has downstream effect. Not every output needs the same review depth. The skill is calibrating: which outputs need a 30-second scan, which need a full read, and which need a subject-matter expert.</p>
+        <p data-de>Ein menschlicher Check, bevor ein Agent-Output Folgewirkungen hat. Nicht jeder Output braucht dieselbe Prüftiefe. Die Kunst liegt in der Kalibrierung: Welche Outputs brauchen einen 30-Sekunden-Scan, welche einen vollständigen Lesedurchgang, welche einen Fachexperten.</p>
+        <ul>
+          <li data-en>Spot-check high-risk outputs</li>
+          <li data-en>Catch outliers and edge cases</li>
+          <li data-en>Final approval before publish or send</li>
+          <li data-de>Hochrisiko-Outputs stichprobenartig prüfen</li>
+          <li data-de>Ausreißer und Grenzfälle abfangen</li>
+          <li data-de>Abschlussgenehmigung vor Veröffentlichung oder Versand</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K2 · DARK ==================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 02</span>
+      <span data-en>· FIVE PATTERNS OF CHANGE</span>
+      <span data-de>· FÜNF MUSTER DER VERÄNDERUNG</span>
+    </div>
+
+    <h2 class="serif" data-en>Five roles, five <em>new shapes</em>.</h2>
+    <h2 class="serif" data-de>Fünf Rollen, fünf <em>neue Formen</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>No role disappears. The mix of tasks within each role changes. These are the five patterns that show up most consistently when a team moves to hybrid operation. The right column is not a threat; it is a description of where the time goes.</p>
+    <p class="kicker" data-de>Keine Rolle verschwindet. Die Mischung der Aufgaben innerhalb jeder Rolle verändert sich. Das sind die fünf Muster, die am häufigsten auftauchen, wenn ein Team auf Hybrid-Betrieb umstellt. Die rechte Spalte ist keine Drohung; es ist eine Beschreibung, wohin die Zeit geht.</p>
+
+    <div style="margin-top:48px;overflow-x:auto">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th><span data-en>ROLE</span><span data-de>ROLLE</span></th>
+            <th><span data-en>BEFORE: task pattern</span><span data-de>VORHER: Aufgabenmuster</span></th>
+            <th><span data-en>WITH AGENTS: task pattern</span><span data-de>MIT AGENTS: Aufgabenmuster</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label">Analyst</td>
+            <td><span data-en>Pulls data from multiple systems, builds reports manually, writes narrative from scratch</span><span data-de>Ruft Daten aus mehreren Systemen ab, erstellt Berichte manuell, schreibt Narrative von Grund auf</span></td>
+            <td><span data-en>Defines metrics and scope, reviews agent output, investigates outliers and anomalies</span><span data-de>Definiert Metriken und Umfang, prüft Agent-Output, untersucht Ausreißer und Anomalien</span></td>
+          </tr>
+          <tr>
+            <td class="col-label">Writer</td>
+            <td><span data-en>Researches, drafts, edits, and formats all content from the first blank page</span><span data-de>Recherchiert, entwirft, redigiert und formatiert alle Inhalte von der ersten leeren Seite</span></td>
+            <td><span data-en>Sets the angle and key points, reviews and refines agent drafts, sharpens voice and facts</span><span data-de>Setzt den Winkel und die Kernpunkte, prüft und verfeinert Agent-Entwürfe, schärft Stimme und Fakten</span></td>
+          </tr>
+          <tr>
+            <td class="col-label">Developer</td>
+            <td><span data-en>Writes boilerplate, handles repetitive refactors, reviews incoming PRs one at a time</span><span data-de>Schreibt Boilerplate, erledigt repetitive Refactors, prüft eingehende PRs einzeln</span></td>
+            <td><span data-en>Reviews agent-generated code, focuses on architecture and edge cases, writes intent specs</span><span data-de>Prüft agent-generierten Code, fokussiert auf Architektur und Grenzfälle, schreibt Intent-Specs</span></td>
+          </tr>
+          <tr>
+            <td class="col-label">PM</td>
+            <td><span data-en>Tracks status manually, writes spec documents from scratch, follows up on blockers</span><span data-de>Verfolgt Status manuell, schreibt Spec-Dokumente von Grund auf, verfolgt Blocker</span></td>
+            <td><span data-en>Writes intent documents, reviews agent-drafted specs and summaries, approves before distribution</span><span data-de>Schreibt Intent-Dokumente, prüft agent-entworfene Specs und Zusammenfassungen, genehmigt vor Verteilung</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>Support rep</span><span data-de>Support-Mitarbeiter</span></td>
+            <td><span data-en>Answers every incoming ticket, writes responses from scratch, classifies manually</span><span data-de>Beantwortet jedes eingehende Ticket, schreibt Antworten von Grund auf, klassifiziert manuell</span></td>
+            <td><span data-en>Handles escalations and edge cases, reviews agent responses before send, trains response patterns</span><span data-de>Bearbeitet Eskalationen und Grenzfälle, prüft Agent-Antworten vor dem Senden, trainiert Antwortmuster</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K3 · PARCHMENT ==================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 03</span>
+      <span data-en>· SIX WEEKS IS ENOUGH</span>
+      <span data-de>· SECHS WOCHEN REICHEN</span>
+    </div>
+
+    <h2 class="serif" data-en>One workflow. <em>Six weeks.</em></h2>
+    <h2 class="serif" data-de>Ein Workflow. <em>Sechs Wochen.</em></h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Teams that try to integrate agents across every workflow simultaneously stall. Teams that pick one contained, repetitive workflow and run it carefully for six weeks almost always stabilize. The method is the same regardless of the workflow chosen.</p>
+    <p class="kicker" data-de>Teams, die versuchen, Agents gleichzeitig in alle Workflows zu integrieren, geraten ins Stocken. Teams, die einen einzigen abgegrenzten, repetitiven Workflow wählen und ihn sechs Wochen sorgfältig führen, stabilisieren sich fast immer. Die Methode ist dieselbe, unabhängig vom gewählten Workflow.</p>
+
+    <div class="process cols-4">
+      <div class="step">
+        <span class="num">01 · <span data-en>WEEKS 1-2</span><span data-de>WOCHE 1-2</span></span>
+        <h4 data-en>Pick one workflow.</h4>
+        <h4 data-de>Einen Workflow wählen.</h4>
+        <p data-en>Choose something contained: high repetition, clear inputs, clear outputs, low blast radius if something goes wrong. Content drafting, bug classification, and data pull are good starting points. Onboarding emails are not.</p>
+        <p data-de>Wähle etwas Abgegrenztes: hohe Wiederholung, klare Eingaben, klare Ausgaben, geringer Schaden wenn etwas schiefläuft. Content-Entwürfe, Fehlerklassifizierung und Datenabruf sind gute Startpunkte. Onboarding-E-Mails nicht.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · <span data-en>WEEKS 3-4</span><span data-de>WOCHE 3-4</span></span>
+        <h4 data-en>Run it with full review.</h4>
+        <h4 data-de>Mit vollem Review führen.</h4>
+        <p data-en>Every agent output gets a human check before it has any downstream effect. Keep notes on what passes without comment, what needs edits, and what is wrong outright. This window builds the dataset you will use to calibrate trust.</p>
+        <p data-de>Jeder Agent-Output bekommt einen menschlichen Check, bevor er irgendeine Folgewirkung hat. Notiere, was ohne Kommentar passiert, was Korrekturen braucht und was schlicht falsch ist. Dieses Fenster baut den Datensatz auf, mit dem du Vertrauen kalibrierst.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · <span data-en>WEEKS 5-6</span><span data-de>WOCHE 5-6</span></span>
+        <h4 data-en>Build the eval set.</h4>
+        <h4 data-de>Eval-Set aufbauen.</h4>
+        <p data-en>Take the notes from weeks 3-4. Turn the failure cases into test prompts. Turn the pass cases into quality examples. This is your eval set. Run it before any change to the agent prompt or tool configuration. Without it, iteration is guesswork.</p>
+        <p data-de>Nimm die Notizen aus Woche 3-4. Verwandle die Fehlerfälle in Testprompts. Verwandle die Erfolgsf&auml;lle in Qualit&auml;tsbeispiele. Das ist dein Eval-Set. Führe es vor jeder Änderung an Prompt oder Tool-Konfiguration aus. Ohne es ist Iteration Raterei.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · <span data-en>MONTH 2+</span><span data-de>MONAT 2+</span></span>
+        <h4 data-en>Expand carefully.</h4>
+        <h4 data-de>Behutsam erweitern.</h4>
+        <p data-en>Add one adjacent workflow at a time. Carry the eval discipline with you. Each new workflow gets its own six-week window and its own eval set. Teams that skip this step and scale too fast accumulate hidden failures that surface at the worst moment.</p>
+        <p data-de>Füge jeweils einen angrenzenden Workflow hinzu. Nimm die Eval-Disziplin mit. Jeder neue Workflow bekommt sein eigenes Sechs-Wochen-Fenster und sein eigenes Eval-Set. Teams, die diesen Schritt überspringen und zu schnell skalieren, häufen versteckte Fehler an, die im schlechtesten Moment auftauchen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K4 · DARK · LIVE DEMO ==================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 04</span>
+      <span data-en>· BEFORE AND AFTER · FOUR WORKFLOWS</span>
+      <span data-de>· VORHER UND NACHHER · VIER WORKFLOWS</span>
+    </div>
+
+    <h2 class="serif" data-en>Same goal, different <em>shape</em>.</h2>
+    <h2 class="serif" data-de>Dasselbe Ziel, andere <em>Form</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Pick a workflow. Toggle between the manual version and the agent-assisted version. The total work is the same. The distribution of effort shifts. Each role badge shows who carries the step: a person defining intent, an agent executing, or a person reviewing before the output moves on.</p>
+    <p class="kicker" data-de>Wähle einen Workflow. Schalte zwischen der manuellen Version und der agent-gestützten Version um. Die Gesamtarbeit ist dieselbe. Die Verteilung des Aufwands verschiebt sich. Jedes Rollen-Badge zeigt, wer den Schritt trägt: eine Person, die Intention definiert, ein Agent, der ausführt, oder eine Person, die vor dem Weitergeben prüft.</p>
+
+    <div class="ba-demo">
+      <div class="ba-head">
+        <span class="ba-head-title" id="ba-flow-label">CONTENT PIPELINE</span>
+        <div class="ba-toggle">
+          <button class="ba-toggle-btn active" id="ba-btn-before" onclick="setDemoMode('before')">BEFORE AGENTS</button>
+          <button class="ba-toggle-btn" id="ba-btn-after" onclick="setDemoMode('after')">AFTER AGENTS</button>
+        </div>
+      </div>
+      <div class="ba-chips">
+        <button class="ba-chip active" onclick="setDemoFlow('content')" data-flow="content">CONTENT PIPELINE</button>
+        <button class="ba-chip" onclick="setDemoFlow('bugs')" data-flow="bugs">BUG TRIAGE</button>
+        <button class="ba-chip" onclick="setDemoFlow('sales')" data-flow="sales">SALES OUTREACH</button>
+        <button class="ba-chip" onclick="setDemoFlow('report')" data-flow="report">DATA REPORT</button>
+      </div>
+      <div class="ba-body" id="ba-body"></div>
+      <div class="ba-legend">
+        <span class="ba-legend-item" id="ba-legend-manual" data-en>
+          <span class="ba-legend-dot" style="background:var(--gray-400)"></span>
+          <span style="color:var(--gray-400)">MANUAL · full human effort</span>
+        </span>
+        <span class="ba-legend-item" id="ba-legend-manual-de" data-de>
+          <span class="ba-legend-dot" style="background:var(--gray-400)"></span>
+          <span style="color:var(--gray-400)">MANUELL · voller menschlicher Aufwand</span>
+        </span>
+        <span class="ba-legend-item" id="ba-legend-human">
+          <span class="ba-legend-dot" style="background:var(--copper)"></span>
+          <span style="color:var(--copper)" data-en>HUMAN · sets intent</span>
+          <span style="color:var(--copper)" data-de>MENSCH · setzt Intention</span>
+        </span>
+        <span class="ba-legend-item" id="ba-legend-agent">
+          <span class="ba-legend-dot" style="background:var(--data-cyan)"></span>
+          <span style="color:var(--data-cyan)" data-en>AGENT · executes</span>
+          <span style="color:var(--data-cyan)" data-de>AGENT · führt aus</span>
+        </span>
+        <span class="ba-legend-item" id="ba-legend-review">
+          <span class="ba-legend-dot" style="background:var(--patina)"></span>
+          <span style="color:var(--patina)" data-en>REVIEW · human gate</span>
+          <span style="color:var(--patina)" data-de>REVIEW · menschliches Gate</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K5 · PARCHMENT ==================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 05</span>
+      <span data-en>· THE RULE BEHIND THE RULE</span>
+      <span data-de>· DIE REGEL HINTER DER REGEL</span>
+    </div>
+
+    <h2 class="serif" data-en>If you can't review it in <em>30 seconds</em>.</h2>
+    <h2 class="serif" data-de>Wenn du es nicht in <em>30 Sekunden</em> prüfen kannst.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Every delegation decision in a hybrid team reduces to one test: can a qualified human verify this output quickly enough that the review gate is not slower than the manual work it replaced? If the answer is no, the workflow is not ready to delegate yet.</p>
+    <p class="kicker" data-de>Jede Delegationsentscheidung in einem hybriden Team reduziert sich auf einen Test: Kann ein qualifizierter Mensch diesen Output schnell genug prüfen, damit das Review-Gate nicht langsamer ist als die manuelle Arbeit, die es ersetzt? Wenn die Antwort nein ist, ist der Workflow noch nicht bereit zur Delegation.</p>
+
+    <div style="margin-top:48px">
+      <div class="pull">
+        <div class="num">30s</div>
+        <div>
+          <div class="label" data-en>FAUSTREGEL · REVIEW GATE</div>
+          <div class="label" data-de>FAUSTREGEL · REVIEW-GATE</div>
+          <p class="text" data-en>"If you can't review an agent's output in 30 seconds, the task isn't ready to delegate. Either the output is too long, too opaque, or the human doing the review doesn't have enough context to judge it. Fix the task definition before you fix the agent."</p>
+          <p class="text" data-de>"Wenn du den Output eines Agents nicht in 30 Sekunden prüfen kannst, ist die Aufgabe noch nicht delegationsreif. Entweder ist der Output zu lang, zu undurchsichtig, oder der Prüfende hat nicht genug Kontext, um zu urteilen. Zuerst die Aufgabendefinition verbessern, dann den Agent."</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px" class="two">
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 01</span>
+          <span data-en>· THREE SIGNALS THAT A TASK IS READY</span>
+          <span data-de>· DREI SIGNALE, DASS EINE AUFGABE BEREIT IST</span>
+        </div>
+        <div class="prose">
+          <p data-en>First: you can write the success criteria before the agent runs. If you cannot describe what a good output looks like, the task is underspecified. Run it manually once more, then write the criteria from what you produced.</p>
+          <p data-de>Erstens: Du kannst die Erfolgskriterien schreiben, bevor der Agent läuft. Wenn du nicht beschreiben kannst, wie ein guter Output aussieht, ist die Aufgabe zu unspezifisch. Führe sie noch einmal manuell durch und schreibe dann die Kriterien aus dem heraus, was du produziert hast.</p>
+          <p data-en>Second: a reviewer who was not involved in the task can spot a failure without explanation. If the review requires deep background knowledge, the review gate will not scale. Simplify the output format until a second person can judge it cold.</p>
+          <p data-de>Zweitens: Eine Person, die nicht an der Aufgabe beteiligt war, kann einen Fehler erkennen, ohne Erklärung. Wenn der Review tiefes Hintergrundwissen erfordert, wird das Review-Gate nicht skalieren. Vereinfache das Ausgabeformat, bis eine zweite Person es kalt beurteilen kann.</p>
+          <p data-en>Third: the failure mode is recoverable. Before delegating any task, name the worst thing that happens if the agent is wrong and the reviewer misses it. If the answer is "a customer gets the wrong invoice" or "a bug ships to production," add a second review gate. If the answer is "we publish a weak blog post," a single reviewer is enough.</p>
+          <p data-de>Drittens: Der Fehlermodus ist behebbar. Bevor du eine Aufgabe delegierst, benenne das Schlimmste, was passiert, wenn der Agent falsch liegt und der Prüfer es übersieht. Wenn die Antwort lautet "ein Kunde bekommt die falsche Rechnung" oder "ein Bug geht in Produktion", füge ein zweites Review-Gate hinzu. Wenn die Antwort lautet "wir veröffentlichen einen schwachen Blogpost", reicht ein einzelner Prüfer.</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 02</span>
+          <span data-en>· THREE SIGNALS THAT IT IS NOT</span>
+          <span data-de>· DREI SIGNALE, DASS SIE ES NICHT IST</span>
+        </div>
+        <div class="prose">
+          <p data-en>The output looks right on first glance but falls apart under scrutiny. This is the most dangerous failure mode. It means the agent learned to produce the surface appearance of quality without the substance. The fix is almost always a richer eval set, not a longer prompt.</p>
+          <p data-de>Der Output sieht auf den ersten Blick richtig aus, zerfällt aber unter Prüfung. Das ist der gefährlichste Fehlermodus. Es bedeutet, dass der Agent gelernt hat, die Oberfl&auml;che von Qualität zu produzieren, ohne den Inhalt. Die Lösung ist fast immer ein reichhaltigeres Eval-Set, kein längerer Prompt.</p>
+          <p data-en>The reviewer finds themselves rewriting rather than approving. This means the handover threshold is too low. The agent is producing early drafts rather than reviewable drafts. Either raise the quality bar in the prompt or add a self-review step where the agent checks its own output against a checklist before it reaches the human.</p>
+          <p data-de>Der Prüfer schreibt um statt zu genehmigen. Das bedeutet, dass die Übergabeschwelle zu niedrig ist. Der Agent produziert frühe Entwürfe statt prüfbare Entwürfe. Hebe entweder die Qualit&auml;tsanforderung im Prompt oder füge einen Selbstprüfungsschritt hinzu, bei dem der Agent seinen Output vor der Übergabe gegen eine Checkliste prüft.</p>
+          <p data-en>The task produces correct outputs 80 percent of the time and confusing outputs the other 20 percent. This is the "mostly works" trap. Teams in this state often accept the bad outputs as edge cases and move on. They are not edge cases. They are a measurement that the task is not defined well enough for reliable delegation.</p>
+          <p data-de>Die Aufgabe produziert 80 Prozent der Zeit korrekte Outputs und 20 Prozent verwirrende. Das ist die "funktioniert meistens"-Falle. Teams in diesem Zustand akzeptieren die schlechten Outputs oft als Grenzf&auml;lle. Das sind keine Grenzfälle. Das ist eine Messung, dass die Aufgabe nicht klar genug definiert ist für zuverlässige Delegation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K6 · DARK · GLOSSAR ==================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 06</span>
+      <span data-en>· SIX TERMS FOR THE TRANSITION</span>
+      <span data-de>· SECHS BEGRIFFE FÜR DEN ÜBERGANG</span>
+    </div>
+
+    <h2 class="serif" data-en>Six terms, one <em>vocabulary</em>.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe, eine <em>Sprache</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Teams that move to hybrid operation without a shared vocabulary spend too much time arguing about what they mean. These six terms cover most of that ground. They are plain enough to use in a Monday standup and precise enough to use in a retrospective.</p>
+    <p class="kicker" data-de>Teams, die ohne gemeinsamen Wortschatz auf Hybrid-Betrieb umstellen, verbringen zu viel Zeit damit, sich darüber zu streiten, was sie meinen. Diese sechs Begriffe decken den größten Teil dieses Terrains ab. Sie sind unkompliziert genug für ein Montags-Standup und präzise genug für eine Retrospektive.</p>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <div class="term" data-en>INTENT DOC</div>
+        <div class="term" data-de>INTENT-DOK.</div>
+        <div class="def" data-en>A brief written by a human that tells an agent what outcome to aim for and what constraints to respect. It describes the goal, not the steps. A good intent document makes the agent's output predictable and makes the review gate tractable.</div>
+        <div class="def" data-de>Ein von einem Menschen verfasstes Briefing, das einem Agent mitteilt, welches Ergebnis er anstreben und welche Einschränkungen er respektieren soll. Es beschreibt das Ziel, nicht die Schritte. Ein gutes Intent-Dokument macht den Output des Agents vorhersehbar und das Review-Gate handhabbar.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>REVIEW GATE</div>
+        <div class="term" data-de>REVIEW-GATE</div>
+        <div class="def" data-en>A mandatory human checkpoint between an agent output and its downstream effect. The gate is the minimum viable check: fast enough to not slow the workflow, thorough enough to catch the failures that matter. Calibrating the gate is the core skill of hybrid operation.</div>
+        <div class="def" data-de>Ein verbindlicher menschlicher Kontrollpunkt zwischen einem Agent-Output und seiner Folgewirkung. Das Gate ist die minimal notwendige Prüfung: schnell genug, um den Workflow nicht zu verlangsamen, gründlich genug, um die relevanten Fehler abzufangen. Das Gate zu kalibrieren ist die Kernkompetenz des Hybrid-Betriebs.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>EVAL WINDOW</div>
+        <div class="term" data-de>EVAL-FENSTER</div>
+        <div class="def" data-en>A fixed period, typically two to four weeks, during which every agent output is reviewed and the results are recorded. The eval window produces the dataset used to calibrate trust and build the test suite. It is not optional; it is the foundation of every reliable agent deployment.</div>
+        <div class="def" data-de>Ein fester Zeitraum, typischerweise zwei bis vier Wochen, in dem jeder Agent-Output geprüft und das Ergebnis festgehalten wird. Das Eval-Fenster produziert den Datensatz, mit dem Vertrauen kalibriert und die Testsuite aufgebaut wird. Es ist nicht optional; es ist die Grundlage jeder zuverlässigen Agent-Implementierung.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>HANDOVER THRESHOLD</div>
+        <div class="term" data-de>ÜBERGABE&shy;SCHWELLE</div>
+        <div class="def" data-en>The minimum quality bar an agent output must reach before it enters the review gate. Setting it too low means reviewers spend most of their time rewriting. Setting it too high means the agent rarely produces anything ready. The right threshold is the one where the reviewer approves without editing in 80 percent of cases.</div>
+        <div class="def" data-de>Die Mindestqualit&auml;tsanforderung, die ein Agent-Output erfüllen muss, bevor er ins Review-Gate eintritt. Zu niedrig gesetzt bedeutet, dass Prüfer den Großteil ihrer Zeit mit Umschreiben verbringen. Zu hoch gesetzt bedeutet, dass der Agent selten etwas Fertiges produziert. Die richtige Schwelle ist die, bei der der Prüfer in 80 Prozent der F&auml;lle ohne Bearbeitung genehmigt.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>TASK SHAPE</div>
+        <div class="term" data-de>AUFGABENFORM</div>
+        <div class="def" data-en>The combination of who initiates a piece of work, who executes it, and who approves the result. Before agents, most tasks had one person across all three roles. In a hybrid team, task shape separates those roles. Mapping task shape is the clearest way to see where a workflow has changed and where it has not.</div>
+        <div class="def" data-de>Die Kombination daraus, wer eine Arbeitseinheit initiiert, wer sie ausführt und wer das Ergebnis genehmigt. Vor Agents hatten die meisten Aufgaben eine Person in allen drei Rollen. In einem hybriden Team trennt die Aufgabenform diese Rollen. Aufgabenformen zu kartieren ist der klarste Weg zu sehen, wo sich ein Workflow verändert hat und wo nicht.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>HYBRID CREW</div>
+        <div class="term" data-de>HYBRIDE CREW</div>
+        <div class="def" data-en>A team where both human roles and agent roles are explicitly defined, calibrated over time, and documented in a way that new members can understand within a day. A hybrid crew is not a team that occasionally uses AI. It is a team where agent integration is part of how the work is described and measured.</div>
+        <div class="def" data-de>Ein Team, in dem sowohl menschliche Rollen als auch Agent-Rollen explizit definiert, über Zeit kalibriert und so dokumentiert sind, dass neue Mitglieder sie innerhalb eines Tages verstehen können. Eine hybride Crew ist kein Team, das gelegentlich AI nutzt. Es ist ein Team, in dem Agent-Integration Teil davon ist, wie Arbeit beschrieben und gemessen wird.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AUSBLICK · PARCHMENT ==================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 07</span>
+      <span data-en>· WHAT COMES NEXT</span>
+      <span data-de>· WAS KOMMT ALS NÄCHSTES</span>
+    </div>
+
+    <h2 class="serif" data-en>You know how teams <em>shift</em>.<br/>What feeds the agent?</h2>
+    <h2 class="serif" data-de>Du kennst den Team-<em>Wandel</em>.<br/>Was versorgt den Agent?</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>A hybrid crew that works well still fails if the agent has to guess. The next article covers data hygiene and context: what agents actually need to produce reliable output, and what happens when the data they work from is stale, ambiguous, or incomplete.</p>
+    <p class="kicker" data-de>Eine gut funktionierende hybride Crew scheitert trotzdem, wenn der Agent raten muss. Die nächste Tafel behandelt Datenhygiene und Kontext: Was Agents wirklich brauchen, um zuverlässigen Output zu produzieren, und was passiert, wenn die Daten, mit denen sie arbeiten, veraltet, mehrdeutig oder unvollständig sind.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>NEXT · CARD 12</span>
+          <span data-de>NÄCHSTE · TAFEL 12</span>
+        </div>
+        <h3 class="serif" data-en>Data hygiene and context.</h3>
+        <h3 class="serif" data-de>Datenhygiene und Context.</h3>
+        <p data-en>What agents need to not guess. How to structure inputs, manage stale data, and give context that produces consistent results rather than confident hallucinations.</p>
+        <p data-de>Was Agents brauchen, um nicht zu raten. Wie man Eingaben strukturiert, veraltete Daten verwaltet und Kontext gibt, der konsistente Ergebnisse statt selbstsicherer Halluzinationen produziert.</p>
+        <div style="margin-top:20px">
+          <a class="cta" href="#" style="font-size:11px;padding:10px 16px">
+            <span data-en>REQUEST CARD 12</span>
+            <span data-de>TAFEL 12 ANFORDERN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>COMING LATER</span>
+          <span data-de>BALD VERFÜGBAR</span>
+        </div>
+        <h3 class="serif" data-en>More cards in the series.</h3>
+        <h3 class="serif" data-de>Mehr Tafeln in der Reihe.</h3>
+        <p data-en>The series continues with cards on evaluation methodology, agent security, and running agents in regulated industries. New cards publish roughly every two weeks.</p>
+        <p data-de>Die Reihe geht weiter mit Tafeln zu Evaluierungsmethodik, Agent-Sicherheit und Agent-Betrieb in regulierten Branchen. Neue Tafeln erscheinen etwa alle zwei Wochen.</p>
+        <div style="margin-top:20px">
+          <a href="https://readix.net" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>FOLLOW ON READIX</span>
+            <span data-de>AUF READIX FOLGEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>START THE SERIES</span>
+          <span data-de>REIHE VON VORNE</span>
+        </div>
+        <h3 class="serif" data-en>Start from card one.</h3>
+        <h3 class="serif" data-de>Ab Tafel eins beginnen.</h3>
+        <p data-en>If this is the first card you've read, start at the beginning. Card 01 explains what AI and agentic AI actually are, without the hype. Each card builds on the previous one.</p>
+        <p data-de>Wenn das die erste Tafel ist, die du gelesen hast, beginne am Anfang. Tafel 01 erklärt, was AI und Agentic AI tatsächlich sind, ohne den Hype. Jede Tafel baut auf der vorherigen auf.</p>
+        <div style="margin-top:20px">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>READ CARD 01</span>
+            <span data-de>TAFEL 01 LESEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;border-top:1px solid var(--border-on-paper);padding-top:40px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:20px">
+        <span data-en>← ALL CARDS IN THE SERIES</span>
+        <span data-de>← ALLE TAFELN IN DER REIHE</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">01 <span data-en>· What is AI?</span><span data-de>· Was ist AI?</span></a>
+        <a href="./02_wie-ein-agent-denkt.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">02 <span data-en>· How an Agent Thinks</span><span data-de>· Wie ein Agent denkt</span></a>
+        <a href="./03_tools-mcps-plugins.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">03 <span data-en>· Tools &amp; MCPs</span><span data-de>· Tools &amp; MCPs</span></a>
+        <a href="./04_risiko-und-trust.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">04 <span data-en>· Risk &amp; Trust</span><span data-de>· Risiko &amp; Trust</span></a>
+        <a href="./05_dein-erster-agent.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">05 <span data-en>· Your First Agent</span><span data-de>· Dein erster Agent</span></a>
+        <a href="./06_agent-teams.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">06 <span data-en>· Agent Teams</span><span data-de>· Agent-Teams</span></a>
+        <a href="./07_pflege-und-iteration.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">07 <span data-en>· Care &amp; Iteration</span><span data-de>· Pflege &amp; Iteration</span></a>
+        <a href="./08_use-case-bibliothek.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">08 <span data-en>· Use-Case Library</span><span data-de>· Use-Case-Bibliothek</span></a>
+        <a href="./09_kosten-und-roi.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">09 <span data-en>· Cost &amp; ROI</span><span data-de>· Kosten &amp; ROI</span></a>
+        <a href="./10_wohin-die-reise-geht.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">10 <span data-en>· Where This Is Going</span><span data-de>· Wohin die Reise geht</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 11</span>
+      <span>STAND · 2026-05</span>
+      <span>VERSION · v.2026.05</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// REIHENFOLGE: Demo zuerst, dann setLang, dann Initial-Load.
+// setLang() ist global (für onclick="setLang(...)").
+// NICHT 'body' als Variablenname verwenden (schattet document.body).
+// ============================================================
+
+// ============== Before/After Demo ==============
+var currentFlow = 'content';
+var currentMode = 'before';
+
+var demoData = {
+  en: {
+    flows: {
+      content: {
+        label: 'CONTENT PIPELINE',
+        before: [
+          { role: 'WRITER', type: 'manual', task: 'Research topic and gather sources', time: '2-4 hrs' },
+          { role: 'WRITER', type: 'manual', task: 'Draft article from scratch', time: '3-5 hrs' },
+          { role: 'EDITOR', type: 'manual', task: 'Review draft, mark up, return with notes', time: '1-2 hrs' },
+          { role: 'WRITER', type: 'manual', task: 'Apply edits, revise structure', time: '1-2 hrs' },
+          { role: 'PM',     type: 'manual', task: 'Approve and schedule publish', time: '30 min' }
+        ],
+        after: [
+          { role: 'WRITER', type: 'human',  task: 'Define topic, angle, and three key points', time: '15 min' },
+          { role: 'AGENT',  type: 'agent',  task: 'Research sources, draft article, format output', time: '4 min' },
+          { role: 'WRITER', type: 'review', task: 'Review draft, refine voice and facts', time: '30 min' },
+          { role: 'AGENT',  type: 'agent',  task: 'Apply edits, add SEO meta, finalize format', time: '1 min' },
+          { role: 'PM',     type: 'review', task: 'Final approval, publish', time: '10 min' }
+        ]
+      },
+      bugs: {
+        label: 'BUG TRIAGE',
+        before: [
+          { role: 'DEV',  type: 'manual', task: 'Read and understand incoming bug report', time: '20 min' },
+          { role: 'DEV',  type: 'manual', task: 'Attempt to reproduce the issue', time: '1-2 hrs' },
+          { role: 'DEV',  type: 'manual', task: 'Classify severity and affected component', time: '30 min' },
+          { role: 'DEV',  type: 'manual', task: 'Write up ticket steps, assign to owner', time: '30 min' },
+          { role: 'LEAD', type: 'manual', task: 'Review queue, adjust priorities', time: '30 min' }
+        ],
+        after: [
+          { role: 'AGENT', type: 'agent',  task: 'Parse report, classify severity and component', time: '2 min' },
+          { role: 'AGENT', type: 'agent',  task: 'Search codebase, link related issues and PRs', time: '3 min' },
+          { role: 'DEV',   type: 'review', task: 'Verify classification, add context if needed', time: '5 min' },
+          { role: 'AGENT', type: 'agent',  task: 'Create structured ticket with steps and links', time: '1 min' },
+          { role: 'LEAD',  type: 'review', task: 'Spot-check queue, confirm priority calls', time: '10 min' }
+        ]
+      },
+      sales: {
+        label: 'SALES OUTREACH',
+        before: [
+          { role: 'AE',  type: 'manual', task: 'Research one prospect: company, role, pain', time: '45 min' },
+          { role: 'AE',  type: 'manual', task: 'Write personalized cold email', time: '30 min' },
+          { role: 'AE',  type: 'manual', task: 'Draft follow-up sequence manually', time: '20 min' },
+          { role: 'SDR', type: 'manual', task: 'Send emails, log activity in CRM', time: '20 min' },
+          { role: 'AE',  type: 'manual', task: 'Monitor replies, respond individually', time: '30 min' }
+        ],
+        after: [
+          { role: 'AE',    type: 'human',  task: 'Set ICP criteria and signal rules for the week', time: '20 min' },
+          { role: 'AGENT', type: 'agent',  task: 'Research 50 prospects: company, role, signals', time: '8 min' },
+          { role: 'AGENT', type: 'agent',  task: 'Draft personalized emails for each prospect', time: '4 min' },
+          { role: 'AE',    type: 'review', task: 'Review and approve the full batch', time: '20 min' },
+          { role: 'AGENT', type: 'agent',  task: 'Send, log in CRM, schedule follow-up sequence', time: '2 min' }
+        ]
+      },
+      report: {
+        label: 'DATA REPORT',
+        before: [
+          { role: 'ANALYST', type: 'manual', task: 'Pull data manually from 3-4 systems', time: '2 hrs' },
+          { role: 'ANALYST', type: 'manual', task: 'Clean, join, and validate datasets', time: '1-2 hrs' },
+          { role: 'ANALYST', type: 'manual', task: 'Build charts and tables in spreadsheet', time: '2 hrs' },
+          { role: 'ANALYST', type: 'manual', task: 'Write narrative and executive summary', time: '1 hr' },
+          { role: 'MANAGER', type: 'manual', task: 'Review report, leave comments', time: '1 hr' }
+        ],
+        after: [
+          { role: 'ANALYST', type: 'human',  task: 'Define metrics, scope, and date range', time: '15 min' },
+          { role: 'AGENT',   type: 'agent',  task: 'Query all sources, join and clean data', time: '5 min' },
+          { role: 'AGENT',   type: 'agent',  task: 'Generate charts, draft narrative and summary', time: '4 min' },
+          { role: 'ANALYST', type: 'review', task: 'Review outputs, investigate any outliers', time: '30 min' },
+          { role: 'MANAGER', type: 'review', task: 'Final sign-off, distribute to stakeholders', time: '15 min' }
+        ]
+      }
+    }
+  },
+  de: {
+    flows: {
+      content: {
+        label: 'CONTENT-PIPELINE',
+        before: [
+          { role: 'AUTOR',  type: 'manual', task: 'Thema recherchieren, Quellen sammeln', time: '2-4 Std.' },
+          { role: 'AUTOR',  type: 'manual', task: 'Artikel von Grund auf schreiben', time: '3-5 Std.' },
+          { role: 'EDITOR', type: 'manual', task: 'Entwurf prüfen, kommentieren, zurückgeben', time: '1-2 Std.' },
+          { role: 'AUTOR',  type: 'manual', task: 'Feedback einarbeiten, Struktur überarbeiten', time: '1-2 Std.' },
+          { role: 'PM',     type: 'manual', task: 'Freigeben und Veröffentlichung planen', time: '30 Min.' }
+        ],
+        after: [
+          { role: 'AUTOR',  type: 'human',  task: 'Thema, Winkel und drei Kernpunkte definieren', time: '15 Min.' },
+          { role: 'AGENT',  type: 'agent',  task: 'Quellen recherchieren, Artikel entwerfen und formatieren', time: '4 Min.' },
+          { role: 'AUTOR',  type: 'review', task: 'Entwurf prüfen, Stimme und Fakten verfeinern', time: '30 Min.' },
+          { role: 'AGENT',  type: 'agent',  task: 'Korrekturen anwenden, SEO-Meta hinzufügen, finalisieren', time: '1 Min.' },
+          { role: 'PM',     type: 'review', task: 'Abschlussgenehmigung, veröffentlichen', time: '10 Min.' }
+        ]
+      },
+      bugs: {
+        label: 'FEHLER-TRIAGE',
+        before: [
+          { role: 'DEV',  type: 'manual', task: 'Fehlerbericht lesen und verstehen', time: '20 Min.' },
+          { role: 'DEV',  type: 'manual', task: 'Problem reproduzieren versuchen', time: '1-2 Std.' },
+          { role: 'DEV',  type: 'manual', task: 'Schwere und betroffene Komponente klassifizieren', time: '30 Min.' },
+          { role: 'DEV',  type: 'manual', task: 'Ticket verfassen, Verantwortlichen zuweisen', time: '30 Min.' },
+          { role: 'LEAD', type: 'manual', task: 'Queue prüfen, Prioritäten anpassen', time: '30 Min.' }
+        ],
+        after: [
+          { role: 'AGENT', type: 'agent',  task: 'Bericht parsen, Schwere und Komponente klassifizieren', time: '2 Min.' },
+          { role: 'AGENT', type: 'agent',  task: 'Codebase durchsuchen, verwandte Issues verknüpfen', time: '3 Min.' },
+          { role: 'DEV',   type: 'review', task: 'Klassifikation bestätigen, Kontext ergänzen', time: '5 Min.' },
+          { role: 'AGENT', type: 'agent',  task: 'Strukturiertes Ticket mit Schritten und Links erstellen', time: '1 Min.' },
+          { role: 'LEAD',  type: 'review', task: 'Queue stichprobenartig prüfen, Prioritäten bestätigen', time: '10 Min.' }
+        ]
+      },
+      sales: {
+        label: 'KUNDEN-AKQUISE',
+        before: [
+          { role: 'AE',  type: 'manual', task: 'Einen Prospect recherchieren: Firma, Rolle, Problem', time: '45 Min.' },
+          { role: 'AE',  type: 'manual', task: 'Personalisierte Kalt-E-Mail schreiben', time: '30 Min.' },
+          { role: 'AE',  type: 'manual', task: 'Follow-up-Sequenz manuell entwerfen', time: '20 Min.' },
+          { role: 'SDR', type: 'manual', task: 'E-Mails senden, Aktivität im CRM protokollieren', time: '20 Min.' },
+          { role: 'AE',  type: 'manual', task: 'Antworten beobachten, individuell reagieren', time: '30 Min.' }
+        ],
+        after: [
+          { role: 'AE',    type: 'human',  task: 'ICP-Kriterien und Signalregeln für die Woche festlegen', time: '20 Min.' },
+          { role: 'AGENT', type: 'agent',  task: '50 Prospects recherchieren: Firma, Rolle, Signale', time: '8 Min.' },
+          { role: 'AGENT', type: 'agent',  task: 'Personalisierte E-Mails für jeden Prospect entwerfen', time: '4 Min.' },
+          { role: 'AE',    type: 'review', task: 'Gesamten Batch prüfen und freigeben', time: '20 Min.' },
+          { role: 'AGENT', type: 'agent',  task: 'Senden, CRM protokollieren, Follow-up planen', time: '2 Min.' }
+        ]
+      },
+      report: {
+        label: 'DATENBERICHT',
+        before: [
+          { role: 'ANALYST', type: 'manual', task: 'Daten aus 3-4 Systemen manuell abrufen', time: '2 Std.' },
+          { role: 'ANALYST', type: 'manual', task: 'Datensätze bereinigen, zusammenführen und validieren', time: '1-2 Std.' },
+          { role: 'ANALYST', type: 'manual', task: 'Charts und Tabellen in Tabellenkalkulation bauen', time: '2 Std.' },
+          { role: 'ANALYST', type: 'manual', task: 'Narrative und Executive Summary schreiben', time: '1 Std.' },
+          { role: 'MANAGER', type: 'manual', task: 'Bericht prüfen und kommentieren', time: '1 Std.' }
+        ],
+        after: [
+          { role: 'ANALYST', type: 'human',  task: 'Metriken, Umfang und Datumsbereich definieren', time: '15 Min.' },
+          { role: 'AGENT',   type: 'agent',  task: 'Alle Quellen abfragen, Daten bereinigen und zusammenführen', time: '5 Min.' },
+          { role: 'AGENT',   type: 'agent',  task: 'Charts erstellen, Narrative und Zusammenfassung entwerfen', time: '4 Min.' },
+          { role: 'ANALYST', type: 'review', task: 'Outputs prüfen, Ausreißer untersuchen', time: '30 Min.' },
+          { role: 'MANAGER', type: 'review', task: 'Abschlussgenehmigung, an Stakeholder verteilen', time: '15 Min.' }
+        ]
+      }
+    }
+  }
+};
+
+var typeColor = {
+  manual: 'role-manual',
+  human:  'role-human',
+  agent:  'role-agent',
+  review: 'role-review'
+};
+
+function getLang() { return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+function setDemoFlow(flow) {
+  currentFlow = flow;
+  renderDemo();
+}
+
+function setDemoMode(mode) {
+  currentMode = mode;
+  renderDemo();
+}
+
+function renderDemo() {
+  var lang = getLang();
+  var flowKeys = ['content', 'bugs', 'sales', 'report'];
+  var flows = demoData[lang].flows;
+
+  // Update chip labels and active state
+  var chips = document.querySelectorAll('.ba-chip');
+  chips.forEach(function(chip, i) {
+    chip.classList.toggle('active', flowKeys[i] === currentFlow);
+    chip.textContent = flows[flowKeys[i]].label;
+  });
+
+  // Update flow label in header
+  var flowLabel = document.getElementById('ba-flow-label');
+  if (flowLabel) flowLabel.textContent = flows[currentFlow].label;
+
+  // Update toggle button labels and state
+  var btnBefore = document.getElementById('ba-btn-before');
+  var btnAfter  = document.getElementById('ba-btn-after');
+  if (btnBefore) {
+    btnBefore.classList.toggle('active', currentMode === 'before');
+    btnBefore.textContent = lang === 'en' ? 'BEFORE AGENTS' : 'VOR AGENTS';
+  }
+  if (btnAfter) {
+    btnAfter.classList.toggle('active', currentMode === 'after');
+    btnAfter.textContent = lang === 'en' ? 'AFTER AGENTS' : 'MIT AGENTS';
+  }
+
+  // Render steps
+  var bodyEl = document.getElementById('ba-body');
+  if (!bodyEl) return;
+  var steps = currentMode === 'before' ? flows[currentFlow].before : flows[currentFlow].after;
+  var html = '';
+  steps.forEach(function(s) {
+    html += '<div class="ba-step">';
+    html += '<div class="ba-role"><span class="' + typeColor[s.type] + '">' + s.role + '</span></div>';
+    html += '<div class="ba-task"><div class="task-text">' + s.task + '</div></div>';
+    html += '<div class="ba-time"><span>' + s.time + '</span></div>';
+    html += '</div>';
+  });
+  bodyEl.innerHTML = html;
+}
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'Agents in the team · Codex Article 11'
+    : 'Agents im Team · Codex Lehrtafel 11';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  if (typeof renderDemo === 'function') renderDemo();
+}
+
+// ============== Initial Load ==============
+(function() {
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
