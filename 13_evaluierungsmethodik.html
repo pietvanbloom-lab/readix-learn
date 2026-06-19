@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Evaluation methodology · Codex Article 13</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:1100px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* ================ Layout ================ */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--rust);width:150px;font-weight:600}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+.process.cols-4{grid-template-columns:repeat(4,1fr)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+@media(max-width:880px){.process.cols-4{grid-template-columns:1fr 1fr}}
+@media(max-width:880px){.process.cols-3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.process.cols-4,.process.cols-3{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:72px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:880px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+/* ================ Evidence buckets (K1) ================ */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:48px}
+.bucket{padding:40px 32px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper)}
+.bucket .bucket-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:16px;display:block}
+.bucket .bucket-tag.tag-weak{color:var(--rust)}
+.bucket .bucket-tag.tag-mid{color:var(--copper-deep)}
+.bucket .bucket-tag.tag-strong{color:var(--patina)}
+.bucket h4{font-family:'Source Serif 4',serif;font-size:22px;font-weight:500;margin-bottom:12px;line-height:1.2;letter-spacing:-.01em;color:var(--fg-on-paper)}
+.bucket p{font-family:'Lora',serif;font-size:15px;line-height:1.6;color:var(--fg-on-paper-mute)}
+.bucket ul{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.bucket ul li{font-family:'Inter',sans-serif;font-size:14px;color:var(--gray-600);padding-left:14px;position:relative;line-height:1.5}
+.bucket ul li::before{content:'·';position:absolute;left:0;color:var(--copper-deep)}
+@media(max-width:880px){.buckets{grid-template-columns:1fr}}
+
+/* ================ Metric Scoreboard Demo (K4) ================ */
+.score-demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);margin-top:48px}
+.score-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:12px}
+.score-head-title{font-family:'Source Serif 4',serif;font-size:16px;color:var(--fg-on-ink-mute)}
+.score-head-hint{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+
+.ver-tabs{display:flex;border-bottom:1px solid var(--border-on-ink);flex-wrap:wrap}
+.ver-tab{flex:1;min-width:180px;padding:18px 20px;background:none;border:none;border-right:1px solid var(--border-on-ink);border-bottom:2px solid transparent;cursor:pointer;text-align:left;color:var(--gray-400);transition:color .15s,background .15s,border-color .15s}
+.ver-tab:last-child{border-right:none}
+.ver-tab .ver-name{display:block;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:4px}
+.ver-tab .ver-sub{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-600)}
+.ver-tab:hover{color:var(--copper)}
+.ver-tab.active{color:var(--copper);background:rgba(217,119,87,.08);border-bottom:2px solid var(--copper)}
+.ver-tab.active .ver-sub{color:var(--copper-deep)}
+@media(max-width:700px){.ver-tab{min-width:100%;border-right:none;border-bottom:1px solid var(--border-on-ink)}.ver-tab.active{border-bottom:2px solid var(--copper)}}
+
+.score-note{padding:14px 24px;border-bottom:1px solid var(--border-on-ink);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-400)}
+
+.score-body{padding:32px 24px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:880px){.score-body{grid-template-columns:1fr;gap:36px}}
+
+.pass-big{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
+.pass-big .pb-num{font-family:'Source Serif 4',serif;font-size:64px;line-height:1;color:var(--copper);font-weight:300}
+.pass-big .pb-pct{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;color:var(--gray-400);text-transform:uppercase}
+.pass-big .pb-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gray-400);text-transform:uppercase;display:block;margin-bottom:6px}
+
+.metric-row{margin-bottom:22px}
+.metric-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.metric-top .m-label{color:var(--gray-400)}
+.metric-top .m-val{color:var(--fg-on-ink);font-weight:600}
+.delta-chip{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border-on-ink);margin-left:10px;color:var(--gray-400)}
+.delta-chip.up{color:var(--patina);border-color:var(--patina)}
+.delta-chip.down{color:var(--rust);border-color:var(--rust)}
+.bar-track{height:10px;background:var(--ink-black);border:1px solid var(--border-on-ink)}
+.bar-fill{height:100%;background:var(--copper);transition:width .4s var(--easing)}
+
+.cost-line{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--border-on-ink);padding-top:18px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.cost-line .m-label{color:var(--gray-400)}
+.cost-line .m-val{color:var(--fg-on-ink);font-weight:600}
+
+.case-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-400);margin-bottom:14px}
+.case-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.case-dot{width:18px;height:18px;border-radius:50%;position:relative}
+.case-dot.pass{background:var(--success)}
+.case-dot.fail{background:var(--rust)}
+.case-dot.flip{box-shadow:0 0 0 2px var(--ochre)}
+.case-legend{display:flex;gap:20px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-400);margin-bottom:24px}
+.case-legend .lg{display:flex;align-items:center;gap:8px}
+.case-legend .lg i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.case-legend .lg i.l-pass{background:var(--success)}
+.case-legend .lg i.l-fail{background:var(--rust)}
+.case-legend .lg i.l-flip{background:transparent;box-shadow:0 0 0 2px var(--ochre)}
+
+.change-row{display:flex;gap:12px;flex-wrap:wrap}
+.change-chip{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--border-on-ink);color:var(--gray-200)}
+.change-chip.good{border-color:var(--patina);color:var(--patina)}
+.change-chip.bad{border-color:var(--rust);color:var(--ochre)}
+
+.verdict{display:flex;align-items:center;gap:18px;padding:22px 24px;border-top:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap}
+.v-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:8px 14px;border:1px solid var(--gray-600);color:var(--gray-200)}
+.v-tag.v-base{border-color:var(--gray-600);color:var(--gray-200)}
+.v-tag.v-iter{border-color:var(--ochre);color:var(--ochre)}
+.v-tag.v-hold{border-color:var(--copper);color:var(--copper)}
+.v-text{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);line-height:1.7}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+      <a href="./08_use-case-bibliothek.html" class="nav-link">
+        <span data-de>08 → Use-Case-Bibliothek</span>
+        <span data-en>08 → Use-Case Library</span>
+      </a>
+      <a href="./09_kosten-und-roi.html" class="nav-link">
+        <span data-de>09 → Kosten &amp; ROI</span>
+        <span data-en>09 → Cost &amp; ROI</span>
+      </a>
+      <a href="./10_wohin-die-reise-geht.html" class="nav-link">
+        <span data-de>10 → Wohin die Reise geht</span>
+        <span data-en>10 → Where This Is Going</span>
+      </a>
+      <a href="./11_agents-im-team.html" class="nav-link">
+        <span data-de>11 → Agents im Team</span>
+        <span data-en>11 → Agents in the Team</span>
+      </a>
+      <a href="./12_datenhygiene-und-context.html" class="nav-link">
+        <span data-de>12 → Datenhygiene &amp; Context</span>
+        <span data-en>12 → Data Hygiene &amp; Context</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 13</span>
+      <span data-en>· LEHRTAFEL · EVALUATION METHODOLOGY</span>
+      <span data-de>· LEHRTAFEL · EVALUIERUNGSMETHODIK</span>
+    </div>
+
+    <h1 class="serif" data-en>Measure the agent, not the <em>vibe</em>.</h1>
+    <h1 class="serif" data-de>Miss den Agent, nicht das <em>Gefühl</em>.</h1>
+
+    <p class="kicker" data-en>Every team that runs an agent eventually asks the same question: is it actually getting better? "It feels stronger this week" is not an answer. This article shows how to build a small, honest evaluation: a fixed set of test cases, a handful of metrics, and a routine that separates a real improvement from a lucky run.</p>
+    <p class="kicker" data-de>Jedes Team, das einen Agent betreibt, stellt irgendwann dieselbe Frage: Wird er wirklich besser? "Er fühlt sich diese Woche stärker an" ist keine Antwort. Diese Tafel zeigt, wie man eine kleine, ehrliche Evaluierung baut: ein festes Set an Testfällen, eine Handvoll Metriken und eine Routine, die eine echte Verbesserung von einem Glückslauf trennt.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">20</div>
+        <div class="label"><span data-en>Cases in a starter eval set</span><span data-de>Fälle in einem Start-Testset</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">4</div>
+        <div class="label"><span data-en>Metrics that cover most jobs</span><span data-de>Metriken, die die meisten Aufgaben abdecken</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">5</div>
+        <div class="label"><span data-en>Runs before you trust a delta</span><span data-de>Läufe, bevor du einem Delta traust</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1">
+        <span data-en>READ THE METHOD</span>
+        <span data-de>METHODE LESEN</span>
+        <span class="arrow">┌──→</span>
+      </a>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px">
+      <span>FILE · 13 / SERIE AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 11 MINUTES</span><span data-de>LESEZEIT · 11 MINUTEN</span></span>
+      <span>VERSION · v.2026.06</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K1 · PARCHMENT ==================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 01</span>
+      <span data-en>· THREE LEVELS OF EVIDENCE</span>
+      <span data-de>· DREI STUFEN VON BELEG</span>
+    </div>
+
+    <h2 class="serif" data-en>A good feeling is not <em>evidence</em>.</h2>
+    <h2 class="serif" data-de>Ein gutes Gefühl ist kein <em>Beleg</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Most claims about agent quality rest on one of three kinds of evidence, and they are not equal. An anecdote tells you something happened once. A demo tells you something can happen under friendly conditions. Only an eval tells you what happens repeatedly, on cases you did not pick to flatter the system.</p>
+    <p class="kicker" data-de>Die meisten Aussagen über Agent-Qualität stützen sich auf eine von drei Arten von Beleg, und die sind nicht gleichwertig. Eine Anekdote sagt dir, dass etwas einmal passiert ist. Eine Demo sagt dir, dass etwas unter freundlichen Bedingungen passieren kann. Nur eine Evaluierung sagt dir, was wiederholt passiert, auf Fällen, die du nicht zum Schmeicheln ausgesucht hast.</p>
+
+    <div class="buckets">
+      <div class="bucket">
+        <span class="bucket-tag tag-weak" data-en>ANECDOTE · WEAKEST</span>
+        <span class="bucket-tag tag-weak" data-de>ANEKDOTE · SCHWÄCHSTE</span>
+        <h4 data-en>"It felt good."</h4>
+        <h4 data-de>"Es fühlte sich gut an."</h4>
+        <p data-en>Someone ran the agent once, liked the output, and reported the feeling. No record of the input, no comparison to a previous version, no way to repeat it. Anecdotes are how hope spreads through a team, not how decisions get made.</p>
+        <p data-de>Jemand hat den Agent einmal laufen lassen, mochte den Output und meldete das Gefühl. Keine Aufzeichnung der Eingabe, kein Vergleich zur vorherigen Version, keine Möglichkeit zur Wiederholung. Anekdoten sind die Art, wie Hoffnung durch ein Team wandert, nicht wie Entscheidungen fallen.</p>
+        <ul>
+          <li data-en>One run, no record</li>
+          <li data-en>No comparison point</li>
+          <li data-en>Not repeatable</li>
+          <li data-de>Ein Lauf, keine Aufzeichnung</li>
+          <li data-de>Kein Vergleichspunkt</li>
+          <li data-de>Nicht wiederholbar</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-mid" data-en>DEMO · CURATED</span>
+        <span class="bucket-tag tag-mid" data-de>DEMO · KURATIERT</span>
+        <h4 data-en>"It worked on stage."</h4>
+        <h4 data-de>"Auf der Bühne lief es."</h4>
+        <p data-en>A handpicked case, rehearsed until it works, shown to an audience. Demos are honest about what is possible and silent about what is typical. Every demo survives until the first real input that nobody rehearsed.</p>
+        <p data-de>Ein handverlesener Fall, geprobt bis er funktioniert, einem Publikum gezeigt. Demos sind ehrlich darüber, was möglich ist, und schweigen darüber, was typisch ist. Jede Demo überlebt bis zur ersten echten Eingabe, die niemand geprobt hat.</p>
+        <ul>
+          <li data-en>Picked to succeed</li>
+          <li data-en>Shows the ceiling, not the floor</li>
+          <li data-en>Breaks on real input</li>
+          <li data-de>Zum Gelingen ausgewählt</li>
+          <li data-de>Zeigt die Decke, nicht den Boden</li>
+          <li data-de>Bricht an echter Eingabe</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-strong" data-en>EVAL · REPEATABLE</span>
+        <span class="bucket-tag tag-strong" data-de>EVAL · WIEDERHOLBAR</span>
+        <h4 data-en>"It passed the set."</h4>
+        <h4 data-de>"Es hat das Set bestanden."</h4>
+        <p data-en>A fixed collection of real cases, a defined way to score each one, and repeated runs. The same set, run against every version, turns "better" into a number with a direction. This is the only level of evidence worth arguing over.</p>
+        <p data-de>Eine feste Sammlung echter Fälle, eine definierte Art, jeden zu bewerten, und wiederholte Läufe. Dasselbe Set, gegen jede Version gefahren, macht aus "besser" eine Zahl mit Richtung. Das ist die einzige Belegstufe, über die zu streiten sich lohnt.</p>
+        <ul>
+          <li data-en>Fixed cases, defined scoring</li>
+          <li data-en>Comparable across versions</li>
+          <li data-en>Repeatable by anyone</li>
+          <li data-de>Feste Fälle, definierte Bewertung</li>
+          <li data-de>Vergleichbar über Versionen</li>
+          <li data-de>Von jedem wiederholbar</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K2 · DARK ==================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 02</span>
+      <span data-en>· WHAT TO MEASURE</span>
+      <span data-de>· WAS MAN MISST</span>
+    </div>
+
+    <h2 class="serif" data-en>Four numbers tell the <em>story</em>.</h2>
+    <h2 class="serif" data-de>Vier Zahlen erzählen die <em>Geschichte</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>You do not need a research lab to evaluate an agent. For most working agents, four metrics cover the job: was it right, was it complete, was it usable, and what did it cost. Each metric answers a different question, and each one has a trap that makes it lie if you score it carelessly.</p>
+    <p class="kicker" data-de>Du brauchst kein Forschungslabor, um einen Agent zu evaluieren. Für die meisten Arbeits-Agents decken vier Metriken die Aufgabe ab: War es richtig, war es vollständig, war es brauchbar, und was hat es gekostet. Jede Metrik beantwortet eine andere Frage, und jede hat eine Falle, die sie lügen lässt, wenn du nachlässig bewertest.</p>
+
+    <div style="margin-top:48px;overflow-x:auto">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th><span data-en>METRIC</span><span data-de>METRIK</span></th>
+            <th><span data-en>What it asks</span><span data-de>Was sie fragt</span></th>
+            <th><span data-en>How to score it</span><span data-de>Wie man sie bewertet</span></th>
+            <th><span data-en>The trap</span><span data-de>Die Falle</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label"><span data-en>CORRECTNESS</span><span data-de>KORREKTHEIT</span></td>
+            <td><span data-en>Is the answer factually right?</span><span data-de>Ist die Antwort sachlich richtig?</span></td>
+            <td><span data-en>Compare against a golden answer per case, pass or fail</span><span data-de>Gegen eine Golden Answer pro Fall vergleichen, bestanden oder nicht</span></td>
+            <td><span data-en>Partial credit hides failures. A nearly right account number is a wrong account number</span><span data-de>Teilpunkte verstecken Fehler. Eine fast richtige Kontonummer ist eine falsche Kontonummer</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>COMPLETENESS</span><span data-de>VOLLSTÄNDIGKEIT</span></td>
+            <td><span data-en>Did it cover everything the task needs?</span><span data-de>Hat er alles abgedeckt, was die Aufgabe braucht?</span></td>
+            <td><span data-en>Checklist of required elements, count what is present</span><span data-de>Checkliste der Pflichtelemente, zählen, was vorhanden ist</span></td>
+            <td><span data-en>An answer can be correct and useless: right facts, half the job</span><span data-de>Eine Antwort kann richtig und nutzlos sein: korrekte Fakten, halbe Aufgabe</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>FORMAT</span><span data-de>FORMAT</span></td>
+            <td><span data-en>Can the next system or person use it as is?</span><span data-de>Kann das nächste System oder die nächste Person es direkt nutzen?</span></td>
+            <td><span data-en>Validate structure: fields, length, tone, schema</span><span data-de>Struktur prüfen: Felder, Länge, Ton, Schema</span></td>
+            <td><span data-en>Format failures are silent: one missing field stops a whole pipeline</span><span data-de>Format-Fehler sind leise: ein fehlendes Feld stoppt eine ganze Pipeline</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>COST</span><span data-de>KOSTEN</span></td>
+            <td><span data-en>What does each run cost in money and time?</span><span data-de>Was kostet jeder Lauf an Geld und Zeit?</span></td>
+            <td><span data-en>Log tokens, tool calls, and latency per run, average over the set</span><span data-de>Tokens, Tool-Calls und Latenz pro Lauf erfassen, über das Set mitteln</span></td>
+            <td><span data-en>A small quality gain that doubles cost is a decision, not a win</span><span data-de>Ein kleiner Qualitätsgewinn, der die Kosten verdoppelt, ist eine Entscheidung, kein Sieg</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K3 · PARCHMENT ==================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 03</span>
+      <span data-en>· BUILDING THE EVAL SET</span>
+      <span data-de>· DAS TESTSET BAUEN</span>
+    </div>
+
+    <h2 class="serif" data-en>Build the set before the <em>change</em>.</h2>
+    <h2 class="serif" data-de>Bau das Set vor der <em>Änderung</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>An eval set is built once and then defended. The order matters: collect the cases before you tune anything, so the set reflects the job and not your latest fix. Twenty real cases beat two hundred invented ones, because the agent will be judged by reality, not by your imagination.</p>
+    <p class="kicker" data-de>Ein Testset wird einmal gebaut und dann verteidigt. Die Reihenfolge zählt: Sammle die Fälle, bevor du irgendetwas tunst, damit das Set die Aufgabe widerspiegelt und nicht deinen letzten Fix. Zwanzig echte Fälle schlagen zweihundert erfundene, denn der Agent wird an der Realität gemessen, nicht an deiner Vorstellung.</p>
+
+    <div class="process cols-4">
+      <div class="step">
+        <span class="num">01 · <span data-en>COLLECT</span><span data-de>SAMMELN</span></span>
+        <h4 data-en>Take real cases.</h4>
+        <h4 data-de>Echte Fälle nehmen.</h4>
+        <p data-en>Pull twenty inputs the agent has actually faced or will face: ordinary ones, ugly ones, and a few that broke it before. Resist the urge to write clean examples. The set must contain the mess the job contains.</p>
+        <p data-de>Hol dir zwanzig Eingaben, denen der Agent wirklich begegnet ist oder begegnen wird: gewöhnliche, hässliche und ein paar, an denen er schon gescheitert ist. Widersteh dem Drang, saubere Beispiele zu schreiben. Das Set muss das Chaos enthalten, das die Aufgabe enthält.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · <span data-en>DEFINE</span><span data-de>DEFINIEREN</span></span>
+        <h4 data-en>Write the expected outcome.</h4>
+        <h4 data-de>Das erwartete Ergebnis festhalten.</h4>
+        <p data-en>For every case, write down what a correct answer contains before you run anything. This is the golden answer. If two people on the team disagree about what correct means, the agent never had a chance.</p>
+        <p data-de>Schreib für jeden Fall auf, was eine korrekte Antwort enthält, bevor du irgendetwas laufen lässt. Das ist die Golden Answer. Wenn zwei Leute im Team uneins sind, was korrekt bedeutet, hatte der Agent nie eine Chance.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · <span data-en>SCORE</span><span data-de>BEWERTEN</span></span>
+        <h4 data-en>Keep the rubric binary.</h4>
+        <h4 data-de>Die Rubrik binär halten.</h4>
+        <p data-en>Score each case pass or fail against its golden answer. A 1-to-10 scale feels precise and measures mood. Binary scoring is harsh, fast, and comparable: it forces you to say what good enough actually means.</p>
+        <p data-de>Bewerte jeden Fall mit bestanden oder nicht gegen seine Golden Answer. Eine Skala von 1 bis 10 fühlt sich präzise an und misst Stimmung. Binäre Bewertung ist hart, schnell und vergleichbar: Sie zwingt dich zu sagen, was gut genug wirklich bedeutet.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · <span data-en>FREEZE</span><span data-de>EINFRIEREN</span></span>
+        <h4 data-en>Version it, then leave it alone.</h4>
+        <h4 data-de>Versionieren, dann in Ruhe lassen.</h4>
+        <p data-en>Freeze the set and give it a version number. Never tune the agent on the test cases, and never quietly swap a case the agent keeps failing. When the job itself changes, cut a new version and say so.</p>
+        <p data-de>Frier das Set ein und gib ihm eine Versionsnummer. Tune den Agent nie auf den Testfällen, und tausche nie still einen Fall aus, an dem der Agent immer wieder scheitert. Wenn sich die Aufgabe selbst ändert, schneide eine neue Version und sag es dazu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K4 · DARK · LIVE DEMO ==================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 04</span>
+      <span data-en>· THE SCOREBOARD · PICK A VERSION</span>
+      <span data-de>· DAS SCOREBOARD · VERSION WÄHLEN</span>
+    </div>
+
+    <h2 class="serif" data-en>Three versions, one <em>scoreboard</em>.</h2>
+    <h2 class="serif" data-de>Drei Versionen, ein <em>Scoreboard</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>This is what an eval looks like in practice. One support agent, one frozen set of 20 cases, three versions. Click through the versions and watch the scoreboard: the pass rate, the four metrics, and the case strip showing exactly which cases flipped. Version 3 hides a lesson that a single total would never show you.</p>
+    <p class="kicker" data-de>So sieht eine Evaluierung in der Praxis aus. Ein Support-Agent, ein eingefrorenes Set mit 20 Fällen, drei Versionen. Klick dich durch die Versionen und beobachte das Scoreboard: die Bestehensquote, die vier Metriken und den Fall-Streifen, der genau zeigt, welche Fälle gekippt sind. Version 3 versteckt eine Lektion, die eine einzelne Gesamtzahl dir nie zeigen würde.</p>
+
+    <div class="score-demo">
+      <div class="score-head">
+        <span class="score-head-title" id="board-title">THE EVAL SCOREBOARD</span>
+        <span class="score-head-hint">
+          <span data-en>● PICK A VERSION</span>
+          <span data-de>● VERSION WÄHLEN</span>
+        </span>
+      </div>
+
+      <div class="ver-tabs" id="ver-tabs">
+        <button class="ver-tab active" onclick="setVersion(0)">
+          <span class="ver-name">V1 · BASELINE</span>
+          <span class="ver-sub"><span data-en>First working version</span><span data-de>Erste lauffähige Version</span></span>
+        </button>
+        <button class="ver-tab" onclick="setVersion(1)">
+          <span class="ver-name">V2 · PROMPT REWORK</span>
+          <span class="ver-sub"><span data-en>Clearer rules, stricter format</span><span data-de>Klarere Regeln, strengeres Format</span></span>
+        </button>
+        <button class="ver-tab" onclick="setVersion(2)">
+          <span class="ver-name">V3 · TOOL ADDED</span>
+          <span class="ver-sub"><span data-en>Live lookup tool wired in</span><span data-de>Live-Lookup-Tool angebunden</span></span>
+        </button>
+      </div>
+
+      <div class="score-note">
+        <span data-en>EVERY NUMBER · MEAN OF 5 RUNS ON EVAL SET v1.0 · 20 FROZEN CASES</span>
+        <span data-de>JEDE ZAHL · MITTEL AUS 5 LÄUFEN AUF TESTSET v1.0 · 20 EINGEFRORENE FÄLLE</span>
+      </div>
+
+      <div class="score-body">
+        <div>
+          <div class="pass-big">
+            <div>
+              <span class="pb-label"><span data-en>PASS RATE</span><span data-de>BESTEHENSQUOTE</span></span>
+              <span class="pb-num" id="pb-num">10/20</span>
+            </div>
+            <span class="pb-pct" id="pb-pct">50%</span>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-top">
+              <span class="m-label"><span data-en>CORRECTNESS</span><span data-de>KORREKTHEIT</span></span>
+              <span><span class="m-val" id="val-corr">62</span><span class="delta-chip" id="chip-corr">·</span></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="bar-corr" style="width:62%"></div></div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-top">
+              <span class="m-label"><span data-en>COMPLETENESS</span><span data-de>VOLLSTÄNDIGKEIT</span></span>
+              <span><span class="m-val" id="val-comp">58</span><span class="delta-chip" id="chip-comp">·</span></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="bar-comp" style="width:58%"></div></div>
+          </div>
+
+          <div class="metric-row">
+            <div class="metric-top">
+              <span class="m-label">FORMAT</span>
+              <span><span class="m-val" id="val-form">71</span><span class="delta-chip" id="chip-form">·</span></span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="bar-form" style="width:71%"></div></div>
+          </div>
+
+          <div class="cost-line">
+            <span class="m-label"><span data-en>COST / RUN</span><span data-de>KOSTEN / LAUF</span></span>
+            <span><span class="m-val" id="val-cost">$0.42</span><span class="delta-chip" id="chip-cost">·</span></span>
+          </div>
+        </div>
+
+        <div>
+          <div class="case-label">
+            <span data-en>20 CASES · ONE DOT PER CASE</span>
+            <span data-de>20 FÄLLE · EIN PUNKT PRO FALL</span>
+          </div>
+          <div class="case-grid" id="case-grid"></div>
+          <div class="case-legend">
+            <span class="lg"><i class="l-pass"></i><span data-en>PASS</span><span data-de>BESTANDEN</span></span>
+            <span class="lg"><i class="l-fail"></i><span data-en>FAIL</span><span data-de>DURCHGEFALLEN</span></span>
+            <span class="lg"><i class="l-flip"></i><span data-en>FLIPPED VS PREVIOUS</span><span data-de>GEKIPPT GGÜ. VORHER</span></span>
+          </div>
+          <div class="change-row" id="change-row"></div>
+        </div>
+      </div>
+
+      <div class="verdict">
+        <span class="v-tag v-base" id="v-tag">BASELINE</span>
+        <span class="v-text" id="v-text"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K5 · PARCHMENT ==================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 05</span>
+      <span data-en>· THE RULE BEHIND THE RULE</span>
+      <span data-de>· DIE REGEL HINTER DER REGEL</span>
+    </div>
+
+    <h2 class="serif" data-en>Luck looks like <em>skill</em>, once.</h2>
+    <h2 class="serif" data-de>Glück sieht aus wie <em>Können</em>, einmal.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Agents are not deterministic. The same version on the same case can pass on Monday and fail on Tuesday. A single run therefore proves almost nothing, in either direction. The fix is boring and cheap: repeat the runs, average the result, and only believe differences that survive the repetition.</p>
+    <p class="kicker" data-de>Agents sind nicht deterministisch. Dieselbe Version kann am selben Fall am Montag bestehen und am Dienstag durchfallen. Ein einzelner Lauf beweist deshalb fast nichts, in keine Richtung. Die Lösung ist langweilig und billig: Läufe wiederholen, Ergebnis mitteln und nur Unterschieden glauben, die die Wiederholung überleben.</p>
+
+    <div style="margin-top:48px">
+      <div class="pull">
+        <div class="num">5×</div>
+        <div>
+          <div class="label" data-en>FAUSTREGEL · REPETITION</div>
+          <div class="label" data-de>FAUSTREGEL · WIEDERHOLUNG</div>
+          <p class="text" data-en>"Run the full eval set five times before you believe a difference between two versions. If the gap between them is smaller than the gap between two runs of the same version, you are looking at noise, not progress. Five runs cost minutes. Shipping a regression costs weeks."</p>
+          <p class="text" data-de>"Fahre das volle Testset fünfmal, bevor du einem Unterschied zwischen zwei Versionen glaubst. Ist der Abstand zwischen ihnen kleiner als der Abstand zwischen zwei Läufen derselben Version, schaust du auf Rauschen, nicht auf Fortschritt. Fünf Läufe kosten Minuten. Eine Regression auszuliefern kostet Wochen."</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px" class="two">
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 01</span>
+          <span data-en>· THREE SIGNALS YOUR EVAL IS HONEST</span>
+          <span data-de>· DREI SIGNALE, DASS DEIN EVAL EHRLICH IST</span>
+        </div>
+        <div class="prose">
+          <p data-en>The numbers move when you change something relevant and stay flat when you change something cosmetic. An eval that reacts to everything measures nothing. Sensitivity to the right things is the whole point.</p>
+          <p data-de>Die Zahlen bewegen sich, wenn du etwas Relevantes änderst, und bleiben flach, wenn du etwas Kosmetisches änderst. Ein Eval, das auf alles reagiert, misst nichts. Empfindlichkeit für die richtigen Dinge ist der ganze Zweck.</p>
+          <p data-en>Every failed case is diagnosable. When case 14 fails, you can open it, read the golden answer, and name the cause in minutes. Failures that cannot be explained cannot be fixed.</p>
+          <p data-de>Jeder durchgefallene Fall ist diagnostizierbar. Wenn Fall 14 scheitert, kannst du ihn öffnen, die Golden Answer lesen und die Ursache in Minuten benennen. Fehler, die sich nicht erklären lassen, lassen sich nicht beheben.</p>
+          <p data-en>The set still contains cases the agent fails. A living eval has an uncomfortable corner. If everything passes, the set has stopped asking hard questions.</p>
+          <p data-de>Das Set enthält noch Fälle, an denen der Agent scheitert. Ein lebendiges Eval hat eine unbequeme Ecke. Wenn alles besteht, hat das Set aufgehört, harte Fragen zu stellen.</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 02</span>
+          <span data-en>· THREE WAYS EVALS LIE</span>
+          <span data-de>· DREI ARTEN, WIE EVALS LÜGEN</span>
+        </div>
+        <div class="prose">
+          <p data-en>A 100 percent pass rate. Either the set is too easy or the agent was tuned on the test. Both mean the same thing: the number no longer tells you anything about the real job.</p>
+          <p data-de>Eine Bestehensquote von 100 Prozent. Entweder ist das Set zu leicht oder der Agent wurde auf den Test getunt. Beides bedeutet dasselbe: Die Zahl sagt dir nichts mehr über die echte Aufgabe.</p>
+          <p data-en>Metrics improve while users complain. You are measuring something that is not the job. Go back to the cases and check whether the golden answers still describe what users actually need.</p>
+          <p data-de>Die Metriken steigen, während Nutzer sich beschweren. Du misst etwas, das nicht die Aufgabe ist. Geh zurück zu den Fällen und prüfe, ob die Golden Answers noch beschreiben, was Nutzer wirklich brauchen.</p>
+          <p data-en>The test cases keep changing. If every comparison uses a slightly different set, no two numbers are comparable and every chart is fiction. Moving goalposts are the quietest way to fake progress.</p>
+          <p data-de>Die Testfälle ändern sich ständig. Wenn jeder Vergleich ein leicht anderes Set nutzt, sind keine zwei Zahlen vergleichbar und jedes Diagramm ist Fiktion. Wandernde Torpfosten sind die leiseste Art, Fortschritt vorzutäuschen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K6 · DARK · GLOSSAR ==================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 06</span>
+      <span data-en>· SIX TERMS FOR EVALUATION</span>
+      <span data-de>· SECHS BEGRIFFE FÜR EVALUIERUNG</span>
+    </div>
+
+    <h2 class="serif" data-en>Six terms, one <em>vocabulary</em>.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe, eine <em>Sprache</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Evaluation has a small working vocabulary that keeps discussions precise. These six terms cover most of what gets said in a review meeting about whether an agent is ready. Use them and the conversation gets shorter.</p>
+    <p class="kicker" data-de>Evaluierung hat einen kleinen Arbeitswortschatz, der Diskussionen präzise hält. Diese sechs Begriffe decken das meiste ab, was in einem Review-Meeting darüber gesagt wird, ob ein Agent bereit ist. Nutze sie und das Gespräch wird kürzer.</p>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <div class="term" data-en>EVAL SET</div>
+        <div class="term" data-de>EVAL SET</div>
+        <div class="def" data-en>A fixed, versioned collection of test cases with a defined scoring rule for each. The eval set is the measuring stick: every version of the agent runs against the same cases, which is what makes results comparable over time.</div>
+        <div class="def" data-de>Eine feste, versionierte Sammlung von Testfällen mit definierter Bewertungsregel für jeden. Das Eval Set ist der Maßstab: Jede Version des Agents läuft gegen dieselben Fälle, und genau das macht Ergebnisse über die Zeit vergleichbar.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>BASELINE</div>
+        <div class="term" data-de>BASELINE</div>
+        <div class="def" data-en>The scores of the first working version, recorded before any tuning. The baseline is what every later version is compared against. Without one, "improved" has no reference point and every claim of progress is unanchored.</div>
+        <div class="def" data-de>Die Werte der ersten lauffähigen Version, festgehalten vor jedem Tuning. Die Baseline ist das, womit jede spätere Version verglichen wird. Ohne sie hat "verbessert" keinen Bezugspunkt und jede Fortschrittsbehauptung hängt in der Luft.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>PASS RATE</div>
+        <div class="term" data-de>PASS RATE</div>
+        <div class="def" data-en>The share of cases in the set that a version passes, averaged over repeated runs. The single most useful headline number, as long as you remember it is a summary: which cases pass matters as much as how many.</div>
+        <div class="def" data-de>Der Anteil der Fälle im Set, den eine Version besteht, gemittelt über wiederholte Läufe. Die nützlichste Überschriftenzahl, solange du im Kopf behältst, dass sie eine Zusammenfassung ist: Welche Fälle bestehen, zählt genauso wie wie viele.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>REGRESSION</div>
+        <div class="term" data-de>REGRESSION</div>
+        <div class="def" data-en>A case that passed in the previous version and fails in the new one. Regressions hide inside improved totals, which is why you compare case by case, not just score by score. One regression in a critical case can outweigh five fixes.</div>
+        <div class="def" data-de>Ein Fall, der in der vorherigen Version bestand und in der neuen durchfällt. Regressionen verstecken sich in verbesserten Gesamtzahlen, weshalb man Fall für Fall vergleicht, nicht nur Wert gegen Wert. Eine Regression in einem kritischen Fall kann fünf Fixes aufwiegen.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>RUBRIC</div>
+        <div class="term" data-de>RUBRIK</div>
+        <div class="def" data-en>The written rule that decides whether a case passes: what must be present, what must be absent, what disqualifies. A good rubric lets two different people score the same output and land on the same verdict.</div>
+        <div class="def" data-de>Die geschriebene Regel, die entscheidet, ob ein Fall besteht: was vorhanden sein muss, was fehlen muss, was disqualifiziert. Eine gute Rubrik lässt zwei verschiedene Personen denselben Output bewerten und beim selben Urteil landen.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>GOLDEN ANSWER</div>
+        <div class="term" data-de>GOLDEN ANSWER</div>
+        <div class="def" data-en>The reference answer for a test case, written down before the agent runs. It does not have to be the only acceptable answer, but it defines what correct contains. Golden answers turn scoring from taste into comparison.</div>
+        <div class="def" data-de>Die Referenzantwort für einen Testfall, aufgeschrieben bevor der Agent läuft. Sie muss nicht die einzig akzeptable Antwort sein, aber sie definiert, was korrekt enthält. Golden Answers machen aus Bewertung nach Geschmack einen Vergleich.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AUSBLICK · PARCHMENT ==================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 07</span>
+      <span data-en>· WHAT COMES NEXT</span>
+      <span data-de>· WAS KOMMT ALS NÄCHSTES</span>
+    </div>
+
+    <h2 class="serif" data-en>The agent is measured.<br/>Is it also <em>safe</em>?</h2>
+    <h2 class="serif" data-de>Der Agent ist gemessen.<br/>Ist er auch <em>sicher</em>?</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>An eval tells you the agent does the job. It does not tell you what happens when someone tries to make it do a different job. The next article covers agent security: prompt injection, tool misuse, data leakage, and the guardrails that keep a helpful agent from becoming an open door.</p>
+    <p class="kicker" data-de>Ein Eval sagt dir, dass der Agent die Aufgabe erledigt. Es sagt dir nicht, was passiert, wenn jemand versucht, ihm eine andere Aufgabe unterzuschieben. Die nächste Tafel behandelt Agent-Sicherheit: Prompt Injection, Tool-Missbrauch, Datenabfluss und die Leitplanken, die einen hilfreichen Agent davon abhalten, eine offene Tür zu werden.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>NEXT · CARD 14</span>
+          <span data-de>NÄCHSTE · TAFEL 14</span>
+        </div>
+        <h3 class="serif" data-en>Agent security.</h3>
+        <h3 class="serif" data-de>Agent-Sicherheit.</h3>
+        <p data-en>What can go wrong when an agent meets a hostile input. Prompt injection, tool misuse, data leakage, and the guardrails that contain them.</p>
+        <p data-de>Was schiefgehen kann, wenn ein Agent auf eine feindliche Eingabe trifft. Prompt Injection, Tool-Missbrauch, Datenabfluss und die Leitplanken, die sie eindämmen.</p>
+        <div style="margin-top:20px">
+          <a class="cta" href="14_agent-sicherheit.html" style="font-size:11px;padding:10px 16px">
+            <span data-en>READ CARD 14</span>
+            <span data-de>TAFEL 14 LESEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>COMING LATER</span>
+          <span data-de>BALD VERFÜGBAR</span>
+        </div>
+        <h3 class="serif" data-en>More cards in the series.</h3>
+        <h3 class="serif" data-de>Mehr Tafeln in der Reihe.</h3>
+        <p data-en>The series continues with cards on running agents in regulated industries and the economics of long-running agents. New cards publish roughly every two weeks.</p>
+        <p data-de>Die Reihe geht weiter mit Tafeln zu Agent-Betrieb in regulierten Branchen und der Ökonomie langlaufender Agents. Neue Tafeln erscheinen etwa alle zwei Wochen.</p>
+        <div style="margin-top:20px">
+          <a href="https://readix.net" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>FOLLOW ON READIX</span>
+            <span data-de>AUF READIX FOLGEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>START THE SERIES</span>
+          <span data-de>REIHE VON VORNE</span>
+        </div>
+        <h3 class="serif" data-en>Start from card one.</h3>
+        <h3 class="serif" data-de>Ab Tafel eins beginnen.</h3>
+        <p data-en>If this is the first card you've read, start at the beginning. Card 01 explains what AI and agentic AI actually are, without the hype. Each card builds on the previous one.</p>
+        <p data-de>Wenn das die erste Tafel ist, die du gelesen hast, beginne am Anfang. Tafel 01 erklärt, was AI und Agentic AI tatsächlich sind, ohne den Hype. Jede Tafel baut auf der vorherigen auf.</p>
+        <div style="margin-top:20px">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>READ CARD 01</span>
+            <span data-de>TAFEL 01 LESEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;border-top:1px solid var(--border-on-paper);padding-top:40px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:20px">
+        <span data-en>← ALL CARDS IN THE SERIES</span>
+        <span data-de>← ALLE TAFELN IN DER REIHE</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">01 <span data-en>· What is AI?</span><span data-de>· Was ist AI?</span></a>
+        <a href="./02_wie-ein-agent-denkt.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">02 <span data-en>· How an Agent Thinks</span><span data-de>· Wie ein Agent denkt</span></a>
+        <a href="./03_tools-mcps-plugins.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">03 <span data-en>· Tools &amp; MCPs</span><span data-de>· Tools &amp; MCPs</span></a>
+        <a href="./04_risiko-und-trust.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">04 <span data-en>· Risk &amp; Trust</span><span data-de>· Risiko &amp; Trust</span></a>
+        <a href="./05_dein-erster-agent.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">05 <span data-en>· Your First Agent</span><span data-de>· Dein erster Agent</span></a>
+        <a href="./06_agent-teams.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">06 <span data-en>· Agent Teams</span><span data-de>· Agent-Teams</span></a>
+        <a href="./07_pflege-und-iteration.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">07 <span data-en>· Care &amp; Iteration</span><span data-de>· Pflege &amp; Iteration</span></a>
+        <a href="./08_use-case-bibliothek.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">08 <span data-en>· Use-Case Library</span><span data-de>· Use-Case-Bibliothek</span></a>
+        <a href="./09_kosten-und-roi.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">09 <span data-en>· Cost &amp; ROI</span><span data-de>· Kosten &amp; ROI</span></a>
+        <a href="./10_wohin-die-reise-geht.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">10 <span data-en>· Where This Is Going</span><span data-de>· Wohin die Reise geht</span></a>
+        <a href="./11_agents-im-team.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">11 <span data-en>· Agents in the Team</span><span data-de>· Agents im Team</span></a>
+        <a href="./12_datenhygiene-und-context.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">12 <span data-en>· Data Hygiene &amp; Context</span><span data-de>· Datenhygiene &amp; Context</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 13</span>
+      <span>STAND · 2026-06</span>
+      <span>VERSION · v.2026.06</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// REIHENFOLGE: Demo zuerst, dann setLang, dann Initial-Load.
+// setVersion() und setLang() sind global (für inline onclick).
+// NICHT 'body' als Variablenname verwenden (schattet document.body).
+// ============================================================
+
+// ============== Metric Scoreboard Demo ==============
+var currentVersion = 0;
+
+var boardData = {
+  versions: [
+    {
+      name: 'V1 · BASELINE',
+      pass: [1,0,1,0,0,1,1,0,1,0,1,0,0,1,1,0,1,0,1,0],
+      metrics: { corr: 62, comp: 58, form: 71 },
+      cost: 0.42,
+      verdictClass: 'v-base'
+    },
+    {
+      name: 'V2 · PROMPT REWORK',
+      pass: [1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1],
+      metrics: { corr: 78, comp: 74, form: 90 },
+      cost: 0.44,
+      verdictClass: 'v-iter'
+    },
+    {
+      name: 'V3 · TOOL ADDED',
+      pass: [1,1,1,1,0,1,1,1,1,1,1,0,1,1,1,1,1,0,1,0],
+      metrics: { corr: 86, comp: 88, form: 92 },
+      cost: 0.61,
+      verdictClass: 'v-hold'
+    }
+  ]
+};
+
+var boardI18n = {
+  en: {
+    title: 'THE EVAL SCOREBOARD',
+    verdictTag: ['BASELINE', 'ITERATE', 'HOLD'],
+    verdictText: [
+      'Your starting line. Record it, freeze it, compare everything that follows against it.',
+      '+4 cases fixed, zero regressions. Real progress, still below the 85 percent ship bar. Keep iterating.',
+      '+3 cases fixed, but case 20 regressed. The total improved and still hides a step backwards. Diagnose case 20 before shipping.'
+    ],
+    fixed: 'FIXED',
+    broken: 'BROKEN',
+    noChange: 'NO COMPARISON · THIS IS THE BASELINE',
+    caseWord: 'CASE'
+  },
+  de: {
+    title: 'DAS EVAL-SCOREBOARD',
+    verdictTag: ['BASELINE', 'ITERIEREN', 'HALTEN'],
+    verdictText: [
+      'Deine Startlinie. Festhalten, einfrieren, alles Folgende dagegen vergleichen.',
+      '+4 Fälle behoben, null Regressionen. Echter Fortschritt, noch unter der 85-Prozent-Marke. Weiter iterieren.',
+      '+3 Fälle behoben, aber Fall 20 ist gekippt. Die Gesamtzahl steigt und versteckt trotzdem einen Rückschritt. Fall 20 diagnostizieren, bevor ausgeliefert wird.'
+    ],
+    fixed: 'BEHOBEN',
+    broken: 'GEKIPPT',
+    noChange: 'KEIN VERGLEICH · DAS IST DIE BASELINE',
+    caseWord: 'FALL'
+  }
+};
+
+function getLang() { return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+function countPass(arr) {
+  var c = 0;
+  for (var i = 0; i < arr.length; i++) c += arr[i];
+  return c;
+}
+
+function deltaChip(el, delta, suffix) {
+  if (delta === null) {
+    el.textContent = '·';
+    el.className = 'delta-chip';
+    return;
+  }
+  var sign = delta > 0 ? '+' : '';
+  el.textContent = sign + delta + (suffix || '');
+  el.className = 'delta-chip ' + (delta > 0 ? 'up' : (delta < 0 ? 'down' : ''));
+}
+
+function setVersion(idx) {
+  currentVersion = idx;
+  renderBoard();
+}
+
+function renderBoard() {
+  var lang = getLang();
+  var t = boardI18n[lang];
+  var v = boardData.versions[currentVersion];
+  var prev = currentVersion > 0 ? boardData.versions[currentVersion - 1] : null;
+
+  // Tabs
+  var tabs = document.querySelectorAll('#ver-tabs .ver-tab');
+  tabs.forEach(function(tab, i) { tab.classList.toggle('active', i === currentVersion); });
+
+  // Head title
+  var titleEl = document.getElementById('board-title');
+  if (titleEl) titleEl.textContent = t.title;
+
+  // Pass rate
+  var passCount = countPass(v.pass);
+  var pct = Math.round(passCount / v.pass.length * 100);
+  document.getElementById('pb-num').textContent = passCount + '/' + v.pass.length;
+  document.getElementById('pb-pct').textContent = pct + '%';
+
+  // Metric bars + deltas
+  var keys = ['corr', 'comp', 'form'];
+  keys.forEach(function(k) {
+    var val = v.metrics[k];
+    document.getElementById('val-' + k).textContent = val;
+    document.getElementById('bar-' + k).style.width = val + '%';
+    deltaChip(document.getElementById('chip-' + k), prev ? val - prev.metrics[k] : null, '');
+  });
+
+  // Cost
+  document.getElementById('val-cost').textContent = '$' + v.cost.toFixed(2);
+  var costDelta = prev ? Math.round((v.cost - prev.cost) * 100) / 100 : null;
+  var chipCost = document.getElementById('chip-cost');
+  if (costDelta === null) {
+    chipCost.textContent = '·';
+    chipCost.className = 'delta-chip';
+  } else {
+    var sign = costDelta > 0 ? '+' : '';
+    chipCost.textContent = sign + '$' + Math.abs(costDelta).toFixed(2);
+    // For cost, up is bad: mark increases as down (rust), decreases as up (patina)
+    chipCost.className = 'delta-chip ' + (costDelta > 0 ? 'down' : (costDelta < 0 ? 'up' : ''));
+    if (costDelta < 0) chipCost.textContent = '-$' + Math.abs(costDelta).toFixed(2);
+  }
+
+  // Case dots
+  var grid = document.getElementById('case-grid');
+  grid.innerHTML = '';
+  var fixedCount = 0, brokenCount = 0;
+  for (var i = 0; i < v.pass.length; i++) {
+    var dot = document.createElement('span');
+    var cls = 'case-dot ' + (v.pass[i] ? 'pass' : 'fail');
+    var flipped = prev && prev.pass[i] !== v.pass[i];
+    if (flipped) {
+      cls += ' flip';
+      if (v.pass[i]) fixedCount++; else brokenCount++;
+    }
+    dot.className = cls;
+    dot.title = t.caseWord + ' ' + (i + 1) + ' · ' + (v.pass[i] ? 'PASS' : 'FAIL');
+    grid.appendChild(dot);
+  }
+
+  // Change summary chips
+  var changeRow = document.getElementById('change-row');
+  changeRow.innerHTML = '';
+  if (!prev) {
+    var chip = document.createElement('span');
+    chip.className = 'change-chip';
+    chip.textContent = t.noChange;
+    changeRow.appendChild(chip);
+  } else {
+    var goodChip = document.createElement('span');
+    goodChip.className = 'change-chip good';
+    goodChip.textContent = fixedCount + ' ' + t.fixed;
+    changeRow.appendChild(goodChip);
+    var badChip = document.createElement('span');
+    badChip.className = 'change-chip' + (brokenCount > 0 ? ' bad' : '');
+    badChip.textContent = brokenCount + ' ' + t.broken;
+    changeRow.appendChild(badChip);
+  }
+
+  // Verdict
+  var vTag = document.getElementById('v-tag');
+  vTag.textContent = t.verdictTag[currentVersion];
+  vTag.className = 'v-tag ' + v.verdictClass;
+  document.getElementById('v-text').textContent = t.verdictText[currentVersion];
+}
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'Evaluation methodology · Codex Article 13'
+    : 'Evaluierungsmethodik · Codex Lehrtafel 13';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  if (typeof renderBoard === 'function') renderBoard();
+}
+
+// ============== Initial Load ==============
+(function() {
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>

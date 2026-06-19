@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Agent security · Codex Article 14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:1100px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* ================ Layout ================ */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--rust);width:170px;font-weight:600}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+.process.cols-4{grid-template-columns:repeat(4,1fr)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+@media(max-width:880px){.process.cols-4{grid-template-columns:1fr 1fr}}
+@media(max-width:880px){.process.cols-3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.process.cols-4,.process.cols-3{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:72px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:880px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+/* ================ Threat buckets (K1) ================ */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:48px}
+.bucket{padding:40px 32px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper)}
+.bucket .bucket-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:16px;display:block}
+.bucket .bucket-tag.tag-hijack{color:var(--copper-deep)}
+.bucket .bucket-tag.tag-misuse{color:var(--rust)}
+.bucket .bucket-tag.tag-leak{color:var(--copper)}
+.bucket h4{font-family:'Source Serif 4',serif;font-size:22px;font-weight:500;margin-bottom:12px;line-height:1.2;letter-spacing:-.01em;color:var(--fg-on-paper)}
+.bucket p{font-family:'Lora',serif;font-size:15px;line-height:1.6;color:var(--fg-on-paper-mute)}
+.bucket ul{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.bucket ul li{font-family:'Inter',sans-serif;font-size:14px;color:var(--gray-600);padding-left:14px;position:relative;line-height:1.5}
+.bucket ul li::before{content:'·';position:absolute;left:0;color:var(--copper-deep)}
+@media(max-width:880px){.buckets{grid-template-columns:1fr}}
+
+/* ================ Annotated SVG Hotspot Demo (K4) ================ */
+.svg-demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden;margin-top:48px}
+.svg-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:12px}
+.svg-head-title{font-family:'Source Serif 4',serif;font-size:16px;color:var(--fg-on-ink-mute)}
+.svg-head-hint{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+.svg-scroll{overflow-x:auto;padding:40px 24px;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.018) 39px,rgba(255,255,255,.018) 40px)}
+.pipe-svg{min-width:760px;margin:0 auto;display:block}
+.pipe-conn{stroke:var(--border-on-ink);stroke-width:1.5}
+.hot{cursor:pointer}
+.hot .node-box{fill:var(--ink-black);stroke:var(--border-on-ink);stroke-width:1.5;transition:stroke .2s var(--easing),fill .2s var(--easing)}
+.hot .node-label{fill:var(--gray-200);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;text-anchor:middle;font-weight:600}
+.hot .node-num{fill:var(--gray-400);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-anchor:middle}
+.hot:hover .node-box{stroke:var(--copper)}
+.hot:hover .node-label{fill:var(--copper)}
+.hot.active .node-box{stroke:var(--copper);stroke-width:2;fill:rgba(217,119,87,.14)}
+.hot.active .node-label{fill:var(--copper)}
+.hot.active .node-num{fill:var(--copper)}
+.hot.guard .node-box{stroke-dasharray:4 3}
+.node-cap{fill:var(--gray-600);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-anchor:middle;text-transform:uppercase}
+.node-detail{border-top:1px solid var(--border-on-ink);padding:32px 24px;background:var(--ink-black);display:grid;grid-template-columns:160px 1fr;gap:28px;align-items:start}
+.nd-stage{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);font-weight:600;line-height:1.6}
+.nd-stage .nd-stage-num{display:block;font-size:40px;font-family:'Source Serif 4',serif;color:var(--copper);font-weight:300;margin-bottom:6px;line-height:1}
+.nd-title{font-family:'Source Serif 4',serif;font-size:24px;font-weight:500;letter-spacing:-.01em;color:var(--fg-on-ink);margin-bottom:12px}
+.nd-text{font-family:'Lora',serif;font-size:17px;line-height:1.6;color:var(--gray-200);max-width:60ch;margin-bottom:20px}
+.nd-fail{border-left:2px solid var(--rust);padding:10px 0 10px 16px}
+.nd-fail-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);font-weight:600;display:block;margin-bottom:6px}
+.nd-fail-text{font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;color:var(--gray-200)}
+@media(max-width:700px){.node-detail{grid-template-columns:1fr;gap:16px}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+      <a href="./08_use-case-bibliothek.html" class="nav-link">
+        <span data-de>08 → Use-Case-Bibliothek</span>
+        <span data-en>08 → Use-Case Library</span>
+      </a>
+      <a href="./09_kosten-und-roi.html" class="nav-link">
+        <span data-de>09 → Kosten &amp; ROI</span>
+        <span data-en>09 → Cost &amp; ROI</span>
+      </a>
+      <a href="./10_wohin-die-reise-geht.html" class="nav-link">
+        <span data-de>10 → Wohin die Reise geht</span>
+        <span data-en>10 → Where This Is Going</span>
+      </a>
+      <a href="./11_agents-im-team.html" class="nav-link">
+        <span data-de>11 → Agents im Team</span>
+        <span data-en>11 → Agents in the Team</span>
+      </a>
+      <a href="./12_datenhygiene-und-context.html" class="nav-link">
+        <span data-de>12 → Datenhygiene &amp; Context</span>
+        <span data-en>12 → Data Hygiene &amp; Context</span>
+      </a>
+      <a href="./13_evaluierungsmethodik.html" class="nav-link">
+        <span data-de>13 → Evaluierungsmethodik</span>
+        <span data-en>13 → Evaluation Methodology</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 14</span>
+      <span data-en>· LEHRTAFEL · AGENT SECURITY</span>
+      <span data-de>· LEHRTAFEL · AGENT-SICHERHEIT</span>
+    </div>
+
+    <h1 class="serif" data-en>Assume the input is <em>hostile</em>.</h1>
+    <h1 class="serif" data-de>Nimm an, die Eingabe ist <em>feindlich</em>.</h1>
+
+    <p class="kicker" data-en>A helpful agent and an open door look the same until someone walks through. The moment an agent reads outside text and holds real permissions, it can be steered by whoever wrote that text. This article covers the three ways agents get attacked, the four guardrails that contain them, and a habit that keeps a useful agent from becoming a liability.</p>
+    <p class="kicker" data-de>Ein hilfreicher Agent und eine offene Tür sehen gleich aus, bis jemand hindurchgeht. In dem Moment, in dem ein Agent fremden Text liest und echte Rechte hält, kann ihn lenken, wer diesen Text geschrieben hat. Diese Tafel behandelt die drei Arten, wie Agents angegriffen werden, die vier Leitplanken, die sie eindämmen, und eine Gewohnheit, die einen nützlichen Agent davon abhält, ein Risiko zu werden.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="label"><span data-en>Attack classes behind most incidents</span><span data-de>Angriffsklassen hinter den meisten Vorfällen</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">4</div>
+        <div class="label"><span data-en>Guardrails that contain them</span><span data-de>Leitplanken, die sie eindämmen</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">1</div>
+        <div class="label"><span data-en>Human gate before irreversible acts</span><span data-de>Menschliche Schranke vor irreversiblen Akten</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1">
+        <span data-en>READ THE METHOD</span>
+        <span data-de>METHODE LESEN</span>
+        <span class="arrow">┌──→</span>
+      </a>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px">
+      <span>FILE · 14 / SERIE AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 12 MINUTES</span><span data-de>LESEZEIT · 12 MINUTEN</span></span>
+      <span>VERSION · v.2026.06</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K1 · PARCHMENT ==================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 01</span>
+      <span data-en>· THREE WAYS AGENTS GET ATTACKED</span>
+      <span data-de>· DREI ARTEN, WIE AGENTS ANGEGRIFFEN WERDEN</span>
+    </div>
+
+    <h2 class="serif" data-en>Three doors, one <em>building</em>.</h2>
+    <h2 class="serif" data-de>Drei Türen, ein <em>Gebäude</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Almost every agent incident fits one of three shapes. The agent is told to do something other than its job, the agent uses a real permission for the wrong end, or the agent says something it should have kept private. Naming the three makes them defensible. Each one has a place it enters and a kind of damage it does.</p>
+    <p class="kicker" data-de>Fast jeder Agent-Vorfall passt in eine von drei Formen. Dem Agent wird etwas anderes als seine Aufgabe aufgetragen, der Agent nutzt ein echtes Recht für den falschen Zweck, oder der Agent sagt etwas, das er hätte für sich behalten sollen. Die drei zu benennen macht sie verteidigbar. Jede hat einen Ort, an dem sie eindringt, und eine Art Schaden, die sie anrichtet.</p>
+
+    <div class="buckets">
+      <div class="bucket">
+        <span class="bucket-tag tag-hijack" data-en>HIJACK · THE INPUT</span>
+        <span class="bucket-tag tag-hijack" data-de>KAPERN · DIE EINGABE</span>
+        <h4 data-en>The input takes over.</h4>
+        <h4 data-de>Die Eingabe übernimmt.</h4>
+        <p data-en>Prompt injection. Hidden instructions inside a document, web page, or email tell the agent to ignore its task and follow them instead. The agent reads commands and content through the same eyes, so unless you teach it the difference, the attacker's text wins.</p>
+        <p data-de>Prompt Injection. Versteckte Anweisungen in einem Dokument, einer Webseite oder einer Mail sagen dem Agent, seine Aufgabe zu ignorieren und stattdessen ihnen zu folgen. Der Agent liest Befehle und Inhalt mit denselben Augen, also gewinnt der fremde Text, solange du ihm den Unterschied nicht beibringst.</p>
+        <ul>
+          <li data-en>Hidden in fetched content</li>
+          <li data-en>Overrides the real task</li>
+          <li data-en>Invisible to the user</li>
+          <li data-de>Versteckt im geholten Inhalt</li>
+          <li data-de>Überschreibt die echte Aufgabe</li>
+          <li data-de>Für den Nutzer unsichtbar</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-misuse" data-en>MISUSE · THE TOOLS</span>
+        <span class="bucket-tag tag-misuse" data-de>MISSBRAUCH · DIE TOOLS</span>
+        <h4 data-en>The tools go too far.</h4>
+        <h4 data-de>Die Tools gehen zu weit.</h4>
+        <p data-en>Tool misuse. The agent is confused or steered into using a real permission for the wrong end: deleting records, sending mail, moving money. Nothing is exploited in the classic sense; a legitimate capability is simply pointed at the wrong target. The damage scales with what the agent may touch.</p>
+        <p data-de>Tool-Missbrauch. Der Agent wird verwirrt oder dazu gelenkt, ein echtes Recht für den falschen Zweck zu nutzen: Datensätze löschen, Mails senden, Geld bewegen. Nichts wird im klassischen Sinn ausgenutzt; eine legitime Fähigkeit wird einfach auf das falsche Ziel gerichtet. Der Schaden skaliert mit dem, was der Agent berühren darf.</p>
+        <ul>
+          <li data-en>Real permission, wrong goal</li>
+          <li data-en>Scales with access</li>
+          <li data-en>Often irreversible</li>
+          <li data-de>Echtes Recht, falsches Ziel</li>
+          <li data-de>Skaliert mit dem Zugriff</li>
+          <li data-de>Oft nicht rückgängig</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-leak" data-en>LEAK · THE OUTPUT</span>
+        <span class="bucket-tag tag-leak" data-de>ABFLUSS · DER OUTPUT</span>
+        <h4 data-en>The data walks out.</h4>
+        <h4 data-de>Die Daten spazieren hinaus.</h4>
+        <p data-en>Data exfiltration. Secrets, internal records, or one user's data end up in an output that reaches somewhere it should not. A leak needs no dramatic exploit. It needs an answer that simply says too much, returned to the wrong reader at the wrong moment.</p>
+        <p data-de>Datenabfluss. Geheimnisse, interne Datensätze oder die Daten eines Nutzers landen in einem Output, der irgendwohin gelangt, wo er nicht hingehört. Ein Abfluss braucht keinen dramatischen Exploit. Er braucht eine Antwort, die schlicht zu viel sagt, geliefert an den falschen Leser im falschen Moment.</p>
+        <ul>
+          <li data-en>Secrets in plain output</li>
+          <li data-en>Crosses a trust boundary</li>
+          <li data-en>Hard to take back</li>
+          <li data-de>Geheimnisse im offenen Output</li>
+          <li data-de>Überschreitet eine Vertrauensgrenze</li>
+          <li data-de>Schwer zurückzuholen</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K2 · DARK ==================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 02</span>
+      <span data-en>· WHAT TO PUT IN THE WAY</span>
+      <span data-de>· WAS MAN DAZWISCHENSTELLT</span>
+    </div>
+
+    <h2 class="serif" data-en>Four guardrails do the <em>work</em>.</h2>
+    <h2 class="serif" data-de>Vier Leitplanken erledigen die <em>Arbeit</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>You do not secure an agent by trusting it more. You secure it by placing constraints around it that hold even when its reasoning fails. Four guardrails cover most of the job: check what comes in, limit what it can reach, check what goes out, and pause what cannot be undone. Each closes one door, and each has a trap that makes it feel safe while leaking.</p>
+    <p class="kicker" data-de>Du sicherst einen Agent nicht, indem du ihm mehr vertraust. Du sicherst ihn, indem du Schranken um ihn legst, die halten, selbst wenn sein Denken versagt. Vier Leitplanken decken das meiste ab: prüfen, was hereinkommt, begrenzen, was er erreichen kann, prüfen, was hinausgeht, und anhalten, was nicht rückgängig zu machen ist. Jede schließt eine Tür, und jede hat eine Falle, die sich sicher anfühlt, während sie leckt.</p>
+
+    <div style="margin-top:48px;overflow-x:auto">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th><span data-en>GUARDRAIL</span><span data-de>LEITPLANKE</span></th>
+            <th><span data-en>What it does</span><span data-de>Was sie tut</span></th>
+            <th><span data-en>How to apply it</span><span data-de>Wie man sie anwendet</span></th>
+            <th><span data-en>The trap</span><span data-de>Die Falle</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label"><span data-en>INPUT VALIDATION</span><span data-de>EINGABE-PRÜFUNG</span></td>
+            <td><span data-en>Separates trusted instructions from untrusted content</span><span data-de>Trennt vertrauenswürdige Anweisungen von fremdem Inhalt</span></td>
+            <td><span data-en>Label fetched text as data, never as commands; quote or strip embedded instructions</span><span data-de>Geholten Text als Daten kennzeichnen, nie als Befehle; eingebettete Anweisungen zitieren oder entfernen</span></td>
+            <td><span data-en>A filter that blocks known phrases misses every phrasing it has not seen yet</span><span data-de>Ein Filter, der bekannte Formeln blockt, verpasst jede Formulierung, die er noch nicht kennt</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>LEAST PRIVILEGE</span><span data-de>GERINGSTE RECHTE</span></td>
+            <td><span data-en>Limits what the agent can reach at all</span><span data-de>Begrenzt, was der Agent überhaupt erreichen kann</span></td>
+            <td><span data-en>Grant the fewest permissions and narrowest scope that still finish the job; read-only where possible</span><span data-de>Die wenigsten Rechte und den engsten Umfang vergeben, die die Aufgabe noch erledigen; nur lesend, wo möglich</span></td>
+            <td><span data-en>Broad credentials granted for convenience become the blast radius of every mistake</span><span data-de>Breite Zugänge aus Bequemlichkeit werden zum Schadensradius jedes Fehlers</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>OUTPUT FILTERING</span><span data-de>OUTPUT-FILTER</span></td>
+            <td><span data-en>Catches secrets and private data before they leave</span><span data-de>Fängt Geheimnisse und private Daten ab, bevor sie hinausgehen</span></td>
+            <td><span data-en>Scan the response for keys, internal IDs, and other users' data; redact or block before sending</span><span data-de>Die Antwort auf Schlüssel, interne IDs und fremde Nutzerdaten prüfen; vor dem Senden schwärzen oder blocken</span></td>
+            <td><span data-en>A filter tuned to one secret format lets a different format pass untouched</span><span data-de>Ein auf ein Geheimnis-Format getrimmter Filter lässt ein anderes Format unberührt durch</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>HUMAN GATE</span><span data-de>MENSCHLICHE SCHRANKE</span></td>
+            <td><span data-en>Stops irreversible actions for a person to confirm</span><span data-de>Hält irreversible Aktionen an, damit ein Mensch bestätigt</span></td>
+            <td><span data-en>Require explicit approval before sending, paying, deleting, or publishing</span><span data-de>Ausdrückliche Freigabe verlangen vor Senden, Zahlen, Löschen oder Veröffentlichen</span></td>
+            <td><span data-en>Gate everything and people approve blindly; gate only what truly cannot be undone</span><span data-de>Alles abriegeln und Menschen winken blind durch; nur abriegeln, was wirklich nicht rückgängig ist</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K3 · PARCHMENT ==================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 03</span>
+      <span data-en>· HARDENING IN FOUR STEPS</span>
+      <span data-de>· ABSICHERN IN VIER SCHRITTEN</span>
+    </div>
+
+    <h2 class="serif" data-en>Map it before you <em>trust</em> it.</h2>
+    <h2 class="serif" data-de>Kartiere es, bevor du ihm <em>traust</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Securing an agent is a routine, not a one-time switch. The order matters: you cannot constrain what you have not drawn, and you cannot trust what you have not attacked. Four steps take an agent from hopeful to hardened, and the last one is the one most teams skip until an incident forces it.</p>
+    <p class="kicker" data-de>Einen Agent abzusichern ist eine Routine, kein einmaliger Schalter. Die Reihenfolge zählt: Du kannst nicht begrenzen, was du nicht gezeichnet hast, und nicht trauen, was du nicht angegriffen hast. Vier Schritte bringen einen Agent von hoffnungsvoll zu gehärtet, und den letzten überspringen die meisten Teams, bis ein Vorfall ihn erzwingt.</p>
+
+    <div class="process cols-4">
+      <div class="step">
+        <span class="num">01 · <span data-en>MAP</span><span data-de>KARTIEREN</span></span>
+        <h4 data-en>List what it can touch.</h4>
+        <h4 data-de>Auflisten, was es berühren kann.</h4>
+        <p data-en>Write down every tool, permission, and data source the agent can reach. You cannot secure an attack surface you have never drawn. Most teams are surprised by how long the list turns out to be.</p>
+        <p data-de>Schreib jedes Tool, jedes Recht und jede Datenquelle auf, die der Agent erreichen kann. Du kannst eine Angriffsfläche nicht sichern, die du nie gezeichnet hast. Die meisten Teams überrascht, wie lang die Liste ausfällt.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · <span data-en>CONSTRAIN</span><span data-de>BEGRENZEN</span></span>
+        <h4 data-en>Cut to least privilege.</h4>
+        <h4 data-de>Auf geringste Rechte kürzen.</h4>
+        <p data-en>Remove every permission the task does not strictly need. Narrow the scopes, switch to read-only where you can, and give each job its own credentials. Convenience is the enemy at this step.</p>
+        <p data-de>Entfern jedes Recht, das die Aufgabe nicht zwingend braucht. Eng die Umfänge ein, wechsle auf nur lesend, wo es geht, und gib jeder Aufgabe eigene Zugänge. Bequemlichkeit ist hier der Feind.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · <span data-en>MONITOR</span><span data-de>BEOBACHTEN</span></span>
+        <h4 data-en>Log every action.</h4>
+        <h4 data-de>Jede Aktion protokollieren.</h4>
+        <p data-en>Record each tool call and output with enough detail to reconstruct what happened. A silent agent cannot be audited, and an agent that cannot be audited cannot be trusted after the first surprise.</p>
+        <p data-de>Halt jeden Tool-Call und Output mit genug Detail fest, um zu rekonstruieren, was geschah. Ein stiller Agent lässt sich nicht prüfen, und ein Agent, der sich nicht prüfen lässt, ist nach der ersten Überraschung nicht mehr vertrauenswürdig.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · <span data-en>DRILL</span><span data-de>ANGREIFEN</span></span>
+        <h4 data-en>Attack it on purpose.</h4>
+        <h4 data-de>Mit Absicht angreifen.</h4>
+        <p data-en>Try to make the agent misbehave before an attacker does. Inject instructions into its inputs, ask it for secrets, push it past its scope. Every weakness you find becomes the next guardrail you write.</p>
+        <p data-de>Versuch, den Agent zum Fehlverhalten zu bringen, bevor ein Angreifer es tut. Schleus Anweisungen in seine Eingaben, frag ihn nach Geheimnissen, treib ihn über seinen Umfang hinaus. Jede gefundene Schwäche wird zur nächsten Leitplanke, die du schreibst.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K4 · DARK · LIVE DEMO ==================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 04</span>
+      <span data-en>· THE REQUEST LIFECYCLE · CLICK ANY STAGE</span>
+      <span data-de>· DER REQUEST-LEBENSZYKLUS · STUFE ANKLICKEN</span>
+    </div>
+
+    <h2 class="serif" data-en>Six stages, four <em>gates</em>.</h2>
+    <h2 class="serif" data-de>Sechs Stufen, vier <em>Schranken</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Every request an agent handles travels the same road, from raw input to a real action. The guardrails from chapter two are not abstract: each one lives at a specific stage on this road. Click any stage to see what it does and what gets through when it is missing. The dashed boxes are the gates; the solid ones are where the agent itself works.</p>
+    <p class="kicker" data-de>Jede Anfrage, die ein Agent bearbeitet, fährt dieselbe Straße, von der rohen Eingabe zur echten Aktion. Die Leitplanken aus Kapitel zwei sind nicht abstrakt: Jede wohnt an einer bestimmten Stufe dieser Straße. Klick eine beliebige Stufe an, um zu sehen, was sie tut und was durchkommt, wenn sie fehlt. Die gestrichelten Kästen sind die Schranken; die durchgezogenen sind dort, wo der Agent selbst arbeitet.</p>
+
+    <div class="svg-demo">
+      <div class="svg-head">
+        <span class="svg-head-title" id="pipe-title">THE REQUEST LIFECYCLE</span>
+        <span class="svg-head-hint">
+          <span data-en>● CLICK A STAGE</span>
+          <span data-de>● STUFE ANKLICKEN</span>
+        </span>
+      </div>
+
+      <div class="svg-scroll">
+        <svg class="pipe-svg" viewBox="0 0 980 210" role="img" aria-label="Agent request lifecycle with guardrails">
+          <!-- connectors -->
+          <line class="pipe-conn" x1="152" y1="100" x2="167" y2="100"></line>
+          <line class="pipe-conn" x1="307" y1="100" x2="322" y2="100"></line>
+          <line class="pipe-conn" x1="462" y1="100" x2="477" y2="100"></line>
+          <line class="pipe-conn" x1="617" y1="100" x2="632" y2="100"></line>
+          <line class="pipe-conn" x1="772" y1="100" x2="787" y2="100"></line>
+
+          <!-- node 0 -->
+          <g class="hot active" id="node-0" onclick="setNode(0)" tabindex="0" role="button" aria-label="Stage 1 Input">
+            <rect class="node-box" x="12" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="82" y="68">01</text>
+            <text class="node-label" x="82" y="105">INPUT</text>
+            <text class="node-cap" x="82" y="148">ARRIVES</text>
+          </g>
+          <!-- node 1 · gate -->
+          <g class="hot guard" id="node-1" onclick="setNode(1)" tabindex="0" role="button" aria-label="Stage 2 Input guard">
+            <rect class="node-box" x="167" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="237" y="68">02</text>
+            <text class="node-label" x="237" y="105">INPUT GUARD</text>
+            <text class="node-cap" x="237" y="148">GATE</text>
+          </g>
+          <!-- node 2 -->
+          <g class="hot" id="node-2" onclick="setNode(2)" tabindex="0" role="button" aria-label="Stage 3 Agent">
+            <rect class="node-box" x="322" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="392" y="68">03</text>
+            <text class="node-label" x="392" y="105">AGENT</text>
+            <text class="node-cap" x="392" y="148">PLANS</text>
+          </g>
+          <!-- node 3 · gate -->
+          <g class="hot guard" id="node-3" onclick="setNode(3)" tabindex="0" role="button" aria-label="Stage 4 Tool gate">
+            <rect class="node-box" x="477" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="547" y="68">04</text>
+            <text class="node-label" x="547" y="105">TOOL GATE</text>
+            <text class="node-cap" x="547" y="148">GATE</text>
+          </g>
+          <!-- node 4 · gate -->
+          <g class="hot guard" id="node-4" onclick="setNode(4)" tabindex="0" role="button" aria-label="Stage 5 Output guard">
+            <rect class="node-box" x="632" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="702" y="68">05</text>
+            <text class="node-label" x="702" y="105">OUTPUT GUARD</text>
+            <text class="node-cap" x="702" y="148">GATE</text>
+          </g>
+          <!-- node 5 -->
+          <g class="hot" id="node-5" onclick="setNode(5)" tabindex="0" role="button" aria-label="Stage 6 Action">
+            <rect class="node-box" x="787" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="857" y="68">06</text>
+            <text class="node-label" x="857" y="105">ACTION</text>
+            <text class="node-cap" x="857" y="148">COMMITS</text>
+          </g>
+        </svg>
+      </div>
+      <div class="node-detail" id="node-detail"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K5 · PARCHMENT ==================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 05</span>
+      <span data-en>· THE RULE BEHIND THE RULE</span>
+      <span data-de>· DIE REGEL HINTER DER REGEL</span>
+    </div>
+
+    <h2 class="serif" data-en>Every permission is a <em>liability</em>.</h2>
+    <h2 class="serif" data-de>Jedes Recht ist eine <em>Last</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Most of agent security collapses into a single discipline: give the agent less. A guardrail you forget can still hold if the agent never had the permission to do harm in the first place. Access is not a feature you add for capability; it is a risk you accept on purpose, and the smallest acceptable amount is almost always less than what feels convenient.</p>
+    <p class="kicker" data-de>Der Großteil der Agent-Sicherheit fällt in eine einzige Disziplin zusammen: Gib dem Agent weniger. Eine vergessene Leitplanke kann trotzdem halten, wenn der Agent das Recht zum Schaden nie hatte. Zugriff ist keine Fähigkeit, die du für Leistung hinzufügst; er ist ein Risiko, das du bewusst eingehst, und die kleinste vertretbare Menge ist fast immer weniger als das, was bequem wirkt.</p>
+
+    <div style="margin-top:48px">
+      <div class="pull">
+        <div class="num">0</div>
+        <div>
+          <div class="label" data-en>FAUSTREGEL · LEAST PRIVILEGE</div>
+          <div class="label" data-de>FAUSTREGEL · GERINGSTE RECHTE</div>
+          <p class="text" data-en>"An agent should hold the fewest permissions that still let it finish the job, and zero beyond that. Every extra permission is not a convenience, it is the blast radius of the next mistake. When you cannot decide whether to grant access, the answer is no: adding a permission later costs a minute, explaining a leak costs a quarter."</p>
+          <p class="text" data-de>"Ein Agent sollte die wenigsten Rechte halten, die ihn die Aufgabe noch erledigen lassen, und null darüber hinaus. Jedes zusätzliche Recht ist keine Bequemlichkeit, es ist der Schadensradius des nächsten Fehlers. Wenn du nicht entscheiden kannst, ob du Zugriff gibst, lautet die Antwort nein: Ein Recht später hinzuzufügen kostet eine Minute, einen Datenabfluss zu erklären kostet ein Quartal."</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px" class="two">
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 01</span>
+          <span data-en>· THREE SIGNALS THE AGENT IS CONTAINED</span>
+          <span data-de>· DREI SIGNALE, DASS DER AGENT EINGEHEGT IST</span>
+        </div>
+        <div class="prose">
+          <p data-en>It runs with narrow, named permissions. You can list exactly what it can touch and why each grant exists. An agent whose access fits on a sticky note is one you can actually reason about.</p>
+          <p data-de>Er läuft mit engen, benannten Rechten. Du kannst genau auflisten, was er berühren kann und warum jedes Recht existiert. Ein Agent, dessen Zugriff auf einen Notizzettel passt, ist einer, über den du wirklich nachdenken kannst.</p>
+          <p data-en>Untrusted content cannot give it orders. Text it fetches is treated as data to read, not instructions to follow. You confirmed this with a hostile document on purpose, and the agent held its task.</p>
+          <p data-de>Fremder Inhalt kann ihm keine Befehle geben. Text, den er holt, gilt als Daten zum Lesen, nicht als Anweisung zum Befolgen. Du hast das mit einem feindlichen Dokument absichtlich geprüft, und der Agent hielt an seiner Aufgabe fest.</p>
+          <p data-en>Irreversible actions wait for a human. Sending, paying, deleting, and publishing pause for approval. The agent proposes the action; a person commits it.</p>
+          <p data-de>Irreversible Aktionen warten auf einen Menschen. Senden, Zahlen, Löschen und Veröffentlichen halten zur Freigabe an. Der Agent schlägt die Aktion vor; ein Mensch führt sie aus.</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 02</span>
+          <span data-en>· THREE SIGNALS IT IS EXPOSED</span>
+          <span data-de>· DREI SIGNALE, DASS ER OFFEN LIEGT</span>
+        </div>
+        <div class="prose">
+          <p data-en>Nobody can list its permissions. If "what can this agent reach" takes a meeting to answer, the honest answer is "too much". Unknown scope is unbounded risk wearing a calm face.</p>
+          <p data-de>Niemand kann seine Rechte auflisten. Wenn "was kann dieser Agent erreichen" ein Meeting zur Beantwortung braucht, lautet die ehrliche Antwort "zu viel". Unbekannter Umfang ist unbegrenztes Risiko mit ruhigem Gesicht.</p>
+          <p data-en>It follows instructions from anywhere. A web page or email that says "ignore your rules" changes how it behaves. The agent cannot tell a command from content, so every source it reads is a potential operator.</p>
+          <p data-de>Er folgt Anweisungen von überall. Eine Webseite oder Mail, die "ignoriere deine Regeln" sagt, ändert sein Verhalten. Der Agent kann Befehl nicht von Inhalt unterscheiden, also ist jede Quelle, die er liest, ein möglicher Steuermann.</p>
+          <p data-en>Its actions leave no trace. When something goes wrong, you cannot reconstruct what it did or why. An agent you cannot audit is an agent you cannot trust the next morning.</p>
+          <p data-de>Seine Aktionen hinterlassen keine Spur. Wenn etwas schiefgeht, kannst du nicht rekonstruieren, was er tat oder warum. Ein Agent, den du nicht prüfen kannst, ist ein Agent, dem du am nächsten Morgen nicht trauen kannst.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K6 · DARK · GLOSSAR ==================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 06</span>
+      <span data-en>· SIX TERMS FOR AGENT SECURITY</span>
+      <span data-de>· SECHS BEGRIFFE FÜR AGENT-SICHERHEIT</span>
+    </div>
+
+    <h2 class="serif" data-en>Six terms, one <em>vocabulary</em>.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe, eine <em>Sprache</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Security has a small working vocabulary that keeps a review precise. These six terms cover most of what gets said when a team decides whether an agent is safe to let loose. Use them and the conversation stops talking past itself.</p>
+    <p class="kicker" data-de>Sicherheit hat einen kleinen Arbeitswortschatz, der ein Review präzise hält. Diese sechs Begriffe decken das meiste ab, was gesagt wird, wenn ein Team entscheidet, ob ein Agent sicher freizulassen ist. Nutze sie und das Gespräch redet nicht mehr aneinander vorbei.</p>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <div class="term" data-en>PROMPT INJECTION</div>
+        <div class="term" data-de>PROMPT INJECTION</div>
+        <div class="def" data-en>An attack that hides instructions inside content the agent reads, so the agent follows the attacker's command instead of the user's task. It is the defining risk of any agent that reads text it did not write itself.</div>
+        <div class="def" data-de>Ein Angriff, der Anweisungen in Inhalt versteckt, den der Agent liest, sodass der Agent dem Befehl des Angreifers statt der Aufgabe des Nutzers folgt. Es ist das prägende Risiko jedes Agents, der Text liest, den er nicht selbst geschrieben hat.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>LEAST PRIVILEGE</div>
+        <div class="term" data-de>GERINGSTE RECHTE</div>
+        <div class="def" data-en>The principle of granting an agent the fewest permissions and the narrowest scope that still let it do its job. It limits how much damage any single mistake or attack can cause, regardless of how the agent fails.</div>
+        <div class="def" data-de>Das Prinzip, einem Agent die wenigsten Rechte und den engsten Umfang zu geben, die ihn seine Aufgabe noch erledigen lassen. Es begrenzt, wie viel Schaden ein einzelner Fehler oder Angriff anrichten kann, egal wie der Agent versagt.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>TOOL GATE</div>
+        <div class="term" data-de>TOOL-SCHRANKE</div>
+        <div class="def" data-en>A checkpoint that validates each tool call against an allow-list and a scope before it runs. The gate is where a confused or hijacked agent gets stopped from acting on a plan it should never have formed.</div>
+        <div class="def" data-de>Ein Prüfpunkt, der jeden Tool-Call gegen eine Erlaubnisliste und einen Umfang prüft, bevor er läuft. Die Schranke ist der Ort, an dem ein verwirrter oder gekaperter Agent davon abgehalten wird, einen Plan auszuführen, den er nie hätte fassen dürfen.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>DATA EXFILTRATION</div>
+        <div class="term" data-de>DATENABFLUSS</div>
+        <div class="def" data-en>The leakage of secrets, internal records, or one user's data into an output that reaches somewhere it should not. It often needs no exploit at all, only an answer that says too much to the wrong reader.</div>
+        <div class="def" data-de>Das Abfließen von Geheimnissen, internen Datensätzen oder den Daten eines Nutzers in einen Output, der irgendwohin gelangt, wo er nicht hingehört. Oft braucht es gar keinen Exploit, nur eine Antwort, die dem falschen Leser zu viel sagt.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>GUARDRAIL</div>
+        <div class="term" data-de>LEITPLANKE</div>
+        <div class="def" data-en>A constraint placed around an agent that prevents a class of harmful behavior regardless of what the agent decides. A good guardrail holds even when the reasoning fails, which is exactly when you need it.</div>
+        <div class="def" data-de>Eine Schranke um einen Agent, die eine Klasse schädlichen Verhaltens verhindert, egal was der Agent entscheidet. Eine gute Leitplanke hält auch dann, wenn das Denken versagt, also genau dann, wenn du sie brauchst.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>BLAST RADIUS</div>
+        <div class="term" data-de>SCHADENSRADIUS</div>
+        <div class="def" data-en>The total damage a single mistake or attack could cause, set by what the agent is allowed to reach. Least privilege shrinks the blast radius; broad access for convenience widens it without anyone noticing.</div>
+        <div class="def" data-de>Der gesamte Schaden, den ein einzelner Fehler oder Angriff anrichten könnte, bestimmt durch das, was der Agent erreichen darf. Geringste Rechte schrumpfen den Schadensradius; breiter Zugriff aus Bequemlichkeit weitet ihn, ohne dass es jemand bemerkt.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AUSBLICK · PARCHMENT ==================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 07</span>
+      <span data-en>· WHAT COMES NEXT</span>
+      <span data-de>· WAS KOMMT ALS NÄCHSTES</span>
+    </div>
+
+    <h2 class="serif" data-en>The agent is safe.<br/>Can it also <em>prove</em> it?</h2>
+    <h2 class="serif" data-de>Der Agent ist sicher.<br/>Kann er es auch <em>belegen</em>?</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Security closes the loop on building, running, and trusting a single agent. What remains is the harder world it has to live in: places where every action is audited and a regulator can ask, after the fact, exactly why the agent did what it did. The next article covers agents in regulated industries, where being safe is not enough until you can show it.</p>
+    <p class="kicker" data-de>Sicherheit schließt den Kreis aus Bauen, Betreiben und Vertrauen für einen einzelnen Agent. Was bleibt, ist die härtere Welt, in der er leben muss: Orte, an denen jede Aktion geprüft wird und eine Aufsicht im Nachhinein fragen kann, warum genau der Agent tat, was er tat. Die nächste Tafel behandelt Agents in regulierten Branchen, wo sicher sein nicht genügt, solange du es nicht zeigen kannst.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>NEXT · CARD 15</span>
+          <span data-de>NÄCHSTE · TAFEL 15</span>
+        </div>
+        <h3 class="serif" data-en>Agents in regulated industries.</h3>
+        <h3 class="serif" data-de>Agents in regulierten Branchen.</h3>
+        <p data-en>Running agents where every action is audited: finance, healthcare, the public sector. The controls a regulator expects, the evidence you keep, and how to prove what an agent did.</p>
+        <p data-de>Agents betreiben, wo jede Aktion geprüft wird: Finanzwesen, Gesundheit, öffentlicher Sektor. Die Kontrollen, die eine Aufsicht erwartet, die Belege, die du aufhebst, und wie man beweist, was ein Agent getan hat.</p>
+        <div style="margin-top:20px">
+          <a class="cta" href="#" style="font-size:11px;padding:10px 16px">
+            <span data-en>REQUEST CARD 15</span>
+            <span data-de>TAFEL 15 ANFORDERN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>COMING LATER</span>
+          <span data-de>BALD VERFÜGBAR</span>
+        </div>
+        <h3 class="serif" data-en>More cards in the series.</h3>
+        <h3 class="serif" data-de>Mehr Tafeln in der Reihe.</h3>
+        <p data-en>The series continues with cards on the economics of long-running agents and the day-to-day of operating a fleet of them. New cards publish roughly every two weeks.</p>
+        <p data-de>Die Reihe geht weiter mit Tafeln zur Ökonomie langlaufender Agents und zum Alltag, eine ganze Flotte davon zu betreiben. Neue Tafeln erscheinen etwa alle zwei Wochen.</p>
+        <div style="margin-top:20px">
+          <a href="https://readix.net" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>FOLLOW ON READIX</span>
+            <span data-de>AUF READIX FOLGEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>START THE SERIES</span>
+          <span data-de>REIHE VON VORNE</span>
+        </div>
+        <h3 class="serif" data-en>Start from card one.</h3>
+        <h3 class="serif" data-de>Ab Tafel eins beginnen.</h3>
+        <p data-en>If this is the first card you've read, start at the beginning. Card 01 explains what AI and agentic AI actually are, without the hype. Each card builds on the previous one.</p>
+        <p data-de>Wenn das die erste Tafel ist, die du gelesen hast, beginne am Anfang. Tafel 01 erklärt, was AI und Agentic AI tatsächlich sind, ohne den Hype. Jede Tafel baut auf der vorherigen auf.</p>
+        <div style="margin-top:20px">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>READ CARD 01</span>
+            <span data-de>TAFEL 01 LESEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;border-top:1px solid var(--border-on-paper);padding-top:40px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:20px">
+        <span data-en>← ALL CARDS IN THE SERIES</span>
+        <span data-de>← ALLE TAFELN IN DER REIHE</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">01 <span data-en>· What is AI?</span><span data-de>· Was ist AI?</span></a>
+        <a href="./02_wie-ein-agent-denkt.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">02 <span data-en>· How an Agent Thinks</span><span data-de>· Wie ein Agent denkt</span></a>
+        <a href="./03_tools-mcps-plugins.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">03 <span data-en>· Tools &amp; MCPs</span><span data-de>· Tools &amp; MCPs</span></a>
+        <a href="./04_risiko-und-trust.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">04 <span data-en>· Risk &amp; Trust</span><span data-de>· Risiko &amp; Trust</span></a>
+        <a href="./05_dein-erster-agent.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">05 <span data-en>· Your First Agent</span><span data-de>· Dein erster Agent</span></a>
+        <a href="./06_agent-teams.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">06 <span data-en>· Agent Teams</span><span data-de>· Agent-Teams</span></a>
+        <a href="./07_pflege-und-iteration.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">07 <span data-en>· Care &amp; Iteration</span><span data-de>· Pflege &amp; Iteration</span></a>
+        <a href="./08_use-case-bibliothek.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">08 <span data-en>· Use-Case Library</span><span data-de>· Use-Case-Bibliothek</span></a>
+        <a href="./09_kosten-und-roi.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">09 <span data-en>· Cost &amp; ROI</span><span data-de>· Kosten &amp; ROI</span></a>
+        <a href="./10_wohin-die-reise-geht.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">10 <span data-en>· Where This Is Going</span><span data-de>· Wohin die Reise geht</span></a>
+        <a href="./11_agents-im-team.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">11 <span data-en>· Agents in the Team</span><span data-de>· Agents im Team</span></a>
+        <a href="./12_datenhygiene-und-context.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">12 <span data-en>· Data Hygiene &amp; Context</span><span data-de>· Datenhygiene &amp; Context</span></a>
+        <a href="./13_evaluierungsmethodik.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">13 <span data-en>· Evaluation Methodology</span><span data-de>· Evaluierungsmethodik</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 14</span>
+      <span>STAND · 2026-06</span>
+      <span>VERSION · v.2026.06</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// REIHENFOLGE: Demo zuerst, dann setLang, dann Initial-Load.
+// setNode() und setLang() sind global (für inline onclick).
+// NICHT 'body' als Variablenname verwenden (schattet document.body).
+// ============================================================
+
+// ============== Annotated SVG Hotspot Demo ==============
+var currentNode = 0;
+
+var nodeData = {
+  en: {
+    nodes: [
+      {
+        stage: '01', label: 'INPUT',
+        title: 'Where the request arrives.',
+        text: 'The raw user message plus anything the agent fetched to answer it: a document, a web page, a record. Trusted and untrusted text arrive here mixed together, and at this point nothing marks which is which.',
+        fail: 'Untrusted text carries instructions and nothing labels it as data. The attacker is now writing part of the prompt.'
+      },
+      {
+        stage: '02', label: 'INPUT GUARD',
+        title: 'Where instructions get screened.',
+        text: 'The first guardrail. Fetched content is labelled as data to read, not commands to obey, and the user\'s real ask is separated from anything embedded in the material. This is the defence against prompt injection.',
+        fail: 'Skip it and a page that says "ignore your rules" is read as a rule. The hijack succeeds before the agent even reasons.'
+      },
+      {
+        stage: '03', label: 'AGENT',
+        title: 'Where the plan forms.',
+        text: 'The agent reasons over the screened input and decides which tools to call and in what order. It is only as safe as the context it was handed: clean input in, sensible plan out.',
+        fail: 'A hijacked context makes a harmful plan look like the assigned job, and the agent pursues it with full confidence.'
+      },
+      {
+        stage: '04', label: 'TOOL GATE',
+        title: 'Where actions get checked.',
+        text: 'The second guardrail. Each tool call is validated against an allow-list and a scope before it runs. This is where least privilege does its work: a call outside the agent\'s remit never executes.',
+        fail: 'The agent holds broad credentials, so one bad call reaches data and systems the task never needed to touch.'
+      },
+      {
+        stage: '05', label: 'OUTPUT GUARD',
+        title: 'Where leaks get caught.',
+        text: 'The third guardrail. The drafted answer is scanned for secrets, internal IDs, and other users\' data before it leaves. Anything that should not cross the boundary is redacted or blocked here.',
+        fail: 'Raw output ships unscanned, carrying an API key or another user\'s record straight into the open.'
+      },
+      {
+        stage: '06', label: 'ACTION',
+        title: 'Where it becomes real.',
+        text: 'The final effect in the world: a sent email, a written record, a triggered workflow, a payment. Some of these cannot be undone, which is why the human gate sits in front of the irreversible ones.',
+        fail: 'An irreversible action runs with no human gate, so a single mistake becomes permanent and public.'
+      }
+    ]
+  },
+  de: {
+    nodes: [
+      {
+        stage: '01', label: 'EINGABE',
+        title: 'Wo die Anfrage ankommt.',
+        text: 'Die rohe Nutzernachricht, dazu alles, was der Agent zum Beantworten geholt hat: ein Dokument, eine Webseite, ein Datensatz. Vertrauenswürdiger und fremder Text kommen hier vermischt an, und an diesem Punkt kennzeichnet nichts, was was ist.',
+        fail: 'Fremder Text trägt Anweisungen und nichts kennzeichnet ihn als Daten. Der Angreifer schreibt jetzt einen Teil des Prompts.'
+      },
+      {
+        stage: '02', label: 'EINGABE-WACHE',
+        title: 'Wo Anweisungen geprüft werden.',
+        text: 'Die erste Leitplanke. Geholter Inhalt wird als Daten zum Lesen gekennzeichnet, nicht als Befehle zum Befolgen, und die echte Frage des Nutzers wird von allem getrennt, was im Material eingebettet ist. Das ist die Abwehr gegen Prompt Injection.',
+        fail: 'Überspring sie und eine Seite, die "ignoriere deine Regeln" sagt, wird als Regel gelesen. Das Kapern gelingt, bevor der Agent überhaupt denkt.'
+      },
+      {
+        stage: '03', label: 'AGENT',
+        title: 'Wo der Plan entsteht.',
+        text: 'Der Agent denkt über die geprüfte Eingabe nach und entscheidet, welche Tools er in welcher Reihenfolge aufruft. Er ist nur so sicher wie der Context, den er bekam: sauberer Input rein, sinnvoller Plan raus.',
+        fail: 'Ein gekaperter Context lässt einen schädlichen Plan wie die zugewiesene Aufgabe aussehen, und der Agent verfolgt ihn mit voller Sicherheit.'
+      },
+      {
+        stage: '04', label: 'TOOL-SCHRANKE',
+        title: 'Wo Aktionen geprüft werden.',
+        text: 'Die zweite Leitplanke. Jeder Tool-Call wird gegen eine Erlaubnisliste und einen Umfang geprüft, bevor er läuft. Hier wirken die geringsten Rechte: Ein Aufruf außerhalb des Auftrags wird nie ausgeführt.',
+        fail: 'Der Agent hält breite Zugänge, also erreicht ein falscher Aufruf Daten und Systeme, die die Aufgabe nie berühren musste.'
+      },
+      {
+        stage: '05', label: 'OUTPUT-WACHE',
+        title: 'Wo Lecks gefangen werden.',
+        text: 'Die dritte Leitplanke. Die entworfene Antwort wird auf Geheimnisse, interne IDs und fremde Nutzerdaten geprüft, bevor sie geht. Was die Grenze nicht überschreiten soll, wird hier geschwärzt oder geblockt.',
+        fail: 'Roher Output geht ungeprüft raus und trägt einen API-Schlüssel oder den Datensatz eines anderen Nutzers direkt ins Offene.'
+      },
+      {
+        stage: '06', label: 'AKTION',
+        title: 'Wo es echt wird.',
+        text: 'Die endgültige Wirkung in der Welt: eine gesendete Mail, ein geschriebener Datensatz, ein ausgelöster Workflow, eine Zahlung. Manche davon sind nicht rückgängig, weshalb die menschliche Schranke vor den irreversiblen sitzt.',
+        fail: 'Eine irreversible Aktion läuft ohne menschliche Schranke, also wird ein einzelner Fehler dauerhaft und öffentlich.'
+      }
+    ]
+  }
+};
+
+function getLang() { return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+function setNode(idx) {
+  currentNode = idx;
+  renderNode();
+}
+
+function renderNode() {
+  var lang = getLang();
+  var nodes = nodeData[lang].nodes;
+  var n = nodes[currentNode];
+
+  // Highlight active node in the SVG + sync labels per language
+  for (var i = 0; i < 6; i++) {
+    var g = document.getElementById('node-' + i);
+    if (g) g.classList.toggle('active', i === currentNode);
+    var labelEl = g ? g.querySelector('.node-label') : null;
+    if (labelEl) labelEl.textContent = nodes[i].label;
+  }
+
+  // Update header title
+  var titleEl = document.getElementById('pipe-title');
+  if (titleEl) titleEl.textContent = lang === 'en' ? 'THE REQUEST LIFECYCLE' : 'DER REQUEST-LEBENSZYKLUS';
+
+  // Render detail panel
+  var detail = document.getElementById('node-detail');
+  if (!detail) return;
+  var failTag = lang === 'en' ? 'FAILS WHEN' : 'VERSAGT WENN';
+  var stageWord = lang === 'en' ? 'STAGE' : 'STUFE';
+  detail.innerHTML =
+    '<div class="nd-stage"><span class="nd-stage-num">' + n.stage + '</span>' + stageWord + ' · ' + n.label + '</div>' +
+    '<div>' +
+      '<div class="nd-title">' + n.title + '</div>' +
+      '<div class="nd-text">' + n.text + '</div>' +
+      '<div class="nd-fail"><span class="nd-fail-tag">' + failTag + '</span><span class="nd-fail-text">' + n.fail + '</span></div>' +
+    '</div>';
+}
+
+// Keyboard access for hotspots
+document.querySelectorAll('.hot').forEach(function(g, i) {
+  g.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setNode(i); }
+  });
+});
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'Agent security · Codex Article 14'
+    : 'Agent-Sicherheit · Codex Lehrtafel 14';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  if (typeof renderNode === 'function') renderNode();
+}
+
+// ============== Initial Load ==============
+(function() {
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>

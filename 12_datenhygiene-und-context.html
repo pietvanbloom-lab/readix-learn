@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Data hygiene and context · Codex Article 12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0A0A0B; --ink-deep:#14151A; --ink-night:#091423;
+  --paper-light:#FAF9F5; --paper-warm:#F0E6D2; --paper-aged:#E8DCC0;
+  --copper:#D97757; --copper-deep:#B85F40; --ochre:#FFC47C;
+  --ink-blue:#4A6FA5; --data-cyan:#52AEFF; --patina:#788C5D; --rust:#8B3A1F;
+  --success:#6B8E5A; --violet:#7389FF;
+  --gray-100:#EBEBEB; --gray-200:#C8C9CC; --gray-400:#8A8F98;
+  --gray-600:#4D4D4D; --gray-800:#222326; --gray-900:#16171A;
+  --fg-on-ink:#E8E8E8; --fg-on-ink-mute:#8A8A8A;
+  --fg-on-paper:#1A1A1A; --fg-on-paper-mute:#6B5D45;
+  --border-on-ink:#222326; --border-on-paper:#C8B89A;
+  --shadow-card:0 24px 48px -16px rgba(0,0,0,.45);
+  --w-container:1180px; --w-prose:64ch;
+  --easing:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink-black);color:var(--fg-on-ink);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-size:18px}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+
+.mono{font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+.serif{font-family:'Source Serif 4',serif}
+
+/* ================ Sticky Nav + Lang Toggle ================ */
+nav.codex-nav{position:sticky;top:0;z-index:200;height:56px;background:var(--ink-black);border-bottom:1px solid var(--border-on-ink);display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--copper);transition:opacity .15s;flex-shrink:0}
+.nav-back:hover{opacity:.7}
+.wordmark{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.wm-readix{font-family:'Source Serif 4',serif;font-size:21px;font-weight:600;letter-spacing:-.025em;color:var(--fg-on-ink);line-height:1}
+.wm-rule-v{width:1px;height:18px;background:var(--border-on-ink);flex-shrink:0;display:inline-block}
+.wm-learn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);line-height:1}
+.nav-links{display:flex;align-items:center;gap:24px}
+.nav-link{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-400);transition:color .15s}
+.nav-link:hover{color:var(--copper)}
+.nav-right{display:flex;align-items:center}
+.nav-cta-a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-on-ink);border:1px solid var(--border-on-ink);padding:7px 16px;background:none;cursor:pointer;transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:8px}
+.nav-cta-a:hover{border-color:var(--copper);color:var(--copper)}
+.nav-lang{display:flex;align-items:center;gap:6px;margin-left:16px}
+.lang-sep{color:var(--gray-400);font-size:11px;font-family:'JetBrains Mono',monospace}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:none;border:1px solid var(--border-on-ink);color:var(--gray-400);padding:5px 10px;cursor:pointer;transition:border-color .15s,color .15s}
+.lang-btn[aria-pressed="true"]{border-color:var(--copper);color:var(--copper)}
+@media(max-width:1100px){.nav-links{display:none}}
+@media(max-width:560px){.nav-cta-a{display:none}}
+
+/* Sprach-Toggle: data-en/data-de Attribute, body.lang-en als Default */
+[data-en]{display:none}
+body.lang-en [data-de]{display:none}
+body.lang-en [data-en]{display:revert}
+
+/* ================ Layout ================ */
+.wrap{max-width:var(--w-container);margin:0 auto;padding:0 32px}
+section{padding:96px 0;border-top:1px solid var(--border-on-ink)}
+section.parchment{background:var(--paper-warm);color:var(--fg-on-paper);border-top:1px solid var(--border-on-paper)}
+section.parchment .eyebrow{color:var(--copper-deep)}
+section.parchment .num{color:var(--copper-deep)}
+
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper);display:flex;align-items:center;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.eyebrow .num{font-weight:600}
+
+h1,h2,h3{font-family:'Source Serif 4',serif;font-weight:400;letter-spacing:-.01em}
+h1{font-size:clamp(56px,8vw,112px);line-height:1;margin-bottom:24px}
+h2{font-size:clamp(32px,4.5vw,56px);line-height:1.08;margin-bottom:20px}
+h3{font-size:22px;line-height:1.25;margin-bottom:12px;font-weight:500}
+h1 em,h2 em{font-style:italic;color:var(--copper)}
+
+.kicker{font-family:'Lora',serif;font-size:20px;line-height:1.55;max-width:64ch;color:var(--gray-200)}
+section.parchment .kicker{color:var(--gray-600)}
+.prose{font-family:'Lora',serif;font-size:18px;line-height:1.7;max-width:64ch;color:var(--gray-200)}
+section.parchment .prose{color:var(--gray-600)}
+.prose p{margin-bottom:18px}
+
+.rule{height:1px;background:var(--border-on-ink);margin:24px 0}
+section.parchment .rule{background:var(--border-on-paper)}
+.rule-copper{height:2px;width:48px;background:var(--copper);margin-bottom:24px}
+
+.hero{padding:120px 0 88px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink);margin-top:64px}
+.hero-stats .stat{padding:32px 0;border-right:1px solid var(--border-on-ink);padding-right:32px}
+.hero-stats .stat:last-child{border-right:none}
+.hero-stats .stat .num{font-family:'Source Serif 4',serif;font-size:56px;line-height:1;color:var(--copper);margin-bottom:8px}
+.hero-stats .stat .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-400)}
+.hero .meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px}
+@media(max-width:880px){.hero-stats{grid-template-columns:1fr}.hero-stats .stat{border-right:none;border-bottom:1px solid var(--border-on-ink)}}
+
+.cta{display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:14px 20px;background:transparent;cursor:pointer;transition:all .2s var(--easing)}
+.cta:hover{background:var(--copper);color:var(--ink-black)}
+.cta:hover .arrow{transform:translateX(4px)}
+.cta .arrow{font-family:'JetBrains Mono',monospace;transition:transform .2s var(--easing)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+@media(max-width:880px){.two{grid-template-columns:1fr;gap:40px}}
+
+.card{border:1px solid var(--border-on-ink);padding:32px;background:var(--ink-deep);transition:transform .2s var(--easing)}
+section.parchment .card{border:1px solid var(--border-on-paper);background:var(--paper-aged);box-shadow:var(--shadow-card)}
+.card:hover{transform:translateY(-2px)}
+.card h3{margin-bottom:16px}
+.card p{font-size:16px;color:var(--gray-200);line-height:1.6}
+section.parchment .card p{color:var(--gray-600)}
+
+.compare{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;font-size:15px}
+.compare th,.compare td{text-align:left;padding:18px 18px;border-bottom:1px solid var(--border-on-ink);vertical-align:top}
+.compare th{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600;border-bottom:2px solid var(--copper)}
+.compare td.col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--rust);width:150px;font-weight:600}
+.compare tr:hover td{background:rgba(217,119,87,.06)}
+
+.process{display:grid;gap:0;border-left:1px solid var(--border-on-ink);border-top:1px solid var(--border-on-ink);margin-top:32px}
+.process.cols-4{grid-template-columns:repeat(4,1fr)}
+.process.cols-3{grid-template-columns:repeat(3,1fr)}
+section.parchment .process{border-color:var(--border-on-paper)}
+.process .step{padding:32px;border-right:1px solid var(--border-on-ink);border-bottom:1px solid var(--border-on-ink)}
+section.parchment .process .step{border-color:var(--border-on-paper)}
+.process .step .num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--copper);margin-bottom:14px;display:block}
+.process .step h4{font-family:'Source Serif 4',serif;font-size:20px;font-weight:500;margin-bottom:10px;line-height:1.25;letter-spacing:-.01em}
+.process .step p{font-size:15px;line-height:1.55;color:var(--gray-200)}
+section.parchment .process .step p{color:var(--gray-600)}
+@media(max-width:880px){.process.cols-4{grid-template-columns:1fr 1fr}}
+@media(max-width:880px){.process.cols-3{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.process.cols-4,.process.cols-3{grid-template-columns:1fr}}
+
+.pull{padding:32px;border:1px solid var(--copper);background:var(--paper-aged);display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+section:not(.parchment) .pull{background:var(--ink-deep)}
+.pull .num{font-family:'Source Serif 4',serif;font-size:72px;line-height:1;color:var(--copper);font-weight:300}
+.pull .text{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-600)}
+section:not(.parchment) .pull .text{color:var(--gray-200)}
+.pull .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);margin-bottom:8px}
+@media(max-width:880px){.pull{grid-template-columns:1fr}}
+
+.gloss{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--border-on-ink);align-items:start}
+section.parchment .gloss{border-bottom:1px solid var(--border-on-paper)}
+.gloss .term{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--copper);font-weight:600}
+.gloss .def{font-family:'Lora',serif;font-size:18px;line-height:1.55;color:var(--gray-200)}
+section.parchment .gloss .def{color:var(--gray-600)}
+@media(max-width:880px){.gloss{grid-template-columns:1fr;gap:6px}}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:880px){.grid-3,.grid-2{grid-template-columns:1fr}}
+
+/* ================ Bucket grid (K1) ================ */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-left:1px solid var(--border-on-paper);border-top:1px solid var(--border-on-paper);margin-top:48px}
+.bucket{padding:40px 32px;border-right:1px solid var(--border-on-paper);border-bottom:1px solid var(--border-on-paper)}
+.bucket .bucket-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:16px;display:block}
+.bucket .bucket-tag.tag-human{color:var(--copper-deep)}
+.bucket .bucket-tag.tag-agent{color:var(--ink-blue)}
+.bucket .bucket-tag.tag-shared{color:var(--patina)}
+.bucket h4{font-family:'Source Serif 4',serif;font-size:22px;font-weight:500;margin-bottom:12px;line-height:1.2;letter-spacing:-.01em;color:var(--fg-on-paper)}
+.bucket p{font-family:'Lora',serif;font-size:15px;line-height:1.6;color:var(--fg-on-paper-mute)}
+.bucket ul{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.bucket ul li{font-family:'Inter',sans-serif;font-size:14px;color:var(--gray-600);padding-left:14px;position:relative;line-height:1.5}
+.bucket ul li::before{content:'·';position:absolute;left:0;color:var(--copper-deep)}
+@media(max-width:880px){.buckets{grid-template-columns:1fr}}
+
+/* ================ Annotated SVG Hotspot Demo (K4) ================ */
+.svg-demo{border:1px solid var(--border-on-ink);background:var(--ink-deep);overflow:hidden;margin-top:48px}
+.svg-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--border-on-ink);background:var(--ink-black);flex-wrap:wrap;gap:12px}
+.svg-head-title{font-family:'Source Serif 4',serif;font-size:16px;color:var(--fg-on-ink-mute)}
+.svg-head-hint{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+.svg-scroll{overflow-x:auto;padding:40px 24px;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.018) 39px,rgba(255,255,255,.018) 40px)}
+.pipe-svg{min-width:760px;margin:0 auto;display:block}
+
+.hot{cursor:pointer}
+.hot .node-box{fill:var(--ink-black);stroke:var(--border-on-ink);stroke-width:1.5;transition:stroke .2s var(--easing),fill .2s var(--easing)}
+.hot .node-label{fill:var(--gray-200);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.08em;text-anchor:middle;font-weight:600}
+.hot .node-num{fill:var(--gray-400);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-anchor:middle}
+.hot:hover .node-box{stroke:var(--copper)}
+.hot:hover .node-label{fill:var(--copper)}
+.hot.active .node-box{stroke:var(--copper);stroke-width:2;fill:rgba(217,119,87,.14)}
+.hot.active .node-label{fill:var(--copper)}
+.hot.active .node-num{fill:var(--copper)}
+.pipe-arrow{stroke:var(--border-on-ink);stroke-width:1.5}
+.pipe-flow-label{fill:var(--gray-400);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-anchor:middle}
+
+.node-detail{border-top:1px solid var(--border-on-ink);padding:32px 24px;background:var(--ink-black);display:grid;grid-template-columns:160px 1fr;gap:28px;align-items:start}
+.nd-stage{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);font-weight:600;line-height:1.6}
+.nd-stage .nd-stage-num{display:block;font-size:40px;font-family:'Source Serif 4',serif;color:var(--copper);font-weight:300;margin-bottom:6px;line-height:1}
+.nd-title{font-family:'Source Serif 4',serif;font-size:24px;font-weight:500;letter-spacing:-.01em;color:var(--fg-on-ink);margin-bottom:12px}
+.nd-text{font-family:'Lora',serif;font-size:17px;line-height:1.6;color:var(--gray-200);max-width:60ch;margin-bottom:20px}
+.nd-fail{border-left:2px solid var(--rust);padding:10px 0 10px 16px}
+.nd-fail-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);font-weight:600;display:block;margin-bottom:6px}
+.nd-fail-text{font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;color:var(--gray-200)}
+@media(max-width:700px){.node-detail{grid-template-columns:1fr;gap:16px}}
+
+footer{padding:64px 0;border-top:1px solid var(--border-on-ink);background:var(--ink-black)}
+footer .row{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.12em;flex-wrap:wrap;gap:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- Sticky Nav · Readix Learn Pattern -->
+<nav class="codex-nav" aria-label="Navigation">
+  <div class="wrap nav-inner">
+    <div style="display:flex;align-items:center;gap:20px">
+      <a href="./index.html" class="nav-back">
+        <span data-de>← Alle Tafeln</span>
+        <span data-en>← All Articles</span>
+      </a>
+      <span class="wm-rule-v" aria-hidden="true"></span>
+      <a href="https://readix.net" class="wordmark" aria-label="Readix">
+        <span class="wm-readix">Readix<span style="color:var(--copper)">.</span></span>
+        <span class="wm-rule-v" aria-hidden="true"></span>
+        <span class="wm-learn">Learn</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="./01_was-ist-ai-und-agentic-ai.html" class="nav-link">
+        <span data-de>01 → Was ist AI?</span>
+        <span data-en>01 → What is AI?</span>
+      </a>
+      <a href="./02_wie-ein-agent-denkt.html" class="nav-link">
+        <span data-de>02 → Wie ein Agent denkt</span>
+        <span data-en>02 → How an Agent Thinks</span>
+      </a>
+      <a href="./03_tools-mcps-plugins.html" class="nav-link">
+        <span data-de>03 → Tools &amp; MCPs</span>
+        <span data-en>03 → Tools &amp; MCPs</span>
+      </a>
+      <a href="./04_risiko-und-trust.html" class="nav-link">
+        <span data-de>04 → Risiko &amp; Trust</span>
+        <span data-en>04 → Risk &amp; Trust</span>
+      </a>
+      <a href="./05_dein-erster-agent.html" class="nav-link">
+        <span data-de>05 → Dein erster Agent</span>
+        <span data-en>05 → Your First Agent</span>
+      </a>
+      <a href="./06_agent-teams.html" class="nav-link">
+        <span data-de>06 → Agent-Teams</span>
+        <span data-en>06 → Agent Teams</span>
+      </a>
+      <a href="./07_pflege-und-iteration.html" class="nav-link">
+        <span data-de>07 → Pflege &amp; Iteration</span>
+        <span data-en>07 → Care &amp; Iteration</span>
+      </a>
+      <a href="./08_use-case-bibliothek.html" class="nav-link">
+        <span data-de>08 → Use-Case-Bibliothek</span>
+        <span data-en>08 → Use-Case Library</span>
+      </a>
+      <a href="./09_kosten-und-roi.html" class="nav-link">
+        <span data-de>09 → Kosten &amp; ROI</span>
+        <span data-en>09 → Cost &amp; ROI</span>
+      </a>
+      <a href="./10_wohin-die-reise-geht.html" class="nav-link">
+        <span data-de>10 → Wohin die Reise geht</span>
+        <span data-en>10 → Where This Is Going</span>
+      </a>
+      <a href="./11_agents-im-team.html" class="nav-link">
+        <span data-de>11 → Agents im Team</span>
+        <span data-en>11 → Agents in the Team</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="https://readix.net" class="nav-cta-a">Readix Platform <span aria-hidden="true">┌──→</span></a>
+      <div class="nav-lang" role="group" aria-label="Sprache wählen">
+        <button class="lang-btn" id="btn-de" onclick="setLang('de')" aria-pressed="false">DE</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 12</span>
+      <span data-en>· LEHRTAFEL · DATA HYGIENE AND CONTEXT</span>
+      <span data-de>· LEHRTAFEL · DATENHYGIENE UND CONTEXT</span>
+    </div>
+
+    <h1 class="serif" data-en>Data hygiene and <em>context</em>.</h1>
+    <h1 class="serif" data-de>Datenhygiene und <em>Context</em>.</h1>
+
+    <p class="kicker" data-en>An agent is only as good as what it can see. Feed it stale, ambiguous, or missing data and it does not stop. It fills the gap with a confident guess. This article is about the unglamorous work that makes an agent reliable: what context actually is, how it goes wrong, and how to prepare data an agent does not have to guess from.</p>
+    <p class="kicker" data-de>Ein Agent ist nur so gut wie das, was er sehen kann. Füttere ihn mit veralteten, mehrdeutigen oder fehlenden Daten und er hört nicht auf. Er füllt die Lücke mit einer selbstsicheren Vermutung. Diese Tafel handelt von der unscheinbaren Arbeit, die einen Agent zuverlässig macht: was Context wirklich ist, wie er kaputtgeht, und wie man Daten vorbereitet, aus denen ein Agent nicht raten muss.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="num">6</div>
+        <div class="label"><span data-en>Stages every input passes through</span><span data-de>Stufen, die jede Eingabe durchläuft</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">4</div>
+        <div class="label"><span data-en>Ways context quietly fails</span><span data-de>Arten, wie Context leise versagt</span></div>
+      </div>
+      <div class="stat">
+        <div class="num">0</div>
+        <div class="label"><span data-en>Guesses a well-fed agent should need</span><span data-de>Vermutungen, die ein gut versorgter Agent braucht</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:14px;flex-wrap:wrap">
+      <a class="cta" href="#kapitel-1">
+        <span data-en>READ THE METHOD</span>
+        <span data-de>METHODE LESEN</span>
+        <span class="arrow">┌──→</span>
+      </a>
+    </div>
+
+    <div class="hero .meta" style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-400);letter-spacing:.06em;text-transform:uppercase;flex-wrap:wrap;gap:16px">
+      <span>FILE · 12 / SERIE AI &amp; AGENTIC EXPLAINED</span>
+      <span><span data-en>READING TIME · 12 MINUTES</span><span data-de>LESEZEIT · 12 MINUTEN</span></span>
+      <span>VERSION · v.2026.06</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K1 · PARCHMENT ==================== -->
+<section id="kapitel-1" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 01</span>
+      <span data-en>· WHAT CONTEXT ACTUALLY IS</span>
+      <span data-de>· WAS CONTEXT WIRKLICH IST</span>
+    </div>
+
+    <h2 class="serif" data-en>Context is not the <em>prompt</em>.</h2>
+    <h2 class="serif" data-de>Context ist nicht der <em>Prompt</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>People hear "context" and think of the instruction they typed. That is the smallest part. The context an agent reasons over is everything it can see at the moment it acts: the standing rules, the facts it pulled in, and the live state of the world. These three layers move at different speeds, and each one fails in a different way.</p>
+    <p class="kicker" data-de>Leute hören "Context" und denken an die Anweisung, die sie getippt haben. Das ist der kleinste Teil. Der Context, über den ein Agent nachdenkt, ist alles, was er im Moment des Handelns sehen kann: die festen Regeln, die hereingeholten Fakten und der Live-Zustand der Welt. Diese drei Schichten bewegen sich unterschiedlich schnell, und jede versagt auf ihre eigene Art.</p>
+
+    <div class="buckets">
+      <div class="bucket">
+        <span class="bucket-tag tag-human" data-en>STANDING · STAYS STABLE</span>
+        <span class="bucket-tag tag-human" data-de>FEST · BLEIBT STABIL</span>
+        <h4 data-en>The rules that hold.</h4>
+        <h4 data-de>Die Regeln, die gelten.</h4>
+        <p data-en>The agent's role, its policies, the format it must respect, the things that are always true for this job. This layer changes rarely. You write it once and revisit it when the job itself changes, not on every run.</p>
+        <p data-de>Die Rolle des Agents, seine Richtlinien, das Format, das er einhalten muss, die Dinge, die für diese Aufgabe immer gelten. Diese Schicht ändert sich selten. Du schreibst sie einmal und überarbeitest sie, wenn sich die Aufgabe selbst ändert, nicht bei jedem Lauf.</p>
+        <ul>
+          <li data-en>Role and scope</li>
+          <li data-en>Policies and constraints</li>
+          <li data-en>Output format and tone</li>
+          <li data-de>Rolle und Umfang</li>
+          <li data-de>Richtlinien und Grenzen</li>
+          <li data-de>Ausgabeformat und Ton</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-agent" data-en>RETRIEVED · FETCHED PER TASK</span>
+        <span class="bucket-tag tag-agent" data-de>GEHOLT · PRO AUFGABE</span>
+        <h4 data-en>The facts it pulls in.</h4>
+        <h4 data-de>Die Fakten, die er holt.</h4>
+        <p data-en>Documents, records, search results, prior tickets: the knowledge the agent retrieves for this specific task. This is where most failures hide. If the retrieval pulls the wrong document or an outdated one, the agent reasons perfectly over the wrong facts.</p>
+        <p data-de>Dokumente, Datensätze, Suchergebnisse, frühere Tickets: das Wissen, das der Agent für diese konkrete Aufgabe abruft. Hier verstecken sich die meisten Fehler. Holt die Suche das falsche oder ein veraltetes Dokument, denkt der Agent makellos über die falschen Fakten nach.</p>
+        <ul>
+          <li data-en>Retrieved documents and records</li>
+          <li data-en>Search and database results</li>
+          <li data-en>Prior conversations and tickets</li>
+          <li data-de>Geholte Dokumente und Datensätze</li>
+          <li data-de>Such- und Datenbankergebnisse</li>
+          <li data-de>Frühere Gespräche und Tickets</li>
+        </ul>
+      </div>
+      <div class="bucket">
+        <span class="bucket-tag tag-shared" data-en>LIVE · CHANGES BY THE MINUTE</span>
+        <span class="bucket-tag tag-shared" data-de>LIVE · ÄNDERT SICH LAUFEND</span>
+        <h4 data-en>The state right now.</h4>
+        <h4 data-de>Der Zustand jetzt.</h4>
+        <p data-en>Current prices, today's date, the inventory count, the open status of an order. This layer is correct for seconds or minutes. An agent that reads it once and caches it will act on a world that has already moved on.</p>
+        <p data-de>Aktuelle Preise, das heutige Datum, der Lagerbestand, der offene Status einer Bestellung. Diese Schicht stimmt für Sekunden oder Minuten. Ein Agent, der sie einmal liest und zwischenspeichert, handelt auf einer Welt, die sich schon weitergedreht hat.</p>
+        <ul>
+          <li data-en>Prices, counts, balances</li>
+          <li data-en>Dates, times, deadlines</li>
+          <li data-en>Live status and recent events</li>
+          <li data-de>Preise, Bestände, Salden</li>
+          <li data-de>Daten, Zeiten, Fristen</li>
+          <li data-de>Live-Status und jüngste Ereignisse</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K2 · DARK ==================== -->
+<section id="kapitel-2">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 02</span>
+      <span data-en>· FOUR WAYS CONTEXT FAILS</span>
+      <span data-de>· VIER ARTEN, WIE CONTEXT VERSAGT</span>
+    </div>
+
+    <h2 class="serif" data-en>Four failures, one <em>symptom</em>.</h2>
+    <h2 class="serif" data-de>Vier Fehler, ein <em>Symptom</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Bad context does not announce itself. The output looks finished and reads with confidence. Underneath, the same four failures account for most wrong answers. Learn to recognize them by their symptom, because the agent will never tell you which one it hit.</p>
+    <p class="kicker" data-de>Schlechter Context meldet sich nicht. Der Output sieht fertig aus und liest sich selbstsicher. Darunter erklären dieselben vier Fehler die meisten falschen Antworten. Lerne, sie an ihrem Symptom zu erkennen, denn der Agent wird dir nie sagen, welchen er erwischt hat.</p>
+
+    <div style="margin-top:48px;overflow-x:auto">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th><span data-en>FAILURE</span><span data-de>FEHLER</span></th>
+            <th><span data-en>What it looks like</span><span data-de>Wie es aussieht</span></th>
+            <th><span data-en>What the agent does</span><span data-de>Was der Agent tut</span></th>
+            <th><span data-en>The fix</span><span data-de>Die Lösung</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label"><span data-en>STALE</span><span data-de>VERALTET</span></td>
+            <td><span data-en>The data was true last quarter, not today</span><span data-de>Die Daten stimmten letztes Quartal, nicht heute</span></td>
+            <td><span data-en>Reports old numbers with full confidence</span><span data-de>Meldet alte Zahlen mit voller Überzeugung</span></td>
+            <td><span data-en>Timestamp every record, refuse data past its shelf life</span><span data-de>Jeden Datensatz mit Zeitstempel versehen, abgelaufene Daten ablehnen</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>AMBIGUOUS</span><span data-de>MEHRDEUTIG</span></td>
+            <td><span data-en>"The client" could mean three different accounts</span><span data-de>"Der Kunde" kann drei verschiedene Konten meinen</span></td>
+            <td><span data-en>Picks one reading and runs with it silently</span><span data-de>Wählt stillschweigend eine Lesart und macht weiter</span></td>
+            <td><span data-en>Use unique identifiers, not friendly labels, in the data</span><span data-de>Eindeutige Bezeichner statt freundlicher Etiketten in den Daten verwenden</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>MISSING</span><span data-de>FEHLEND</span></td>
+            <td><span data-en>The fact the agent needs was never retrieved</span><span data-de>Der benötigte Fakt wurde nie abgerufen</span></td>
+            <td><span data-en>Fills the gap with a plausible invention</span><span data-de>Füllt die Lücke mit einer plausiblen Erfindung</span></td>
+            <td><span data-en>Instruct the agent to say "not found" instead of guessing</span><span data-de>Den Agent anweisen, "nicht gefunden" zu sagen statt zu raten</span></td>
+          </tr>
+          <tr>
+            <td class="col-label"><span data-en>CONFLICTING</span><span data-de>WIDERSPRÜCHLICH</span></td>
+            <td><span data-en>Two sources disagree and both are in context</span><span data-de>Zwei Quellen widersprechen sich, beide sind im Context</span></td>
+            <td><span data-en>Blends them into one wrong middle answer</span><span data-de>Vermischt sie zu einer falschen Mittelantwort</span></td>
+            <td><span data-en>Name one source of truth, rank the rest below it</span><span data-de>Eine Wahrheitsquelle benennen, den Rest darunter einordnen</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K3 · PARCHMENT ==================== -->
+<section id="kapitel-3" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 03</span>
+      <span data-en>· PREPARING DATA AN AGENT CAN TRUST</span>
+      <span data-de>· DATEN VORBEREITEN, DENEN EIN AGENT TRAUEN KANN</span>
+    </div>
+
+    <h2 class="serif" data-en>Four moves before the <em>first run</em>.</h2>
+    <h2 class="serif" data-de>Vier Schritte vor dem <em>ersten Lauf</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>You do not fix context by writing a longer prompt. You fix it upstream, in the data the agent reads. These four moves take an afternoon and prevent most of the failures from the previous chapter. Do them once per source, not once per task.</p>
+    <p class="kicker" data-de>Context reparierst du nicht mit einem längeren Prompt. Du reparierst ihn flussaufwärts, in den Daten, die der Agent liest. Diese vier Schritte kosten einen Nachmittag und verhindern die meisten Fehler aus dem vorigen Kapitel. Mach sie einmal pro Quelle, nicht einmal pro Aufgabe.</p>
+
+    <div class="process cols-4">
+      <div class="step">
+        <span class="num">01 · <span data-en>SCOPE</span><span data-de>EINGRENZEN</span></span>
+        <h4 data-en>Cut the source down.</h4>
+        <h4 data-de>Die Quelle verkleinern.</h4>
+        <p data-en>An agent does not need your whole drive. Pick the smallest set of documents that answers the task. A narrow, relevant source beats a vast one every time, because retrieval has fewer wrong turns to take.</p>
+        <p data-de>Ein Agent braucht nicht dein ganzes Laufwerk. Wähle die kleinste Menge an Dokumenten, die die Aufgabe beantwortet. Eine schmale, relevante Quelle schlägt jedes Mal eine riesige, weil die Suche weniger falsche Abzweigungen nehmen kann.</p>
+      </div>
+      <div class="step">
+        <span class="num">02 · <span data-en>CLEAN</span><span data-de>BEREINIGEN</span></span>
+        <h4 data-en>Remove the duplicates.</h4>
+        <h4 data-de>Die Dubletten entfernen.</h4>
+        <p data-en>Three copies of a policy with small differences will confuse any retriever. Keep one version, delete the rest, and resolve contradictions by hand. The agent cannot tell which copy is canonical, so you must.</p>
+        <p data-de>Drei Kopien einer Richtlinie mit kleinen Unterschieden verwirren jede Suche. Behalte eine Version, lösche den Rest und kläre Widersprüche von Hand. Der Agent kann nicht erkennen, welche Kopie maßgeblich ist, also musst du es.</p>
+      </div>
+      <div class="step">
+        <span class="num">03 · <span data-en>TIMESTAMP</span><span data-de>DATIEREN</span></span>
+        <h4 data-en>Date everything.</h4>
+        <h4 data-de>Alles datieren.</h4>
+        <p data-en>Every record gets a "last verified" date the agent can read. With dates in the data, you can instruct the agent to flag or refuse anything past its shelf life. Without them, stale and fresh facts look identical.</p>
+        <p data-de>Jeder Datensatz bekommt ein "zuletzt geprüft"-Datum, das der Agent lesen kann. Mit Datum in den Daten kannst du den Agent anweisen, alles über der Haltbarkeit zu markieren oder abzulehnen. Ohne sehen veraltete und frische Fakten gleich aus.</p>
+      </div>
+      <div class="step">
+        <span class="num">04 · <span data-en>STRUCTURE</span><span data-de>STRUKTURIEREN</span></span>
+        <h4 data-en>Shape it for retrieval.</h4>
+        <h4 data-de>Für die Suche formen.</h4>
+        <p data-en>Break long documents into self-contained pieces, each with a clear heading and a stable identifier. A chunk that makes sense on its own can be retrieved on its own. A wall of text either comes back whole or not at all.</p>
+        <p data-de>Zerlege lange Dokumente in eigenständige Stücke, jedes mit klarer Überschrift und stabilem Bezeichner. Ein Stück, das für sich Sinn ergibt, kann für sich abgerufen werden. Eine Textwand kommt entweder ganz zurück oder gar nicht.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K4 · DARK · LIVE DEMO ==================== -->
+<section id="kapitel-4">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 04</span>
+      <span data-en>· THE CONTEXT PIPELINE · CLICK ANY STAGE</span>
+      <span data-de>· DIE CONTEXT-PIPELINE · STUFE ANKLICKEN</span>
+    </div>
+
+    <h2 class="serif" data-en>Six stages, one <em>journey</em>.</h2>
+    <h2 class="serif" data-de>Sechs Stufen, eine <em>Reise</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Every fact an agent uses travels the same road, from a raw source to a grounded answer. Click any stage on the pipeline to see what happens there and what breaks when it is neglected. The failure modes from chapter two each live at a specific stage.</p>
+    <p class="kicker" data-de>Jeder Fakt, den ein Agent nutzt, fährt dieselbe Straße, von einer rohen Quelle zu einer belegten Antwort. Klick eine beliebige Stufe der Pipeline an, um zu sehen, was dort passiert und was kaputtgeht, wenn sie vernachlässigt wird. Die Fehlermodi aus Kapitel zwei wohnen jeweils an einer bestimmten Stufe.</p>
+
+    <div class="svg-demo">
+      <div class="svg-head">
+        <span class="svg-head-title" id="pipe-title">THE CONTEXT PIPELINE</span>
+        <span class="svg-head-hint">
+          <span data-en>● CLICK A STAGE</span>
+          <span data-de>● STUFE ANKLICKEN</span>
+        </span>
+      </div>
+      <div class="svg-scroll">
+        <svg class="pipe-svg" viewBox="0 0 980 200" role="img" aria-label="Context pipeline diagram">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#8A8F98"></path>
+            </marker>
+          </defs>
+
+          <!-- arrows -->
+          <line class="pipe-arrow" x1="152" y1="100" x2="171" y2="100" marker-end="url(#arrow)"></line>
+          <line class="pipe-arrow" x1="307" y1="100" x2="326" y2="100" marker-end="url(#arrow)"></line>
+          <line class="pipe-arrow" x1="462" y1="100" x2="481" y2="100" marker-end="url(#arrow)"></line>
+          <line class="pipe-arrow" x1="617" y1="100" x2="636" y2="100" marker-end="url(#arrow)"></line>
+          <line class="pipe-arrow" x1="772" y1="100" x2="791" y2="100" marker-end="url(#arrow)"></line>
+
+          <!-- flow labels -->
+          <text class="pipe-flow-label" x="161" y="92">RAW</text>
+          <text class="pipe-flow-label" x="316" y="92">CLEAN</text>
+          <text class="pipe-flow-label" x="471" y="92">RELEVANT</text>
+          <text class="pipe-flow-label" x="626" y="92">VISIBLE</text>
+          <text class="pipe-flow-label" x="781" y="92">REASONED</text>
+
+          <!-- node 0 -->
+          <g class="hot active" id="node-0" onclick="setNode(0)" tabindex="0" role="button" aria-label="Stage 1 Sources">
+            <rect class="node-box" x="12" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="82" y="68">01</text>
+            <text class="node-label" x="82" y="105">SOURCES</text>
+          </g>
+          <!-- node 1 -->
+          <g class="hot" id="node-1" onclick="setNode(1)" tabindex="0" role="button" aria-label="Stage 2 Cleaning">
+            <rect class="node-box" x="167" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="237" y="68">02</text>
+            <text class="node-label" x="237" y="105">CLEANING</text>
+          </g>
+          <!-- node 2 -->
+          <g class="hot" id="node-2" onclick="setNode(2)" tabindex="0" role="button" aria-label="Stage 3 Retrieval">
+            <rect class="node-box" x="322" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="392" y="68">03</text>
+            <text class="node-label" x="392" y="105">RETRIEVAL</text>
+          </g>
+          <!-- node 3 -->
+          <g class="hot" id="node-3" onclick="setNode(3)" tabindex="0" role="button" aria-label="Stage 4 Context window">
+            <rect class="node-box" x="477" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="547" y="68">04</text>
+            <text class="node-label" x="547" y="105">CONTEXT</text>
+          </g>
+          <!-- node 4 -->
+          <g class="hot" id="node-4" onclick="setNode(4)" tabindex="0" role="button" aria-label="Stage 5 Agent">
+            <rect class="node-box" x="632" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="702" y="68">05</text>
+            <text class="node-label" x="702" y="105">AGENT</text>
+          </g>
+          <!-- node 5 -->
+          <g class="hot" id="node-5" onclick="setNode(5)" tabindex="0" role="button" aria-label="Stage 6 Output">
+            <rect class="node-box" x="787" y="75" width="140" height="50"></rect>
+            <text class="node-num" x="857" y="68">06</text>
+            <text class="node-label" x="857" y="105">OUTPUT</text>
+          </g>
+        </svg>
+      </div>
+      <div class="node-detail" id="node-detail"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K5 · PARCHMENT ==================== -->
+<section id="kapitel-5" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 05</span>
+      <span data-en>· THE RULE BEHIND THE RULE</span>
+      <span data-de>· DIE REGEL HINTER DER REGEL</span>
+    </div>
+
+    <h2 class="serif" data-en>If it has to <em>guess</em>, you missed a step.</h2>
+    <h2 class="serif" data-de>Wenn es <em>raten</em> muss, fehlt ein Schritt.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Most "the agent is unreliable" complaints are really "the agent had to guess" complaints. A guess is what happens when the context is incomplete and the agent was not told to stop. The whole discipline of data hygiene reduces to one demand: make every fact traceable, and make absence visible.</p>
+    <p class="kicker" data-de>Die meisten "der Agent ist unzuverlässig"-Klagen sind in Wahrheit "der Agent musste raten"-Klagen. Eine Vermutung entsteht, wenn der Context unvollständig ist und dem Agent nicht gesagt wurde, anzuhalten. Die ganze Disziplin der Datenhygiene reduziert sich auf eine Forderung: mach jeden Fakt nachverfolgbar und mach Abwesenheit sichtbar.</p>
+
+    <div style="margin-top:48px">
+      <div class="pull">
+        <div class="num">100%</div>
+        <div>
+          <div class="label" data-en>FAUSTREGEL · PROVENANCE</div>
+          <div class="label" data-de>FAUSTREGEL · HERKUNFT</div>
+          <p class="text" data-en>"Every factual claim an agent makes should trace to a source you can name. If it cannot, the agent should say so instead of guessing. A system where 100 percent of facts are traceable and absence is reported is reliable. A system where the agent fills gaps quietly is not, no matter how good the output looks."</p>
+          <p class="text" data-de>"Jede Tatsachenbehauptung eines Agents sollte sich auf eine Quelle zurückführen lassen, die du benennen kannst. Wenn nicht, sollte der Agent das sagen, statt zu raten. Ein System, in dem 100 Prozent der Fakten nachverfolgbar sind und Abwesenheit gemeldet wird, ist zuverlässig. Ein System, in dem der Agent Lücken still füllt, ist es nicht, egal wie gut der Output aussieht."</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px" class="two">
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 01</span>
+          <span data-en>· THREE SIGNALS CONTEXT IS HEALTHY</span>
+          <span data-de>· DREI SIGNALE, DASS CONTEXT GESUND IST</span>
+        </div>
+        <div class="prose">
+          <p data-en>The agent cites where each fact came from. When you ask "why did you say that," it points to a specific document or record rather than offering a rationalization. Traceable output is the clearest sign the context held.</p>
+          <p data-de>Der Agent gibt an, woher jeder Fakt stammt. Wenn du fragst "warum hast du das gesagt", verweist er auf ein konkretes Dokument oder einen Datensatz statt eine Rechtfertigung zu liefern. Nachverfolgbarer Output ist das klarste Zeichen, dass der Context gehalten hat.</p>
+          <p data-en>The agent says "not found" when something is missing. An agent that admits gaps has been fed a context discipline that values honesty over completeness. This is a feature you build in, not a behavior you hope for.</p>
+          <p data-de>Der Agent sagt "nicht gefunden", wenn etwas fehlt. Ein Agent, der Lücken zugibt, wurde mit einer Context-Disziplin gefüttert, die Ehrlichkeit über Vollständigkeit stellt. Das ist eine Eigenschaft, die du einbaust, kein Verhalten, auf das du hoffst.</p>
+          <p data-en>Repeated runs on the same input give the same answer. Stable output means the context is unambiguous. If the answer drifts run to run, something in the input can be read more than one way.</p>
+          <p data-de>Wiederholte Läufe auf derselben Eingabe geben dieselbe Antwort. Stabiler Output bedeutet, der Context ist eindeutig. Wandert die Antwort von Lauf zu Lauf, lässt sich etwas in der Eingabe auf mehr als eine Weise lesen.</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:20px">
+          <span class="num">● 02</span>
+          <span data-en>· THREE SIGNALS IT IS ROTTING</span>
+          <span data-de>· DREI SIGNALE, DASS ER VERFAULT</span>
+        </div>
+        <div class="prose">
+          <p data-en>The answers are confident and wrong in equal measure. High confidence on incorrect output is the signature of missing context: the agent had no way to know it was missing something, so it produced its best guess at full volume.</p>
+          <p data-de>Die Antworten sind selbstsicher und falsch im gleichen Maß. Hohe Sicherheit bei falschem Output ist die Signatur fehlenden Contexts: Der Agent hatte keine Möglichkeit zu wissen, dass ihm etwas fehlte, also lieferte er seine beste Vermutung in voller Lautstärke.</p>
+          <p data-en>The same question gives different answers on different days. If nothing in the task changed, the data did. Usually a source went stale or a duplicate with different numbers entered the retrieval pool.</p>
+          <p data-de>Dieselbe Frage gibt an verschiedenen Tagen verschiedene Antworten. Wenn sich an der Aufgabe nichts geändert hat, taten es die Daten. Meist wurde eine Quelle veraltet oder eine Dublette mit anderen Zahlen gelangte in den Suchpool.</p>
+          <p data-en>You cannot reconstruct why the agent said something. If tracing a claim back to its source takes more than a minute, your provenance is broken. Fix the data trail before you trust the next output.</p>
+          <p data-de>Du kannst nicht rekonstruieren, warum der Agent etwas gesagt hat. Wenn das Zurückverfolgen einer Behauptung zu ihrer Quelle länger als eine Minute dauert, ist deine Herkunft kaputt. Repariere die Datenspur, bevor du dem nächsten Output traust.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== K6 · DARK · GLOSSAR ==================== -->
+<section id="kapitel-6">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 06</span>
+      <span data-en>· SIX TERMS FOR CONTEXT</span>
+      <span data-de>· SECHS BEGRIFFE FÜR CONTEXT</span>
+    </div>
+
+    <h2 class="serif" data-en>Six terms, one <em>vocabulary</em>.</h2>
+    <h2 class="serif" data-de>Sechs Begriffe, eine <em>Sprache</em>.</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Data hygiene has its own working vocabulary. These six terms come up in every serious conversation about why an agent produced what it did. They are plain enough for a standup and precise enough for a postmortem.</p>
+    <p class="kicker" data-de>Datenhygiene hat ihren eigenen Arbeitswortschatz. Diese sechs Begriffe tauchen in jedem ernsten Gespräch darüber auf, warum ein Agent produziert hat, was er produziert hat. Sie sind unkompliziert genug für ein Standup und präzise genug für eine Retrospektive.</p>
+
+    <div style="margin-top:48px;background:var(--ink-deep);padding:48px;border:1px solid var(--border-on-ink)">
+      <div class="gloss">
+        <div class="term" data-en>GROUNDING</div>
+        <div class="term" data-de>GROUNDING</div>
+        <div class="def" data-en>Tying an agent's output to specific facts in its context rather than to its general training. A grounded answer can point to the document it came from. Grounding is what separates a researched answer from a confident guess.</div>
+        <div class="def" data-de>Den Output eines Agents an konkrete Fakten in seinem Context binden statt an sein allgemeines Training. Eine geerdete Antwort kann auf das Dokument verweisen, aus dem sie stammt. Grounding ist das, was eine recherchierte Antwort von einer selbstsicheren Vermutung trennt.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>RETRIEVAL</div>
+        <div class="term" data-de>RETRIEVAL</div>
+        <div class="def" data-en>The step that searches your sources and pulls the relevant pieces into the agent's context for a given task. Retrieval quality sets a ceiling on answer quality: the agent can only reason over what retrieval delivered.</div>
+        <div class="def" data-de>Der Schritt, der deine Quellen durchsucht und die relevanten Stücke für eine Aufgabe in den Context des Agents holt. Die Such-Qualität setzt eine Obergrenze für die Antwortqualität: Der Agent kann nur über das nachdenken, was die Suche geliefert hat.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>CONTEXT WINDOW</div>
+        <div class="term" data-de>CONTEXT-FENSTER</div>
+        <div class="def" data-en>The fixed amount of text an agent can hold in view at one time. Everything the agent reasons over must fit inside it. When the window is full, older or less relevant material falls out, which is why what you put in and in what order both matter.</div>
+        <div class="def" data-de>Die feste Textmenge, die ein Agent gleichzeitig im Blick halten kann. Alles, worüber der Agent nachdenkt, muss hineinpassen. Ist das Fenster voll, fällt älteres oder weniger relevantes Material heraus, weshalb es darauf ankommt, was du hineingibst und in welcher Reihenfolge.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>STALENESS</div>
+        <div class="term" data-de>VERALTUNG</div>
+        <div class="def" data-en>The gap between when a fact was true and when the agent uses it. Every data source has a shelf life. Staleness is invisible unless you record when each record was last verified, which is why timestamps are not optional.</div>
+        <div class="def" data-de>Der Abstand zwischen dem Zeitpunkt, an dem ein Fakt stimmte, und dem Zeitpunkt, an dem der Agent ihn nutzt. Jede Datenquelle hat eine Haltbarkeit. Veraltung ist unsichtbar, solange du nicht festhältst, wann jeder Datensatz zuletzt geprüft wurde, weshalb Zeitstempel nicht optional sind.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>PROVENANCE</div>
+        <div class="term" data-de>HERKUNFT</div>
+        <div class="def" data-en>The traceable origin of a fact: which source it came from and when. Provenance is what lets you audit an agent's output after the fact. Without it, a wrong answer is impossible to diagnose and a right answer is impossible to trust.</div>
+        <div class="def" data-de>Der nachverfolgbare Ursprung eines Fakts: aus welcher Quelle er stammt und wann. Herkunft ist das, was es dir erlaubt, den Output eines Agents im Nachhinein zu prüfen. Ohne sie ist eine falsche Antwort nicht zu diagnostizieren und einer richtigen nicht zu trauen.</div>
+      </div>
+      <div class="gloss">
+        <div class="term" data-en>CHUNKING</div>
+        <div class="term" data-de>CHUNKING</div>
+        <div class="def" data-en>Breaking a long document into smaller, self-contained pieces so retrieval can return exactly the relevant part. A good chunk makes sense on its own and carries a stable identifier. Bad chunking is a hidden cause of missing context: the right answer was in the document but never came back.</div>
+        <div class="def" data-de>Ein langes Dokument in kleinere, eigenständige Stücke zerlegen, damit die Suche genau den relevanten Teil zurückgeben kann. Ein gutes Stück ergibt für sich Sinn und trägt einen stabilen Bezeichner. Schlechtes Chunking ist eine versteckte Ursache fehlenden Contexts: Die richtige Antwort stand im Dokument, kam aber nie zurück.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AUSBLICK · PARCHMENT ==================== -->
+<section id="ausblick" class="parchment">
+  <div class="wrap">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      <span class="num">● 07</span>
+      <span data-en>· WHAT COMES NEXT</span>
+      <span data-de>· WAS KOMMT ALS NÄCHSTES</span>
+    </div>
+
+    <h2 class="serif" data-en>The agent is fed.<br/>How do you <em>measure</em> it?</h2>
+    <h2 class="serif" data-de>Der Agent ist versorgt.<br/>Wie <em>misst</em> du ihn?</h2>
+    <div class="rule-copper"></div>
+
+    <p class="kicker" data-en>Clean context is necessary, not sufficient. You still need a way to know whether the agent is getting better or worse over time. The next article covers evaluation methodology: how to build a test set, what to measure, and how to tell a real improvement from a lucky run.</p>
+    <p class="kicker" data-de>Sauberer Context ist notwendig, nicht hinreichend. Du brauchst trotzdem einen Weg zu wissen, ob der Agent über die Zeit besser oder schlechter wird. Die nächste Tafel behandelt Evaluierungsmethodik: wie man ein Testset baut, was man misst, und wie man eine echte Verbesserung von einem Glückslauf unterscheidet.</p>
+
+    <div class="grid-3" style="margin-top:48px">
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>NEXT · CARD 13</span>
+          <span data-de>NÄCHSTE · TAFEL 13</span>
+        </div>
+        <h3 class="serif" data-en>Evaluation methodology.</h3>
+        <h3 class="serif" data-de>Evaluierungsmethodik.</h3>
+        <p data-en>How to know if an agent is actually good. Building a test set, choosing what to measure, and telling a genuine improvement apart from a lucky run.</p>
+        <p data-de>Wie man weiß, ob ein Agent wirklich gut ist. Ein Testset bauen, wählen, was man misst, und eine echte Verbesserung von einem Glückslauf unterscheiden.</p>
+        <div style="margin-top:20px">
+          <a class="cta" href="./13_evaluierungsmethodik.html" style="font-size:11px;padding:10px 16px">
+            <span data-en>READ CARD 13</span>
+            <span data-de>TAFEL 13 LESEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>COMING LATER</span>
+          <span data-de>BALD VERFÜGBAR</span>
+        </div>
+        <h3 class="serif" data-en>More cards in the series.</h3>
+        <h3 class="serif" data-de>Mehr Tafeln in der Reihe.</h3>
+        <p data-en>The series continues with cards on agent security, running agents in regulated industries, and the economics of long-running agents. New cards publish roughly every two weeks.</p>
+        <p data-de>Die Reihe geht weiter mit Tafeln zu Agent-Sicherheit, Agent-Betrieb in regulierten Branchen und der Ökonomie langlaufender Agents. Neue Tafeln erscheinen etwa alle zwei Wochen.</p>
+        <div style="margin-top:20px">
+          <a href="https://readix.net" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>FOLLOW ON READIX</span>
+            <span data-de>AUF READIX FOLGEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:14px">
+          <span data-en>START THE SERIES</span>
+          <span data-de>REIHE VON VORNE</span>
+        </div>
+        <h3 class="serif" data-en>Start from card one.</h3>
+        <h3 class="serif" data-de>Ab Tafel eins beginnen.</h3>
+        <p data-en>If this is the first card you've read, start at the beginning. Card 01 explains what AI and agentic AI actually are, without the hype. Each card builds on the previous one.</p>
+        <p data-de>Wenn das die erste Tafel ist, die du gelesen hast, beginne am Anfang. Tafel 01 erklärt, was AI und Agentic AI tatsächlich sind, ohne den Hype. Jede Tafel baut auf der vorherigen auf.</p>
+        <div style="margin-top:20px">
+          <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:11px;padding:10px 16px">
+            <span data-en>READ CARD 01</span>
+            <span data-de>TAFEL 01 LESEN</span>
+            <span class="arrow">┌──→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;border-top:1px solid var(--border-on-paper);padding-top:40px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:20px">
+        <span data-en>← ALL CARDS IN THE SERIES</span>
+        <span data-de>← ALLE TAFELN IN DER REIHE</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="./01_was-ist-ai-und-agentic-ai.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">01 <span data-en>· What is AI?</span><span data-de>· Was ist AI?</span></a>
+        <a href="./02_wie-ein-agent-denkt.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">02 <span data-en>· How an Agent Thinks</span><span data-de>· Wie ein Agent denkt</span></a>
+        <a href="./03_tools-mcps-plugins.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">03 <span data-en>· Tools &amp; MCPs</span><span data-de>· Tools &amp; MCPs</span></a>
+        <a href="./04_risiko-und-trust.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">04 <span data-en>· Risk &amp; Trust</span><span data-de>· Risiko &amp; Trust</span></a>
+        <a href="./05_dein-erster-agent.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">05 <span data-en>· Your First Agent</span><span data-de>· Dein erster Agent</span></a>
+        <a href="./06_agent-teams.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">06 <span data-en>· Agent Teams</span><span data-de>· Agent-Teams</span></a>
+        <a href="./07_pflege-und-iteration.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">07 <span data-en>· Care &amp; Iteration</span><span data-de>· Pflege &amp; Iteration</span></a>
+        <a href="./08_use-case-bibliothek.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">08 <span data-en>· Use-Case Library</span><span data-de>· Use-Case-Bibliothek</span></a>
+        <a href="./09_kosten-und-roi.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">09 <span data-en>· Cost &amp; ROI</span><span data-de>· Kosten &amp; ROI</span></a>
+        <a href="./10_wohin-die-reise-geht.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">10 <span data-en>· Where This Is Going</span><span data-de>· Wohin die Reise geht</span></a>
+        <a href="./11_agents-im-team.html" class="cta" style="font-size:10px;padding:8px 14px;color:var(--copper-deep);border-color:var(--border-on-paper)">11 <span data-en>· Agents in the Team</span><span data-de>· Agents im Team</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>● CODEX LEHRTAFEL · 12</span>
+      <span>STAND · 2026-06</span>
+      <span>VERSION · v.2026.06</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============================================================
+// REIHENFOLGE: Demo zuerst, dann setLang, dann Initial-Load.
+// setNode() und setLang() sind global (für inline onclick).
+// NICHT 'body' als Variablenname verwenden (schattet document.body).
+// ============================================================
+
+// ============== Annotated SVG Hotspot Demo ==============
+var currentNode = 0;
+
+var nodeData = {
+  en: {
+    nodes: [
+      {
+        stage: '01', label: 'SOURCES',
+        title: 'Where the data lives.',
+        text: 'Your documents, databases, tickets, and APIs in their raw form. This is everything that could feed the agent, before anything is selected. The job here is not to add data but to decide what is in scope and what is noise.',
+        fail: 'Point the agent at everything and retrieval drowns. A narrow, relevant source beats a vast one every time.'
+      },
+      {
+        stage: '02', label: 'CLEANING',
+        title: 'Where duplicates die.',
+        text: 'Sources get deduplicated, normalized, and stamped with a last-verified date. Contradictions are resolved by hand and one canonical version is kept. This is the unglamorous step most teams skip, and the one that prevents the most failures.',
+        fail: 'Skip it and three near-identical copies enter the pool. The agent cannot tell which is canonical, so it blends them.'
+      },
+      {
+        stage: '03', label: 'RETRIEVAL',
+        title: 'Where relevance is chosen.',
+        text: 'For a given task, the system searches the clean sources and pulls the pieces that look relevant. Retrieval quality sets a hard ceiling on answer quality: the agent can only reason over what came back.',
+        fail: 'Bad chunking or weak search leaves the right fact behind. The answer was in the source but never reached the agent.'
+      },
+      {
+        stage: '04', label: 'CONTEXT WINDOW',
+        title: 'What the agent sees.',
+        text: 'The retrieved pieces, plus the standing rules and live state, assembled into the fixed window the agent reads. Order and size matter here. When the window is full, the least relevant material falls out of view.',
+        fail: 'Overfill the window and key facts get pushed out. The agent reasons over a partial picture without knowing it.'
+      },
+      {
+        stage: '05', label: 'AGENT',
+        title: 'Where reasoning happens.',
+        text: 'The agent works only with what is in the window. It does not know what was left out. Given complete context it reasons well; given gaps it reasons just as fluently over the gaps, producing a confident guess.',
+        fail: 'A gap in context becomes a guess in output, delivered at the same confidence as a grounded fact.'
+      },
+      {
+        stage: '06', label: 'OUTPUT',
+        title: 'Grounded or guessed.',
+        text: 'The final answer. A healthy pipeline produces output where every claim traces to a source and missing facts are reported as missing. This is the only stage you usually see, which is why the upstream work has to be right.',
+        fail: 'Without provenance you cannot tell a grounded answer from a guess. Both look finished and read with confidence.'
+      }
+    ]
+  },
+  de: {
+    nodes: [
+      {
+        stage: '01', label: 'QUELLEN',
+        title: 'Wo die Daten liegen.',
+        text: 'Deine Dokumente, Datenbanken, Tickets und APIs in ihrer Rohform. Das ist alles, was den Agent versorgen könnte, bevor irgendetwas ausgewählt ist. Die Aufgabe hier ist nicht, Daten hinzuzufügen, sondern zu entscheiden, was im Umfang liegt und was Rauschen ist.',
+        fail: 'Zeig dem Agent alles und die Suche ertrinkt. Eine schmale, relevante Quelle schlägt jedes Mal eine riesige.'
+      },
+      {
+        stage: '02', label: 'BEREINIGUNG',
+        title: 'Wo Dubletten sterben.',
+        text: 'Quellen werden entdoppelt, normalisiert und mit einem "zuletzt geprüft"-Datum versehen. Widersprüche werden von Hand geklärt und eine maßgebliche Version bleibt. Das ist der unscheinbare Schritt, den die meisten Teams überspringen, und der, der die meisten Fehler verhindert.',
+        fail: 'Überspringst du ihn, gelangen drei fast identische Kopien in den Pool. Der Agent kann die maßgebliche nicht erkennen und vermischt sie.'
+      },
+      {
+        stage: '03', label: 'RETRIEVAL',
+        title: 'Wo Relevanz gewählt wird.',
+        text: 'Für eine Aufgabe durchsucht das System die sauberen Quellen und holt die Stücke, die relevant aussehen. Die Such-Qualität setzt eine harte Obergrenze für die Antwortqualität: Der Agent kann nur über das nachdenken, was zurückkam.',
+        fail: 'Schlechtes Chunking oder schwache Suche lässt den richtigen Fakt zurück. Die Antwort stand in der Quelle, erreichte den Agent aber nie.'
+      },
+      {
+        stage: '04', label: 'CONTEXT-FENSTER',
+        title: 'Was der Agent sieht.',
+        text: 'Die geholten Stücke, dazu die festen Regeln und der Live-Zustand, zusammengesetzt zu dem festen Fenster, das der Agent liest. Reihenfolge und Größe zählen hier. Ist das Fenster voll, fällt das am wenigsten relevante Material aus dem Blick.',
+        fail: 'Überfüll das Fenster und Schlüsselfakten werden hinausgedrängt. Der Agent denkt über ein Teilbild nach, ohne es zu wissen.'
+      },
+      {
+        stage: '05', label: 'AGENT',
+        title: 'Wo das Denken passiert.',
+        text: 'Der Agent arbeitet nur mit dem, was im Fenster ist. Er weiß nicht, was weggelassen wurde. Mit vollständigem Context denkt er gut; mit Lücken denkt er genauso flüssig über die Lücken und produziert eine selbstsichere Vermutung.',
+        fail: 'Eine Lücke im Context wird zu einer Vermutung im Output, geliefert mit derselben Sicherheit wie ein belegter Fakt.'
+      },
+      {
+        stage: '06', label: 'OUTPUT',
+        title: 'Belegt oder geraten.',
+        text: 'Die fertige Antwort. Eine gesunde Pipeline produziert Output, in dem jede Behauptung sich auf eine Quelle zurückführen lässt und fehlende Fakten als fehlend gemeldet werden. Das ist die einzige Stufe, die du meist siehst, weshalb die Arbeit flussaufwärts stimmen muss.',
+        fail: 'Ohne Herkunft kannst du eine belegte Antwort nicht von einer Vermutung unterscheiden. Beide sehen fertig aus und lesen sich selbstsicher.'
+      }
+    ]
+  }
+};
+
+function getLang() { return document.body.classList.contains('lang-en') ? 'en' : 'de'; }
+
+function setNode(idx) {
+  currentNode = idx;
+  renderNode();
+}
+
+function renderNode() {
+  var lang = getLang();
+  var nodes = nodeData[lang].nodes;
+  var n = nodes[currentNode];
+
+  // Highlight active node in the SVG
+  for (var i = 0; i < 6; i++) {
+    var g = document.getElementById('node-' + i);
+    if (g) g.classList.toggle('active', i === currentNode);
+    // Update label text per language
+    var labelEl = g ? g.querySelector('.node-label') : null;
+    if (labelEl) labelEl.textContent = nodes[i].label;
+  }
+
+  // Update header title
+  var titleEl = document.getElementById('pipe-title');
+  if (titleEl) titleEl.textContent = lang === 'en' ? 'THE CONTEXT PIPELINE' : 'DIE CONTEXT-PIPELINE';
+
+  // Render detail panel
+  var detail = document.getElementById('node-detail');
+  if (!detail) return;
+  var failTag = lang === 'en' ? 'FAILS WHEN' : 'VERSAGT WENN';
+  var stageWord = lang === 'en' ? 'STAGE' : 'STUFE';
+  detail.innerHTML =
+    '<div class="nd-stage"><span class="nd-stage-num">' + n.stage + '</span>' + stageWord + ' · ' + n.label + '</div>' +
+    '<div>' +
+      '<div class="nd-title">' + n.title + '</div>' +
+      '<div class="nd-text">' + n.text + '</div>' +
+      '<div class="nd-fail"><span class="nd-fail-tag">' + failTag + '</span><span class="nd-fail-text">' + n.fail + '</span></div>' +
+    '</div>';
+}
+
+// Keyboard access for hotspots
+document.querySelectorAll('.hot').forEach(function(g, i) {
+  g.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setNode(i); }
+  });
+});
+
+// ============== Language Toggle · Readix Learn Pattern ==============
+function setLang(lang) {
+  document.body.classList.toggle('lang-en', lang === 'en');
+  document.documentElement.lang = lang === 'en' ? 'en' : 'de';
+  document.title = lang === 'en'
+    ? 'Data hygiene and context · Codex Article 12'
+    : 'Datenhygiene und Context · Codex Lehrtafel 12';
+  var btnDE = document.getElementById('btn-de');
+  var btnEN = document.getElementById('btn-en');
+  if (btnDE) btnDE.setAttribute('aria-pressed', lang === 'de' ? 'true' : 'false');
+  if (btnEN) btnEN.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+  try { localStorage.setItem('rl-lang', lang); } catch(e) {}
+  if (typeof renderNode === 'function') renderNode();
+}
+
+// ============== Initial Load ==============
+(function() {
+  var saved = 'en';
+  try { saved = localStorage.getItem('rl-lang') || 'en'; } catch(e) {}
+  setLang(saved);
+})();
+</script>
+
+</body>
+</html>
